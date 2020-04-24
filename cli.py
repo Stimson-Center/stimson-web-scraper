@@ -3,8 +3,8 @@
 
 import click
 
-from newspaper import Article
-from newspaper.utils import get_available_languages
+from scraper import Article
+from scraper.utils import get_available_languages
 
 
 @click.command()
@@ -28,9 +28,9 @@ if __name__ == '__main__':
 # from multiprocessing import Pool, cpu_count
 # from time import sleep, time
 #
-# from newspaper.google_customsearch import GoogleCustomSearch
-# from newspaper.news_ycombinator import connect_to_base, parse_html, write_to_file
-# from newspaper.chromium import get_driver
+# from scraper.google_customsearch import GoogleCustomSearch
+# from scraper.news_ycombinator import connect_to_base, parse_html, write_to_file
+# from scraper.chromium import get_driver
 #
 #
 # def run_process(page_number, output_filename):

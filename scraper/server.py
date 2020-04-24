@@ -4,8 +4,8 @@ import json
 import logging
 
 from flask import Flask, request
-from newspaper import Article
-from newspaper.configuration import Configuration
+from scraper import Article
+from scraper.configuration import Configuration
 
 app = Flask(__name__)
 

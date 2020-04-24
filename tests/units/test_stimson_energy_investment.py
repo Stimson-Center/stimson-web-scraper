@@ -4,10 +4,10 @@ import json
 import os
 from time import time
 
-from newspaper import Article
-from newspaper.urls import b64_encode
-from newspaper import news_pool
-from newspaper.configuration import Configuration
+from scraper import Article
+from scraper.urls import b64_encode
+from scraper import news_pool
+from scraper.configuration import Configuration
 
 
 def save_article(article, filename, filedir='/tmp'):
@@ -58,7 +58,7 @@ def test_get_mekong_delta_urls(fixture_directory):
         build_start_time = time()
         for line in f:
             # scrape and crawl
-            # websites.append(newspaper.build(line.rstrip(), config=config))
+            # websites.append(scraper.build(line.rstrip(), config=config))
             websites.append(Article(line.rstrip(), request_timeout=config.request_timeout,
                                     ignored_content_types_defaults=pdf_defaults))
 

@@ -2,10 +2,10 @@
 
 import json
 
-from newspaper.google_customsearch import GoogleCustomSearch
-from newspaper.sources import Sources
-from newspaper import Article
-from newspaper.configuration import Configuration
+from scraper.google_customsearch import GoogleCustomSearch
+from scraper.sources import Sources
+from scraper import Article
+from scraper.configuration import Configuration
 from bs4 import BeautifulSoup
 
 # Check if your url end-point actively prevents programmatic access.
@@ -123,7 +123,7 @@ def test_goole_book():
 #     x = driver.page_source
 
 def test_chromium():
-    from newspaper.chromium import get_page_source
+    from scraper.chromium import get_page_source
     x = get_page_source('https://scholar.google.com/scholar?oi=bibs&hl=en&oe=ASCII&cites=17455492728027388341')
     soup = BeautifulSoup(x)
     y = soup.findAll(name='div', attrs={'class': 'gs_a'})

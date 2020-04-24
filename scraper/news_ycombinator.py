@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from newspaper.utils import get_load_time
+from scraper.utils import get_load_time
 
 
 def connect_to_base(browser, page_number):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-All unit tests for the newspaper library should be contained in this file.
+All unit tests for the scraper library should be contained in this file.
 """
 import concurrent.futures
 import os
@@ -11,18 +11,18 @@ import traceback
 import unittest
 from collections import defaultdict, OrderedDict
 
-import newspaper
-from newspaper import Article, fulltext, Source, ArticleException, news_pool
-from newspaper.article import ArticleDownloadState
-from newspaper.configuration import Configuration
-from newspaper.source import Category
-from newspaper.urls import get_domain
+import scraper
+from scraper import Article, fulltext, Source, ArticleException, news_pool
+from scraper.article import ArticleDownloadState
+from scraper.configuration import Configuration
+from scraper.source import Category
+from scraper.urls import get_domain
 
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))
 FIXTURES_DIR = os.path.abspath(os.path.join(TEST_DIR, '../fixtures'))
 PARENT_DIR = os.path.abspath(os.path.join(TEST_DIR, '../..'))
 
-# newspaper's unit tests are in their own separate module, so
+# scraper's unit tests are in their own separate module, so
 # insert the parent directory manually to gain scope of the
 # core module
 sys.path.insert(0, PARENT_DIR)
@@ -361,8 +361,8 @@ class ContentExtractorTestCase(unittest.TestCase):
     """Test specific element extraction cases"""
 
     def setUp(self):
-        self.extractor = newspaper.extractors.ContentExtractor(Configuration())
-        self.parser = newspaper.parsers.Parser
+        self.extractor = scraper.extractors.ContentExtractor(Configuration())
+        self.parser = scraper.parsers.Parser
 
     def _get_title(self, html):
         doc = self.parser.fromstring(html)
@@ -559,7 +559,7 @@ class UrlTestCase(unittest.TestCase):
         """Prints out a list of urls with our heuristic guess if it is a
         valid news url purely based on the url
         """
-        from newspaper.urls import valid_url
+        from scraper.urls import valid_url
 
         with open(os.path.join(FIXTURES_DIR, 'test_urls.txt'), 'r') as f:
             lines = f.readlines()
@@ -578,7 +578,7 @@ class UrlTestCase(unittest.TestCase):
     @print_test
     def test_pubdate(self):
         """Checks that irrelevant data in url isn't considered as publishing date"""
-        from newspaper.urls import STRICT_DATE_REGEX
+        from scraper.urls import STRICT_DATE_REGEX
 
         with open(os.path.join(FIXTURES_DIR, 'test_urls_pubdate.txt'), 'r') as f:
             lines = f.readlines()
@@ -604,7 +604,7 @@ class UrlTestCase(unittest.TestCase):
         """Normalizes a url, removes arguments, hashtags. If a relative url, it
         merges it with the source domain to make an abs url, etc
         """
-        from newspaper.urls import prepare_url
+        from scraper.urls import prepare_url
 
         with open(os.path.join(FIXTURES_DIR, 'test_prepare_urls.txt'), 'r') as f:
             lines = f.readlines()
@@ -624,13 +624,13 @@ class APITestCase(unittest.TestCase):
     def test_hot_trending(self):
         """Grab google trending, just make sure this runs
         """
-        newspaper.hot()
+        scraper.hot()
 
     @print_test
     def test_popular_urls(self):
         """Just make sure this method runs
         """
-        newspaper.popular_urls()
+        scraper.popular_urls()
 
 
 @unittest.skip("Need to mock download")
@@ -639,9 +639,9 @@ class MThreadingTestCase(unittest.TestCase):
     def test_download_works(self):
         config = Configuration()
         config.memoize_articles = False
-        slate_paper = newspaper.build('http://slate.com', config=config)
-        tc_paper = newspaper.build('http://techcrunch.com', config=config)
-        espn_paper = newspaper.build('http://espn.com', config=config)
+        slate_paper = scraper.build('http://slate.com', config=config)
+        tc_paper = scraper.build('http://techcrunch.com', config=config)
+        espn_paper = scraper.build('http://espn.com', config=config)
 
         print(('Slate has %d articles TC has %d articles ESPN has %d articles'
                % (slate_paper.size(), tc_paper.size(), espn_paper.size())))
@@ -774,7 +774,7 @@ class MultiLanguageTestCase(unittest.TestCase):
 class TestNewspaperLanguagesApi(unittest.TestCase):
     @print_test
     def test_languages_api_call(self):
-        newspaper.languages()
+        scraper.languages()
 
 
 class TestDownloadPdf(unittest.TestCase):

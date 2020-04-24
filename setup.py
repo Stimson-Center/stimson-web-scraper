@@ -16,7 +16,7 @@ except ImportError:
 
 
 packages = [
-    'newspaper',
+    'scraper',
 ]
 
 
@@ -34,7 +34,7 @@ if sys.version_info[0] == 2 and sys.argv[-1] not in ['publish', 'upload']:
     sys.exit('WARNING! You are attempting to install newspaper3k\'s '
              'python3 repository on python2. PLEASE RUN '
              '`$ pip3 install newspaper3k` for python3 or '
-             '`$ pip install newspaper` for python2')
+             '`$ pip install scraper` for python2')
 
 
 with open('requirements.txt') as f:
@@ -65,6 +65,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        newspaper=newspaper.cli:parse
+        scraper=scraper.cli:parse
     ''',
 )

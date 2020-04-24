@@ -19,6 +19,30 @@ You may also provide configuration parameters like ``language``, ``browser_user_
 
 .. code-block:: pycon
 
+    >>> import scraper
+    >>> cnn_paper = newspaper.build('http://cnn.com')
+
+    >>> sina_paper = newspaper.build('http://www.lemonde.fr/', language='fr')
+
+However, if needed, you may also play with the lower level
+    >>> import scraper
+    >>> cnn_paper = newspaper.build('http://cnn.com')
+
+    >>> sina_paper = newspaper.build('http://www.lemonde.fr/', language='fr')
+
+However, if needed, you may also play with the lower level
+    >>> import newspaper
+    >>> cnn_paper = newspaper.build('http://cnn.com')
+
+    >>> sina_paper = scraper.build('http://www.lemonde.fr/', language='fr')
+
+However, if needed, you may also play with the lower level
+    >>> import newspaper
+    >>> cnn_paper = newspaper.build('http://cnn.com')
+
+    >>> sina_paper = scraper.build('http://www.lemonde.fr/', language='fr')
+
+However, if needed, you may also play with the lower level
     >>> import newspaper
     >>> cnn_paper = newspaper.build('http://cnn.com')
 
@@ -77,6 +101,60 @@ You may also pass in the lower level``Config`` objects as covered in the :ref:`a
 
 .. code-block:: pycon
 
+    >>> import scraper
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+    >>> import scraper
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+    >>> import newspaper
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+
+    >>> cbs_paper = scraper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+    >>> import newspaper
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+
+    >>> cbs_paper = scraper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+    >>> import newspaper
+
+    >>> cbs_paper = scraper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+    >>> import newspaper
+
+    >>> cbs_paper = scraper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', memoize_articles=False)
+    >>> cbs_paper.size()
+    1030
     >>> import newspaper
 
     >>> cbs_paper = newspaper.build('http://cbs.com', memoize_articles=False)
@@ -142,6 +220,16 @@ Initializing an ``Article`` by itself.
 
 .. code-block:: pycon
 
+    >>> from scraper import Article
+    >>> first_article = Article(url="http://www.lemonde.fr/...", language='fr')
+
+
+Note the similar
+    >>> from scraper import Article
+    >>> first_article = Article(url="http://www.lemonde.fr/...", language='fr')
+
+
+Note the similar
     >>> from newspaper import Article
     >>> first_article = Article(url="http://www.lemonde.fr/...", language='fr')
 
@@ -156,6 +244,30 @@ The default html value for the particular content type can be provided and then 
 
 .. code-block:: pycon
 
+    >>> from scraper import Article
+    >>> pdf_defaults = {"application/pdf": "%PDF-",
+                      "application/x-pdf": "%PDF-",
+                      "application/x-bzpdf": "%PDF-",
+                      "application/x-gzpdf": "%PDF-"}
+    >>> pdf_article = Article(url='https://www.adobe.com/pdf/pdfs/ISO32000-1PublicPatentLicense.pdf',
+                                            ignored_content_types_defaults=pdf_defaults)
+    >>> pdf_article.download()
+    >>> print(pdf_article.html)
+    %PDF-
+
+There are endless possibilities on how we can manipulate and build articles.
+    >>> from scraper import Article
+    >>> pdf_defaults = {"application/pdf": "%PDF-",
+                      "application/x-pdf": "%PDF-",
+                      "application/x-bzpdf": "%PDF-",
+                      "application/x-gzpdf": "%PDF-"}
+    >>> pdf_article = Article(url='https://www.adobe.com/pdf/pdfs/ISO32000-1PublicPatentLicense.pdf',
+                                            ignored_content_types_defaults=pdf_defaults)
+    >>> pdf_article.download()
+    >>> print(pdf_article.html)
+    %PDF-
+
+There are endless possibilities on how we can manipulate and build articles.
     >>> from newspaper import Article
     >>> pdf_defaults = {"application/pdf": "%PDF-",
                       "application/x-pdf": "%PDF-",
@@ -253,6 +365,630 @@ of popular news source urls.. In case you need help choosing a news source!
 
 .. code-block:: pycon
 
+    >>> import newspaper
+
+    >>> scraper.hot()
+    ['Ned Vizzini', Brian Boitano', Crossword Inventor', 'Alex & Sierra', ... ]
+
+    >>> newspaper.popular_urls()
+    ['http://slate.com', 'http://cnn.com', 'http://huffingtonpost.com', ... ]
+
+    >>> newspaper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
+    >>> import newspaper
+
+    >>> scraper.hot()
+    ['Ned Vizzini', Brian Boitano', Crossword Inventor', 'Alex & Sierra', ... ]
+
+    >>> newspaper.popular_urls()
+    ['http://slate.com', 'http://cnn.com', 'http://huffingtonpost.com', ... ]
+
+    >>> newspaper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
+    >>> import scraper
+
+    >>> newspaper.hot()
+    ['Ned Vizzini', Brian Boitano', Crossword Inventor', 'Alex & Sierra', ... ]
+
+    >>> newspaper.popular_urls()
+    ['http://slate.com', 'http://cnn.com', 'http://huffingtonpost.com', ... ]
+
+    >>> newspaper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
+    >>> import scraper
+
+    >>> newspaper.hot()
+    ['Ned Vizzini', Brian Boitano', Crossword Inventor', 'Alex & Sierra', ... ]
+
+    >>> newspaper.popular_urls()
+    ['http://slate.com', 'http://cnn.com', 'http://huffingtonpost.com', ... ]
+
+    >>> newspaper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
+    >>> import newspaper
+
+    >>> newspaper.hot()
+    ['Ned Vizzini', Brian Boitano', Crossword Inventor', 'Alex & Sierra', ... ]
+
+    >>> newspaper.popular_urls()
+    ['http://slate.com', 'http://cnn.com', 'http://huffingtonpost.com', ... ]
+
+    >>> scraper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
+    >>> import newspaper
+
+    >>> newspaper.hot()
+    ['Ned Vizzini', Brian Boitano', Crossword Inventor', 'Alex & Sierra', ... ]
+
+    >>> newspaper.popular_urls()
+    ['http://slate.com', 'http://cnn.com', 'http://huffingtonpost.com', ... ]
+
+    >>> scraper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
+    >>> import newspaper
+
+    >>> newspaper.hot()
+    ['Ned Vizzini', Brian Boitano', Crossword Inventor', 'Alex & Sierra', ... ]
+
+    >>> scraper.popular_urls()
+    ['http://slate.com', 'http://cnn.com', 'http://huffingtonpost.com', ... ]
+
+    >>> newspaper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
+    >>> import newspaper
+
+    >>> newspaper.hot()
+    ['Ned Vizzini', Brian Boitano', Crossword Inventor', 'Alex & Sierra', ... ]
+
+    >>> scraper.popular_urls()
+    ['http://slate.com', 'http://cnn.com', 'http://huffingtonpost.com', ... ]
+
+    >>> newspaper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
     >>> import newspaper
 
     >>> newspaper.hot()

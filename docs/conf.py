@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# newspaper documentation build configuration file, created by
+# scraper documentation build configuration file, created by
 # sphinx-quickstart on Sat Dec 21 22:26:51 2013.
 #
 # This file is execfile()d with the current directory set to its
@@ -48,7 +48,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'newspaper'
+project = 'scraper'
 copyright = '2013, <a href="http://codelucas.com">Lucas Ou-Yang</a>'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -206,7 +206,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'newspaper.tex', 'newspaper Documentation',
+  ('index', 'scraper.tex', 'scraper Documentation',
    'Lucas Ou-Yang', 'manual'),
 ]
 
@@ -236,7 +236,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'newspaper', 'newspaper Documentation',
+    ('index', 'scraper', 'scraper Documentation',
      ['Lucas Ou-Yang'], 1)
 ]
 
@@ -250,8 +250,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'newspaper', 'newspaper Documentation',
-   'Lucas Ou-Yang', 'newspaper', 'One line description of project.',
+  ('index', 'scraper', 'scraper Documentation',
+   'Lucas Ou-Yang', 'scraper', 'One line description of project.',
    'Miscellaneous'),
 ]
 

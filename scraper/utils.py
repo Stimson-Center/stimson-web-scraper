@@ -3,7 +3,7 @@
 Holds misc. utility methods which prove to be
 useful throughout this library.
 """
-__title__ = 'newspaper'
+__title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'

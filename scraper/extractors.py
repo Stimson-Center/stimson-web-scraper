@@ -6,7 +6,7 @@ https://github.com/codelucas/newspaper/blob/master/GOOSE-LICENSE.txt
 Keep all html page extraction code within this file. Abstract any
 lxml or soup parsing code in the parsers.py file!
 """
-__title__ = 'newspaper'
+__title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'

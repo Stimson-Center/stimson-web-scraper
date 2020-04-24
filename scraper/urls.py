@@ -3,7 +3,7 @@
 Newspaper treats urls for news articles as critical components.
 Hence, we have an entire module dedicated to them.
 """
-__title__ = 'newspaper'
+__title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import newspaper
+import scraper
 from time import time
-from newspaper.configuration import Configuration
+from scraper.configuration import Configuration
 
 
 # noinspection PyUnresolvedReferences
@@ -23,7 +23,7 @@ def test_newspapers():
     for website in websites:
         # set variables
         start_time = time()
-        np = newspaper.build(website["url"], config=config, language=website["language"])
+        np = scraper.build(website["url"], config=config, language=website["language"])
         assert len(np.articles)
         end_time = time()
         elapsed_time = end_time - start_time

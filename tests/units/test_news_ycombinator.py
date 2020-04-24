@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from newspaper.news_ycombinator import parse_html
+from scraper.news_ycombinator import parse_html
 
 
 # noinspection PyUnresolvedReferences

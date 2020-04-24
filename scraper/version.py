@@ -2,7 +2,7 @@
 """
 To change the version of entire package, just edit this one location.
 """
-__title__ = 'newspaper'
+__title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'

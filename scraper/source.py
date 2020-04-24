@@ -3,7 +3,7 @@
 Source objects abstract online news source websites & domains.
 www.cnn.com would be its own source.
 """
-__title__ = 'newspaper'
+__title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'

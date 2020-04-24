@@ -3,7 +3,7 @@
 All code involving requests and responses over the http network
 must be abstracted in this file.
 """
-__title__ = 'newspaper'
+__title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
@@ -14,8 +14,8 @@ import requests
 from requests_toolbelt.utils import deprecated
 
 # This site doesn’t like and want scraping. This gives you the same dreaded error 54, connection reset by the peer.
-from newspaper.chromium import get_page_source
-from newspaper.pdf.pdf import PdfFileReader
+from scraper.chromium import get_page_source
+from scraper.pdf.pdf import PdfFileReader
 from .configuration import Configuration
 from .mthreading import ThreadPool
 from .settings import cj
@@ -51,7 +51,7 @@ def get_html(url, config=None, response=None):
 
 
 def get_html_2XX_only(url, config=None, response=None):
-    """Consolidated logic for http requests from newspaper. We handle error cases:
+    """Consolidated logic for http requests from scraper. We handle error cases:
     - Attempt to find encoding of the html by using HTTP header. Fallback to
       'ISO-8859-1' if not provided.
     - Error out if a non 2XX HTTP response code is returned.

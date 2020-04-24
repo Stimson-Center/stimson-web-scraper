@@ -19,6 +19,102 @@ speed up the download time while being respectful.
 .. code-block:: pycon
 
     >>> import newspaper
+    >>> from scraper import news_pool
+
+    >>> slate_paper = newspaper.build('http://slate.com')
+    >>> tc_paper = newspaper.build('http://techcrunch.com')
+    >>> espn_paper = newspaper.build('http://espn.com')
+
+    >>> papers = [slate_paper, tc_paper, espn_paper]
+    >>> news_pool.set(papers, threads_per_source=2) # (3*2) = 6 threads total
+    >>> news_pool.join()
+
+    At this point, you can safely assume that download() has been
+    called on every single article for all 3 sources.
+
+    >>> print(slate_paper.articles[10].html)
+    u'<html> ...'
+    >>> import newspaper
+    >>> from scraper import news_pool
+
+    >>> slate_paper = newspaper.build('http://slate.com')
+    >>> tc_paper = newspaper.build('http://techcrunch.com')
+    >>> espn_paper = newspaper.build('http://espn.com')
+
+    >>> papers = [slate_paper, tc_paper, espn_paper]
+    >>> news_pool.set(papers, threads_per_source=2) # (3*2) = 6 threads total
+    >>> news_pool.join()
+
+    At this point, you can safely assume that download() has been
+    called on every single article for all 3 sources.
+
+    >>> print(slate_paper.articles[10].html)
+    u'<html> ...'
+    >>> import newspaper
+    >>> from newspaper import news_pool
+
+    >>> slate_paper = scraper.build('http://slate.com')
+    >>> tc_paper = newspaper.build('http://techcrunch.com')
+    >>> espn_paper = newspaper.build('http://espn.com')
+
+    >>> papers = [slate_paper, tc_paper, espn_paper]
+    >>> news_pool.set(papers, threads_per_source=2) # (3*2) = 6 threads total
+    >>> news_pool.join()
+
+    At this point, you can safely assume that download() has been
+    called on every single article for all 3 sources.
+
+    >>> print(slate_paper.articles[10].html)
+    u'<html> ...'
+    >>> import newspaper
+    >>> from newspaper import news_pool
+
+    >>> slate_paper = scraper.build('http://slate.com')
+    >>> tc_paper = newspaper.build('http://techcrunch.com')
+    >>> espn_paper = newspaper.build('http://espn.com')
+
+    >>> papers = [slate_paper, tc_paper, espn_paper]
+    >>> news_pool.set(papers, threads_per_source=2) # (3*2) = 6 threads total
+    >>> news_pool.join()
+
+    At this point, you can safely assume that download() has been
+    called on every single article for all 3 sources.
+
+    >>> print(slate_paper.articles[10].html)
+    u'<html> ...'
+    >>> import scraper
+    >>> from scraper import news_pool
+
+    >>> slate_paper = newspaper.build('http://slate.com')
+    >>> tc_paper = newspaper.build('http://techcrunch.com')
+    >>> espn_paper = newspaper.build('http://espn.com')
+
+    >>> papers = [slate_paper, tc_paper, espn_paper]
+    >>> news_pool.set(papers, threads_per_source=2) # (3*2) = 6 threads total
+    >>> news_pool.join()
+
+    At this point, you can safely assume that download() has been
+    called on every single article for all 3 sources.
+
+    >>> print(slate_paper.articles[10].html)
+    u'<html> ...'
+    >>> import scraper
+    >>> from scraper import news_pool
+
+    >>> slate_paper = newspaper.build('http://slate.com')
+    >>> tc_paper = newspaper.build('http://techcrunch.com')
+    >>> espn_paper = newspaper.build('http://espn.com')
+
+    >>> papers = [slate_paper, tc_paper, espn_paper]
+    >>> news_pool.set(papers, threads_per_source=2) # (3*2) = 6 threads total
+    >>> news_pool.join()
+
+    At this point, you can safely assume that download() has been
+    called on every single article for all 3 sources.
+
+    >>> print(slate_paper.articles[10].html)
+    u'<html> ...'
+    >>> import newspaper
     >>> from newspaper import news_pool
 
     >>> slate_paper = newspaper.build('http://slate.com')
@@ -46,6 +142,26 @@ Here is how to do so:
 
 .. code-block:: pycon
 
+    >>> from scraper import Article
+
+    >>> a = Article('http://www.cnn.com/2014/01/12/world/asia/north-korea-charles-smith/index.html'
+        , keep_article_html=True)
+
+    >>> a.download()
+    >>> a.parse()
+
+    >>> a.article_html
+    u'<div>
+    >>> from scraper import Article
+
+    >>> a = Article('http://www.cnn.com/2014/01/12/world/asia/north-korea-charles-smith/index.html'
+        , keep_article_html=True)
+
+    >>> a.download()
+    >>> a.parse()
+
+    >>> a.article_html
+    u'<div>
     >>> from newspaper import Article
 
     >>> a = Article('http://www.cnn.com/2014/01/12/world/asia/north-korea-charles-smith/index.html'
@@ -128,6 +244,28 @@ into newspaper's ``Source`` api.
 
 .. code-block:: pycon
 
+    >>> from scraper import Source
+    >>> cnn_paper = Source('http://cnn.com')
+
+    >>> print(cnn_paper.size()) # no articles, we have not built the source
+    0
+
+    >>> cnn_paper.build()
+    >>> print(cnn_paper.size())
+    3100
+
+Note the
+    >>> from scraper import Source
+    >>> cnn_paper = Source('http://cnn.com')
+
+    >>> print(cnn_paper.size()) # no articles, we have not built the source
+    0
+
+    >>> cnn_paper.build()
+    >>> print(cnn_paper.size())
+    3100
+
+Note the
     >>> from newspaper import Source
     >>> cnn_paper = Source('http://cnn.com')
 
@@ -173,6 +311,54 @@ Here are some named parameter passing examples:
     >>> import newspaper
     >>> from newspaper import Article, Source
 
+    >>> cnn = scraper.build('http://cnn.com', language='en', memoize_articles=False)
+
+    >>> article = Article(url='http://cnn.com/french/...', language='fr', fetch_images=False)
+
+    >>> cnn = Source(url='http://latino.cnn.com/...', language='es', request_timeout=10,
+                                                                number_threads=20)
+
+
+Here are some examples of how Config objects are passed.
+    >>> import newspaper
+    >>> from newspaper import Article, Source
+
+    >>> cnn = scraper.build('http://cnn.com', language='en', memoize_articles=False)
+
+    >>> article = Article(url='http://cnn.com/french/...', language='fr', fetch_images=False)
+
+    >>> cnn = Source(url='http://latino.cnn.com/...', language='es', request_timeout=10,
+                                                                number_threads=20)
+
+
+Here are some examples of how Config objects are passed.
+    >>> import scraper
+    >>> from newspaper import Article, Source
+
+    >>> cnn = newspaper.build('http://cnn.com', language='en', memoize_articles=False)
+
+    >>> article = Article(url='http://cnn.com/french/...', language='fr', fetch_images=False)
+
+    >>> cnn = Source(url='http://latino.cnn.com/...', language='es', request_timeout=10,
+                                                                number_threads=20)
+
+
+Here are some examples of how Config objects are passed.
+    >>> import scraper
+    >>> from newspaper import Article, Source
+
+    >>> cnn = newspaper.build('http://cnn.com', language='en', memoize_articles=False)
+
+    >>> article = Article(url='http://cnn.com/french/...', language='fr', fetch_images=False)
+
+    >>> cnn = Source(url='http://latino.cnn.com/...', language='es', request_timeout=10,
+                                                                number_threads=20)
+
+
+Here are some examples of how Config objects are passed.
+    >>> import newspaper
+    >>> from newspaper import Article, Source
+
     >>> cnn = newspaper.build('http://cnn.com', language='en', memoize_articles=False)
 
     >>> article = Article(url='http://cnn.com/french/...', language='fr', fetch_images=False)
@@ -185,6 +371,90 @@ Here are some examples of how Config objects are passed.
 
 .. code-block:: pycon
 
+    >>> import newspaper
+    >>> from scraper import Config, Article, Source
+
+    >>> config = Config()
+    >>> config.memoize_articles = False
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', config)
+
+    >>> article_1 = Article(url='http://espn/2013/09/...', config)
+
+    >>> cbs_paper = Source('http://cbs.com', config)
+
+
+Here is a full list of the configuration options:
+    >>> import newspaper
+    >>> from scraper import Config, Article, Source
+
+    >>> config = Config()
+    >>> config.memoize_articles = False
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', config)
+
+    >>> article_1 = Article(url='http://espn/2013/09/...', config)
+
+    >>> cbs_paper = Source('http://cbs.com', config)
+
+
+Here is a full list of the configuration options:
+    >>> import newspaper
+    >>> from newspaper import Config, Article, Source
+
+    >>> config = Config()
+    >>> config.memoize_articles = False
+
+    >>> cbs_paper = scraper.build('http://cbs.com', config)
+
+    >>> article_1 = Article(url='http://espn/2013/09/...', config)
+
+    >>> cbs_paper = Source('http://cbs.com', config)
+
+
+Here is a full list of the configuration options:
+    >>> import newspaper
+    >>> from newspaper import Config, Article, Source
+
+    >>> config = Config()
+    >>> config.memoize_articles = False
+
+    >>> cbs_paper = scraper.build('http://cbs.com', config)
+
+    >>> article_1 = Article(url='http://espn/2013/09/...', config)
+
+    >>> cbs_paper = Source('http://cbs.com', config)
+
+
+Here is a full list of the configuration options:
+    >>> import scraper
+    >>> from scraper import Config, Article, Source
+
+    >>> config = Config()
+    >>> config.memoize_articles = False
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', config)
+
+    >>> article_1 = Article(url='http://espn/2013/09/...', config)
+
+    >>> cbs_paper = Source('http://cbs.com', config)
+
+
+Here is a full list of the configuration options:
+    >>> import scraper
+    >>> from scraper import Config, Article, Source
+
+    >>> config = Config()
+    >>> config.memoize_articles = False
+
+    >>> cbs_paper = newspaper.build('http://cbs.com', config)
+
+    >>> article_1 = Article(url='http://espn/2013/09/...', config)
+
+    >>> cbs_paper = Source('http://cbs.com', config)
+
+
+Here is a full list of the configuration options:
     >>> import newspaper
     >>> from newspaper import Config, Article, Source
 

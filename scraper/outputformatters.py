@@ -2,7 +2,7 @@
 """
 Output formatting to text via lxml xpath nodes abstracted in this file.
 """
-__title__ = 'newspaper'
+__title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'

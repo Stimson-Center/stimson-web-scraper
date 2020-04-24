@@ -5,7 +5,7 @@ as settings.py but dynamic and changing for whatever parent object
 holds them. For example, pass in a config object to an Article
 object, Source object, or even network methods, and it just works.
 """
-__title__ = 'newspaper'
+__title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
@@ -65,7 +65,7 @@ class Configuration(object):
         # Unique stopword classes for oriental languages, don'tcanonical_link toggle
         self.stopwords_class = StopWords
 
-        self.browser_user_agent = 'newspaper/%s' % __version__
+        self.browser_user_agent = 'scraper/%s' % __version__
         self.headers = {}
         self.request_timeout = 60
         self.proxies = {}

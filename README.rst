@@ -33,6 +33,14 @@ A Glance:
 
 .. code-block:: pycon
 
+    >>> from scraper import Article
+
+    >>> url = 'http://fox13now.com/2013/12/30/new-year-new-laws-obamacare-pot-guns-and-drones/'
+    >>> article = Article(url)
+    >>> from scraper import Article
+
+    >>> url = 'http://fox13now.com/2013/12/30/new-year-new-laws-obamacare-pot-guns-and-drones/'
+    >>> article = Article(url)
     >>> from newspaper import Article
 
     >>> url = 'http://fox13now.com/2013/12/30/new-year-new-laws-obamacare-pot-guns-and-drones/'
@@ -76,6 +84,34 @@ A Glance:
 
 .. code-block:: pycon
 
+    >>> import scraper
+
+    >>> cnn_paper = newspaper.build('http://cnn.com')
+
+    >>> for article in cnn_paper.articles:
+    >>>     print(article.url)
+
+    >>> import scraper
+
+    >>> cnn_paper = newspaper.build('http://cnn.com')
+
+    >>> for article in cnn_paper.articles:
+    >>>     print(article.url)
+
+    >>> import newspaper
+
+    >>> cnn_paper = scraper.build('http://cnn.com')
+
+    >>> for article in cnn_paper.articles:
+    >>>     print(article.url)
+
+    >>> import newspaper
+
+    >>> cnn_paper = scraper.build('http://cnn.com')
+
+    >>> for article in cnn_paper.articles:
+    >>>     print(article.url)
+
     >>> import newspaper
 
     >>> cnn_paper = newspaper.build('http://cnn.com')
@@ -102,6 +138,20 @@ A Glance:
 
 .. code-block:: pycon
 
+    >>> from scraper import fulltext
+
+    >>> html = requests.get(...).text
+    >>> text = fulltext(html)
+
+
+Newspaper can extract and detect languages
+    >>> from scraper import fulltext
+
+    >>> html = requests.get(...).text
+    >>> text = fulltext(html)
+
+
+Newspaper can extract and detect languages
     >>> from newspaper import fulltext
 
     >>> html = requests.get(...).text
@@ -113,6 +163,48 @@ If no language is specified, Newspaper will attempt to auto detect a language.
 
 .. code-block:: pycon
 
+    >>> from scraper import Article
+    >>> url = 'http://www.bbc.co.uk/zhongwen/simp/chinese_news/2012/12/121210_hongkong_politics.shtml'
+
+    >>> a = Article(url, language='zh') # Chinese
+
+    >>> a.download()
+    >>> a.parse()
+
+    >>> print(a.text[:150])
+    香港行政长官梁振英在各方压力下就其大宅的违章建
+    筑（僭建）问题到立法会接受质询，并向香港民众道歉。
+    梁振英在星期二（12月10日）的答问大会开始之际
+    在其演说中道歉，但强调他在违章建筑问题上没有隐瞒的
+    意图和动机。 一些亲北京阵营议员欢迎梁振英道歉，
+    且认为应能获得香港民众接受，但这些议员也质问梁振英有
+
+    >>> print(a.title)
+    港特首梁振英就住宅违建事件道歉
+
+
+If you are certain that an
+    >>> from scraper import Article
+    >>> url = 'http://www.bbc.co.uk/zhongwen/simp/chinese_news/2012/12/121210_hongkong_politics.shtml'
+
+    >>> a = Article(url, language='zh') # Chinese
+
+    >>> a.download()
+    >>> a.parse()
+
+    >>> print(a.text[:150])
+    香港行政长官梁振英在各方压力下就其大宅的违章建
+    筑（僭建）问题到立法会接受质询，并向香港民众道歉。
+    梁振英在星期二（12月10日）的答问大会开始之际
+    在其演说中道歉，但强调他在违章建筑问题上没有隐瞒的
+    意图和动机。 一些亲北京阵营议员欢迎梁振英道歉，
+    且认为应能获得香港民众接受，但这些议员也质问梁振英有
+
+    >>> print(a.title)
+    港特首梁振英就住宅违建事件道歉
+
+
+If you are certain that an
     >>> from newspaper import Article
     >>> url = 'http://www.bbc.co.uk/zhongwen/simp/chinese_news/2012/12/121210_hongkong_politics.shtml'
 
@@ -136,6 +228,30 @@ If no language is specified, Newspaper will attempt to auto detect a language.
 If you are certain that an *entire* news source is in one language, **go ahead and use the same api :)**
 
 .. code-block:: pycon
+
+    >>> import newspaper
+    >>> sina_paper = scraper.build('http://www.sina.com.cn/', language='zh')
+
+    >>> for category in sina_paper.category_urls():
+    >>>     print(category)
+
+    >>> import newspaper
+    >>> sina_paper = scraper.build('http://www.sina.com.cn/', language='zh')
+
+    >>> for category in sina_paper.category_urls():
+    >>>     print(category)
+
+    >>> import scraper
+    >>> sina_paper = scraper.build('http://www.sina.com.cn/', language='zh')
+
+    >>> for category in sina_paper.category_urls():
+    >>>     print(category)
+
+    >>> import scraper
+    >>> sina_paper = scraper.build('http://www.sina.com.cn/', language='zh')
+
+    >>> for category in sina_paper.category_urls():
+    >>>     print(category)
 
     >>> import newspaper
     >>> sina_paper = newspaper.build('http://www.sina.com.cn/', language='zh')
@@ -186,6 +302,290 @@ Features
 
 .. code-block:: pycon
 
+    >>> import newspaper
+    >>> scraper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
+    >>> import newspaper
+    >>> scraper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
+    >>> import scraper
+    >>> scraper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
+    >>> import scraper
+    >>> scraper.languages()
+
+    Your available languages are:
+    input code      full name
+
+    ar              Arabic
+    af              Afrikaans
+    be              Belarusian
+    bg              Bulgarian
+    bn              Bengali
+    br              Portuguese, Brazil
+    ca              Catalan
+    cs              Czech
+    da              Danish
+    de              German
+    el              Greek
+    en              English
+    eo              Esperanto
+    es              Spanish
+    et              Estonian
+    eu              Basque
+    fa              Persian
+    fi              Finnish
+    fr              French
+    ga              Irish
+    gl              Galician
+    gu              Gujarati
+    ha              Hausa
+    he              Hebrew
+    hi              Hindi
+    hr              Croatian
+    hu              Hungarian
+    hy              Armenian
+    id              Indonesian
+    it              Italian
+    ja              Japanese
+    ka              Georgian
+    ko              Korean
+    ku              Kurdish
+    la              Latin
+    lt              Lithuanian
+    lv              Latvian
+    mk              Macedonian
+    mr              Marathi
+    ms              Malay
+    nb              Norwegian (Bokmål)
+    nl              Dutch
+    no              Norwegian
+    np              Nepali
+    pl              Polish
+    pt              Portuguese
+    ro              Romanian
+    ru              Russian
+    sk              Slovak
+    sl              Slovenian
+    so              Somali
+    sr              Serbian
+    st              Sotho, Southern
+    sv              Swedish
+    sw              Swahili
+    ta              Tamil
+    th              Thai
+    tl              Tagalog
+    tr              Turkish
+    uk              Ukrainian
+    ur              Urdu
+    vi              Vietnamese
+    yo              Yoruba
+    zh              Chinese
+    zu              Zulu
     >>> import newspaper
     >>> newspaper.languages()
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Downloads the necessary NLTK models and corpora required to support
-all of newspaper's features. Modify for your own needs.
+all of scraper's features. Modify for your own needs.
 """
 import nltk
 

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Ignore the unused imports, this file's purpose is to make visible
-anything which a user might need to import from newspaper.
-View newspaper/__init__.py for its usage.
+anything which a user might need to import from scraper.
+View scraper/__init__.py for its usage.
 """
-__title__ = 'newspaper'
+__title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'

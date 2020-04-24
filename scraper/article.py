@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__ = 'newspaper'
+__title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
@@ -157,9 +157,9 @@ class Article(object):
         self.link_hash = None
 
     def build(self):
-        """Build a lone article from a URL independent of the source (newspaper).
+        """Build a lone article from a URL independent of the source (scraper).
         Don't normally call this method b/c it's good to multithread articles
-        on a source (newspaper) level.
+        on a source (scraper) level.
         """
 
         self.download()
