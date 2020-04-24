@@ -1,0 +1,22 @@
+beautifulsoup4>=4.9.0
+cssselect>=1.1.0
+feedfinder2>=0.0.4
+feedparser>=5.2.1
+jieba3k>=0.35.1
+lxml>=4.5.0
+nltk>=3.4.5
+Pillow>=7.1.1
+pythainlp>=2.1.4
+python-dateutil>=2.8.1
+PyYAML>=5.3.1
+requests>=2.23.0
+requests_toolbelt>=0.9.1
+tinysegmenter==0.4  # TODO(codelucas): Investigate making this >=0.3
+tldextract>=2.2.2
+selenium>=3.141.0
+fake_useragent>=0.1.11
+pandas>=1.0.3
+python-dotenv>=0.12.0
+click>=7.1.1
+flask>=1.1.2
+pytest>=5.4.1
