@@ -122,6 +122,7 @@ class TimeoutError(Exception):
 def timelimit(timeout):
     """Borrowed from web.py, rip Aaron Swartz
     """
+
     def _1(function):
         def _2(*args, **kw):
             class Dispatch(threading.Thread):
@@ -138,6 +139,7 @@ def timelimit(timeout):
                         self.result = function(*args, **kw)
                     except:
                         self.error = sys.exc_info()
+
             c = Dispatch()
             c.join(timeout)
             if c.is_alive():
@@ -145,7 +147,9 @@ def timelimit(timeout):
             if c.error:
                 raise c.error[0](c.error[1])
             return c.result
+
         return _2
+
     return _1
 
 
@@ -169,11 +173,13 @@ def filename_to_domain(filename):
 def is_ascii(word):
     """True if a word is only ascii chars
     """
+
     def onlyascii(char):
         if ord(char) > 127:
             return ''
         else:
             return char
+
     for c in word:
         if not onlyascii(c):
             return False
@@ -214,6 +220,7 @@ def to_valid_filename(s):
 def cache_disk(seconds=(86400 * 5), cache_folder="/tmp"):
     """Caching extracting category locations & rss feeds for 5 days
     """
+
     def do_cache(function):
         def inner_function(*args, **kwargs):
             """Calculate a cache key based on the decorated method signature
@@ -236,19 +243,23 @@ def cache_disk(seconds=(86400 * 5), cache_folder="/tmp"):
             # ... and save the cached object for next time
             pickle.dump(result, open(filepath, "wb"))
             return result
+
         return inner_function
+
     return do_cache
 
 
 def print_duration(method):
     """Prints out the runtime duration of a method in seconds
     """
+
     def timed(*args, **kw):
         ts = time.time()
         result = method(*args, **kw)
         te = time.time()
         print('%r %2.2f sec' % (method.__name__, te - ts))
         return result
+
     return timed
 
 
@@ -349,11 +360,8 @@ def get_available_languages():
     return two_dig_codes
 
 
-def print_available_languages():
-    """Prints available languages with their full names
-    ISO 639-1 Code: https://www.loc.gov/standards/iso639-2/php/code_list.php
-    """
-    language_dict = {
+def get_languages():
+    return {
         'ar': 'Arabic',
         'af': 'Afrikaans',
         'be': 'Belarusian',
@@ -421,12 +429,24 @@ def print_available_languages():
         'zu': 'Zulu'
     }
 
+
+def print_available_languages():
+    """Prints available languages with their full names
+    ISO 639-1 Code: https://www.loc.gov/standards/iso639-2/php/code_list.php
+    """
+    languages = get_languages()
+
     codes = get_available_languages()
+    for k,v in languages.items():
+        if k not in codes:
+            del languages[k]
+
     print('\nYour available languages are:')
     print('\ninput code\t\tfull name')
     for code in codes:
-        print('  %s\t\t\t  %s' % (code, language_dict[code]))
+        print('  %s\t\t\t  %s' % (code, languages[code]))
     print()
+    return languages
 
 
 def extend_config(config, config_items):

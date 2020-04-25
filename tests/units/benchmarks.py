@@ -10,7 +10,7 @@ import sys
 import logging
 import os
 
-from tests.units.unit_tests import read_urls
+from tests.units.test_exhaustive import read_urls
 
 try:  # Python 2.7+
     from logging import NullHandler

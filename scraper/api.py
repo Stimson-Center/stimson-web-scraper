@@ -45,7 +45,7 @@ def build_article(url='', config=None, **kwargs) -> Article:
 def languages():
     """Returns a list of the supported languages
     """
-    print_available_languages()
+    return print_available_languages()
 
 
 def popular_urls():

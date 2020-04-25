@@ -7,6 +7,6 @@ install:
  - pip install -r requirements.txt coverage coveralls
  - python download_corpora.py
 script:
-  - coverage run --source scraper tests/unit_tests.py
+  - coverage run --source scraper tests
 after_success:
   coveralls
