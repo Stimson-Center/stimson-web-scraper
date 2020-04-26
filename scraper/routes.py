@@ -17,7 +17,6 @@ log.setLevel(logging.ERROR)
 def get_article():
     url = request.args.get('url')
     article = _get_article(url)
-    article.nlp()
     return json.dumps({
         "authors": article.authors,
         "html": article.html,
@@ -40,9 +39,7 @@ def _get_article(url):
         "application/x-gzpdf": "%PDF-"
     }
     article = Article(url, request_timeout=config.request_timeout, ignored_content_types_defaults=pdf_defaults)
-    article.download()
+    article.build()
     # uncomment this if 200 is desired in case of bad url
     # article.set_html(article.html if article.html else '<html></html>')
-    article.parse()
-    article.nlp()
     return article

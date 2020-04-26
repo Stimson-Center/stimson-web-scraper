@@ -1,5 +1,5 @@
-Newspaper3k: Article scraping & curation
-========================================
+stimson-web-scraping
+====================
 
 .. image:: https://badge.fury.io/py/newspaper3k.svg
     :target: http://badge.fury.io/py/newspaper3k.svg
@@ -24,9 +24,6 @@ Inspired by `requests`_ for its simplicity and powered by `lxml`_ for its speed:
 .. _`tweeted by`: https://twitter.com/kennethreitz/status/419520678862548992
 .. _`The Changelog`: http://thechangelog.com/newspaper-delivers-instapaper-style-article-extraction/
 
-**Newspaper is a Python3 library**! Or, view our **deprecated and buggy** `Python2 branch`_
-
-.. _`Python2 branch`: https://github.com/codelucas/newspaper/tree/python-2-head
 
 A Glance:
 ---------
@@ -86,19 +83,19 @@ A Glance:
 
     >>> import scraper
 
-    >>> cnn_paper = newspaper.build('http://cnn.com')
+    >>> cnn_paper = scraper.build('http://cnn.com')
 
     >>> for article in cnn_paper.articles:
     >>>     print(article.url)
 
     >>> import scraper
 
-    >>> cnn_paper = newspaper.build('http://cnn.com')
+    >>> cnn_paper = scraper.build('http://cnn.com')
 
     >>> for article in cnn_paper.articles:
     >>>     print(article.url)
 
-    >>> import newspaper
+    >>> import scraper
 
     >>> cnn_paper = scraper.build('http://cnn.com')
 
@@ -114,7 +111,7 @@ A Glance:
 
     >>> import newspaper
 
-    >>> cnn_paper = newspaper.build('http://cnn.com')
+    >>> cnn_paper = scraper.build('http://cnn.com')
 
     >>> for article in cnn_paper.articles:
     >>>     print(article.url)
@@ -144,21 +141,21 @@ A Glance:
     >>> text = fulltext(html)
 
 
-Newspaper can extract and detect languages
+scraper can extract and detect languages
     >>> from scraper import fulltext
 
     >>> html = requests.get(...).text
     >>> text = fulltext(html)
 
 
-Newspaper can extract and detect languages
-    >>> from newspaper import fulltext
+scraper can extract and detect languages
+    >>> from scraper import fulltext
 
     >>> html = requests.get(...).text
     >>> text = fulltext(html)
 
 
-Newspaper can extract and detect languages *seamlessly*.
+scraper can extract and detect languages *seamlessly*.
 If no language is specified, Newspaper will attempt to auto detect a language.
 
 .. code-block:: pycon
@@ -205,7 +202,7 @@ If you are certain that an
 
 
 If you are certain that an
-    >>> from newspaper import Article
+    >>> from scraper import Article
     >>> url = 'http://www.bbc.co.uk/zhongwen/simp/chinese_news/2012/12/121210_hongkong_politics.shtml'
 
     >>> a = Article(url, language='zh') # Chinese
@@ -225,17 +222,17 @@ If you are certain that an
     港特首梁振英就住宅违建事件道歉
 
 
-If you are certain that an *entire* news source is in one language, **go ahead and use the same api :)**
+If you are certain that an *entire* website's source is in one language, **go ahead and use the same api :)**
 
 .. code-block:: pycon
 
-    >>> import newspaper
+    >>> import scraper
     >>> sina_paper = scraper.build('http://www.sina.com.cn/', language='zh')
 
     >>> for category in sina_paper.category_urls():
     >>>     print(category)
 
-    >>> import newspaper
+    >>> import scraper
     >>> sina_paper = scraper.build('http://www.sina.com.cn/', language='zh')
 
     >>> for category in sina_paper.category_urls():
@@ -253,7 +250,7 @@ If you are certain that an *entire* news source is in one language, **go ahead a
     >>> for category in sina_paper.category_urls():
     >>>     print(category)
 
-    >>> import newspaper
+    >>> import scraper
     >>> sina_paper = newspaper.build('http://www.sina.com.cn/', language='zh')
 
     >>> for category in sina_paper.category_urls():
@@ -302,361 +299,78 @@ Features
 
 .. code-block:: pycon
 
-    >>> import newspaper
-    >>> scraper.languages()
-
-    Your available languages are:
-    input code      full name
-
-    ar              Arabic
-    af              Afrikaans
-    be              Belarusian
-    bg              Bulgarian
-    bn              Bengali
-    br              Portuguese, Brazil
-    ca              Catalan
-    cs              Czech
-    da              Danish
-    de              German
-    el              Greek
-    en              English
-    eo              Esperanto
-    es              Spanish
-    et              Estonian
-    eu              Basque
-    fa              Persian
-    fi              Finnish
-    fr              French
-    ga              Irish
-    gl              Galician
-    gu              Gujarati
-    ha              Hausa
-    he              Hebrew
-    hi              Hindi
-    hr              Croatian
-    hu              Hungarian
-    hy              Armenian
-    id              Indonesian
-    it              Italian
-    ja              Japanese
-    ka              Georgian
-    ko              Korean
-    ku              Kurdish
-    la              Latin
-    lt              Lithuanian
-    lv              Latvian
-    mk              Macedonian
-    mr              Marathi
-    ms              Malay
-    nb              Norwegian (Bokmål)
-    nl              Dutch
-    no              Norwegian
-    np              Nepali
-    pl              Polish
-    pt              Portuguese
-    ro              Romanian
-    ru              Russian
-    sk              Slovak
-    sl              Slovenian
-    so              Somali
-    sr              Serbian
-    st              Sotho, Southern
-    sv              Swedish
-    sw              Swahili
-    ta              Tamil
-    th              Thai
-    tl              Tagalog
-    tr              Turkish
-    uk              Ukrainian
-    ur              Urdu
-    vi              Vietnamese
-    yo              Yoruba
-    zh              Chinese
-    zu              Zulu
-    >>> import newspaper
-    >>> scraper.languages()
-
-    Your available languages are:
-    input code      full name
-
-    ar              Arabic
-    af              Afrikaans
-    be              Belarusian
-    bg              Bulgarian
-    bn              Bengali
-    br              Portuguese, Brazil
-    ca              Catalan
-    cs              Czech
-    da              Danish
-    de              German
-    el              Greek
-    en              English
-    eo              Esperanto
-    es              Spanish
-    et              Estonian
-    eu              Basque
-    fa              Persian
-    fi              Finnish
-    fr              French
-    ga              Irish
-    gl              Galician
-    gu              Gujarati
-    ha              Hausa
-    he              Hebrew
-    hi              Hindi
-    hr              Croatian
-    hu              Hungarian
-    hy              Armenian
-    id              Indonesian
-    it              Italian
-    ja              Japanese
-    ka              Georgian
-    ko              Korean
-    ku              Kurdish
-    la              Latin
-    lt              Lithuanian
-    lv              Latvian
-    mk              Macedonian
-    mr              Marathi
-    ms              Malay
-    nb              Norwegian (Bokmål)
-    nl              Dutch
-    no              Norwegian
-    np              Nepali
-    pl              Polish
-    pt              Portuguese
-    ro              Romanian
-    ru              Russian
-    sk              Slovak
-    sl              Slovenian
-    so              Somali
-    sr              Serbian
-    st              Sotho, Southern
-    sv              Swedish
-    sw              Swahili
-    ta              Tamil
-    th              Thai
-    tl              Tagalog
-    tr              Turkish
-    uk              Ukrainian
-    ur              Urdu
-    vi              Vietnamese
-    yo              Yoruba
-    zh              Chinese
-    zu              Zulu
     >>> import scraper
     >>> scraper.languages()
 
     Your available languages are:
     input code      full name
+    af			  Afrikaans
+    ar			  Arabic
+    be			  Belarusian
+    bg			  Bulgarian
+    bn			  Bengali
+    br			  Portuguese, Brazil
+    ca			  Catalan
+    cs			  Czech
+    da			  Danish
+    de			  German
+    el			  Greek
+    en			  English
+    eo			  Esperanto
+    es			  Spanish
+    et			  Estonian
+    eu			  Basque
+    fa			  Persian
+    fi			  Finnish
+    fr			  French
+    ga			  Irish
+    gl			  Galician
+    gu			  Gujarati
+    ha			  Hausa
+    he			  Hebrew
+    hi			  Hindi
+    hr			  Croatian
+    hu			  Hungarian
+    hy			  Armenian
+    id			  Indonesian
+    it			  Italian
+    ja			  Japanese
+    ka			  Georgian
+    ko			  Korean
+    ku			  Kurdish
+    la			  Latin
+    lt			  Lithuanian
+    lv			  Latvian
+    mk			  Macedonian
+    mr			  Marathi
+    ms			  Malay
+    nb			  Norwegian (Bokmål)
+    nl			  Dutch
+    no			  Norwegian
+    np			  Nepali
+    pl			  Polish
+    pt			  Portuguese
+    ro			  Romanian
+    ru			  Russian
+    sk			  Slovak
+    sl			  Slovenian
+    so			  Somali
+    sr			  Serbian
+    st			  Sotho, Southern
+    sv			  Swedish
+    sw			  Swahili
+    ta			  Tamil
+    th			  Thai
+    tl			  Tagalog
+    tr			  Turkish
+    uk			  Ukrainian
+    ur			  Urdu
+    vi			  Vietnamese
+    yo			  Yoruba
+    zh			  Chinese
+    zu			  Zulu
 
-    ar              Arabic
-    af              Afrikaans
-    be              Belarusian
-    bg              Bulgarian
-    bn              Bengali
-    br              Portuguese, Brazil
-    ca              Catalan
-    cs              Czech
-    da              Danish
-    de              German
-    el              Greek
-    en              English
-    eo              Esperanto
-    es              Spanish
-    et              Estonian
-    eu              Basque
-    fa              Persian
-    fi              Finnish
-    fr              French
-    ga              Irish
-    gl              Galician
-    gu              Gujarati
-    ha              Hausa
-    he              Hebrew
-    hi              Hindi
-    hr              Croatian
-    hu              Hungarian
-    hy              Armenian
-    id              Indonesian
-    it              Italian
-    ja              Japanese
-    ka              Georgian
-    ko              Korean
-    ku              Kurdish
-    la              Latin
-    lt              Lithuanian
-    lv              Latvian
-    mk              Macedonian
-    mr              Marathi
-    ms              Malay
-    nb              Norwegian (Bokmål)
-    nl              Dutch
-    no              Norwegian
-    np              Nepali
-    pl              Polish
-    pt              Portuguese
-    ro              Romanian
-    ru              Russian
-    sk              Slovak
-    sl              Slovenian
-    so              Somali
-    sr              Serbian
-    st              Sotho, Southern
-    sv              Swedish
-    sw              Swahili
-    ta              Tamil
-    th              Thai
-    tl              Tagalog
-    tr              Turkish
-    uk              Ukrainian
-    ur              Urdu
-    vi              Vietnamese
-    yo              Yoruba
-    zh              Chinese
-    zu              Zulu
-    >>> import scraper
-    >>> scraper.languages()
-
-    Your available languages are:
-    input code      full name
-
-    ar              Arabic
-    af              Afrikaans
-    be              Belarusian
-    bg              Bulgarian
-    bn              Bengali
-    br              Portuguese, Brazil
-    ca              Catalan
-    cs              Czech
-    da              Danish
-    de              German
-    el              Greek
-    en              English
-    eo              Esperanto
-    es              Spanish
-    et              Estonian
-    eu              Basque
-    fa              Persian
-    fi              Finnish
-    fr              French
-    ga              Irish
-    gl              Galician
-    gu              Gujarati
-    ha              Hausa
-    he              Hebrew
-    hi              Hindi
-    hr              Croatian
-    hu              Hungarian
-    hy              Armenian
-    id              Indonesian
-    it              Italian
-    ja              Japanese
-    ka              Georgian
-    ko              Korean
-    ku              Kurdish
-    la              Latin
-    lt              Lithuanian
-    lv              Latvian
-    mk              Macedonian
-    mr              Marathi
-    ms              Malay
-    nb              Norwegian (Bokmål)
-    nl              Dutch
-    no              Norwegian
-    np              Nepali
-    pl              Polish
-    pt              Portuguese
-    ro              Romanian
-    ru              Russian
-    sk              Slovak
-    sl              Slovenian
-    so              Somali
-    sr              Serbian
-    st              Sotho, Southern
-    sv              Swedish
-    sw              Swahili
-    ta              Tamil
-    th              Thai
-    tl              Tagalog
-    tr              Turkish
-    uk              Ukrainian
-    ur              Urdu
-    vi              Vietnamese
-    yo              Yoruba
-    zh              Chinese
-    zu              Zulu
-    >>> import newspaper
-    >>> newspaper.languages()
-
-    Your available languages are:
-    input code      full name
-
-    ar              Arabic
-    af              Afrikaans
-    be              Belarusian
-    bg              Bulgarian
-    bn              Bengali
-    br              Portuguese, Brazil
-    ca              Catalan
-    cs              Czech
-    da              Danish
-    de              German
-    el              Greek
-    en              English
-    eo              Esperanto
-    es              Spanish
-    et              Estonian
-    eu              Basque
-    fa              Persian
-    fi              Finnish
-    fr              French
-    ga              Irish
-    gl              Galician
-    gu              Gujarati
-    ha              Hausa
-    he              Hebrew
-    hi              Hindi
-    hr              Croatian
-    hu              Hungarian
-    hy              Armenian
-    id              Indonesian
-    it              Italian
-    ja              Japanese
-    ka              Georgian
-    ko              Korean
-    ku              Kurdish
-    la              Latin
-    lt              Lithuanian
-    lv              Latvian
-    mk              Macedonian
-    mr              Marathi
-    ms              Malay
-    nb              Norwegian (Bokmål)
-    nl              Dutch
-    no              Norwegian
-    np              Nepali
-    pl              Polish
-    pt              Portuguese
-    ro              Romanian
-    ru              Russian
-    sk              Slovak
-    sl              Slovenian
-    so              Somali
-    sr              Serbian
-    st              Sotho, Southern
-    sv              Swedish
-    sw              Swahili
-    ta              Tamil
-    th              Thai
-    tl              Tagalog
-    tr              Turkish
-    uk              Ukrainian
-    ur              Urdu
-    vi              Vietnamese
-    yo              Yoruba
-    zh              Chinese
-    zu              Zulu
+{'ar': 'Arabic', 'af': 'Afrikaans', 'be': 'Belarusian', 'bg': 'Bulgarian', 'bn': 'Bengali', 'br': 'Portuguese, Brazil', 'ca': 'Catalan', 'cs': 'Czech', 'da': 'Danish', 'de': 'German', 'el': 'Greek', 'en': 'English', 'eo': 'Esperanto', 'es': 'Spanish', 'et': 'Estonian', 'eu': 'Basque', 'fa': 'Persian', 'fi': 'Finnish', 'fr': 'French', 'ga': 'Irish', 'gl': 'Galician', 'gu': 'Gujarati', 'ha': 'Hausa', 'he': 'Hebrew', 'hi': 'Hindi', 'hr': 'Croatian', 'hu': 'Hungarian', 'hy': 'Armenian', 'id': 'Indonesian', 'it': 'Italian', 'ja': 'Japanese', 'ka': 'Georgian', 'ko': 'Korean', 'ku': 'Kurdish', 'la': 'Latin', 'lt': 'Lithuanian', 'lv': 'Latvian', 'mk': 'Macedonian', 'mr': 'Marathi', 'ms': 'Malay', 'nb': 'Norwegian (Bokmål)', 'nl': 'Dutch', 'no': 'Norwegian', 'np': 'Nepali', 'pl': 'Polish', 'pt': 'Portuguese', 'ro': 'Romanian', 'ru': 'Russian', 'sk': 'Slovak', 'sl': 'Slovenian', 'so': 'Somali', 'sr': 'Serbian', 'st': 'Sotho, Southern', 'sv': 'Swedish', 'sw': 'Swahili', 'ta': 'Tamil', 'th': 'Thai', 'tl': 'Tagalog', 'tr': 'Turkish', 'uk': 'Ukrainian', 'ur': 'Urdu', 'vi': 'Vietnamese', 'yo': 'Yoruba', 'zh': 'Chinese', 'zu': 'Zulu'}
 
 
 Get it now
