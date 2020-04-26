@@ -61,6 +61,7 @@ def test_get_mekong_delta_urls(fixture_directory):
             # websites.append(scraper.build(line.rstrip(), config=config))
             websites.append(Article(line.rstrip(), request_timeout=config.request_timeout,
                                     ignored_content_types_defaults=pdf_defaults))
+            # break # only process the first url in file
 
         build_end_time = time()
         build_elapsed_time = build_end_time - build_start_time

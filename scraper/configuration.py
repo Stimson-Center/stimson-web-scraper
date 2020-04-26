@@ -102,7 +102,7 @@ class Configuration(object):
         self.use_meta_language = False
 
         # Set oriental language stopword class
-        self._language = language
+        self._language = language.lower()
         self.stopwords_class = self.get_stopwords_class(language)
 
     language = property(get_language, set_language,

@@ -349,7 +349,7 @@ def get_useragent():
         return agent.strip()
 
 
-def get_available_languages():
+def get_available_language_codes():
     """Returns a list of available languages and their 2 char input codes
     """
     stopword_files = os.listdir(os.path.join(settings.STOPWORDS_DIR))
@@ -430,22 +430,22 @@ def get_languages():
     }
 
 
-def print_available_languages():
+def get_available_languages():
     """Prints available languages with their full names
     ISO 639-1 Code: https://www.loc.gov/standards/iso639-2/php/code_list.php
     """
     languages = get_languages()
 
-    codes = get_available_languages()
+    codes = get_available_language_codes()
     for k,v in languages.items():
         if k not in codes:
             del languages[k]
 
-    print('\nYour available languages are:')
-    print('\ninput code\t\tfull name')
-    for code in codes:
-        print('  %s\t\t\t  %s' % (code, languages[code]))
-    print()
+    # print('\nYour available languages are:')
+    # print('\ninput code\t\tfull name')
+    # for code in codes:
+    #     print('  %s\t\t\t  %s' % (code, languages[code]))
+    # print()
     return languages
 
 

@@ -4,12 +4,12 @@
 import click
 
 from scraper import Article
-from scraper.utils import get_available_languages
+from scraper.utils import get_available_language_codes
 
 
 @click.command()
 @click.option('--language', '-l', default='en', help='Language in which the text is written',
-              type=click.Choice(get_available_languages()))
+              type=click.Choice(get_available_language_codes()))
 @click.option('--url', '-u', help='URL to parse', required=True)
 def parse(url, language):
     article = Article(url, language=language)

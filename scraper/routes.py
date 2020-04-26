@@ -4,7 +4,7 @@ import json
 import logging
 
 from flask import Flask, request
-from scraper import Article
+from scraper import Article, languages
 from scraper.configuration import Configuration
 
 app = Flask(__name__)
@@ -13,10 +13,16 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 
-@app.route('/', methods=['GET'])
+@app.route('/languages', methods=['GET'])
+def get_languages():
+    return json.dumps(languages()), 200, {'Content-Type': 'application/json'}
+
+
+@app.route('/article', methods=['GET'], defaults={'language': 'en'})
 def get_article():
     url = request.args.get('url')
-    article = _get_article(url)
+    language = request.args.get('language')
+    article = _get_article(url, language)
     return json.dumps({
         "authors": article.authors,
         "html": article.html,
@@ -30,8 +36,9 @@ def get_article():
         "topimage": article.top_image}), 200, {'Content-Type': 'application/json'}
 
 
-def _get_article(url):
+def _get_article(url, language):
     config = Configuration()
+    config.set_language(language)
     pdf_defaults = {
         # "application/pdf": "%PDF-",
         # "application/x-pdf": "%PDF-",

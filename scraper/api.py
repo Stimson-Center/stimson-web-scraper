@@ -15,7 +15,7 @@ from .article import Article
 from .configuration import Configuration
 from .settings import POPULAR_URLS, TRENDING_URL
 from .source import Source
-from .utils import extend_config, print_available_languages
+from .utils import extend_config, get_available_languages
 
 
 def build(url='', dry=False, config=None, **kwargs) -> Source:
@@ -45,7 +45,7 @@ def build_article(url='', config=None, **kwargs) -> Article:
 def languages():
     """Returns a list of the supported languages
     """
-    return print_available_languages()
+    return get_available_languages()
 
 
 def popular_urls():

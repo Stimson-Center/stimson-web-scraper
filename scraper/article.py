@@ -23,7 +23,7 @@ from .extractors import ContentExtractor
 from .outputformatters import OutputFormatter
 from .urls import prepare_url
 from .utils import (URLHelper, RawHelper, extend_config,
-                    get_available_languages, extract_meta_refresh)
+                    get_available_language_codes, extract_meta_refresh)
 from .videos.extractors import VideoExtractor
 
 log = logging.getLogger(__name__)
@@ -531,7 +531,7 @@ class Article(object):
         """Save langauges in their ISO 2-character form
         """
         if meta_lang and len(meta_lang) >= 2 and \
-                meta_lang in get_available_languages():
+                meta_lang in get_available_language_codes():
             self.meta_lang = meta_lang[:2]
 
     def set_meta_keywords(self, meta_keywords):
