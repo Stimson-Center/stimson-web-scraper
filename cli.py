@@ -2,6 +2,7 @@
 
 
 import click
+import json
 
 from scraper import Article
 from scraper.utils import get_available_language_codes
@@ -13,9 +14,12 @@ from scraper.utils import get_available_language_codes
 @click.option('--url', '-u', help='URL to parse', required=True)
 def parse(url, language):
     article = Article(url, language=language)
-    article.download()
-    article.parse()
-    print(article.text)
+    article.build()
+    if article.keywords:
+        print('Article Keywords: ' + json.dumps(article.keywords) + '\n')
+    if article.summary:
+        print('Article Summary: ' + article.summary + '\n')
+    print('Article Text: ' + article.text)
 
 
 if __name__ == '__main__':
