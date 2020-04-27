@@ -29,7 +29,7 @@
 
 
 from .generic import *
-from .pagerange import PageRange
+from .page_range import PageRange
 from .pdf import PdfFileReader, PdfFileWriter
 from .utils import isString, str_
 # å
