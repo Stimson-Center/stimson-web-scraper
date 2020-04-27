@@ -30,7 +30,8 @@
 
 from .generic import *
 from .page_range import PageRange
-from .pdf import PdfFileReader, PdfFileWriter
+from .pdf_reader import PdfFileReader
+from .pdf_writer import PdfFileWriter
 from .utils import isString, str_
 # å
 

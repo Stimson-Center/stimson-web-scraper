@@ -15,7 +15,7 @@ from requests_toolbelt.utils import deprecated
 
 # This site doesn’t like and want scraping. This gives you the same dreaded error 54, connection reset by the peer.
 from scraper.chromium import get_page_source
-from scraper.pdf.pdf import PdfFileReader
+from scraper.pdf.pdf_reader import PdfFileReader
 from .configuration import Configuration
 from .mthreading import ThreadPool
 from .settings import cj
