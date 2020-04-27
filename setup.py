@@ -30,10 +30,10 @@ if sys.argv[-1] == 'publish':
 
 # This *must* run early. Please see this API limitation on our users:
 # https://github.com/codelucas/newspaper/issues/155
-if sys.version_info[0] == 2 and sys.argv[-1] not in ['publish', 'upload']:
-    sys.exit('WARNING! You are attempting to install stimson-web-scraper\'s '
-             'python3 repository on python2. PLEASE RUN '
-             '`$ pip3 install stimson-web-scraper` for python3'
+# if sys.version_info[0] == 2 and sys.argv[-1] not in ['publish', 'upload']:
+#     sys.exit('WARNING! You are attempting to install stimson-web-scraper\'s '
+#              'python3 repository on python2. PLEASE RUN '
+#              '`$ pip3 install stimson-web-scraper` for python3'
 
 
 with open('requirements.txt') as f:
