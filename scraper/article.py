@@ -466,11 +466,14 @@ class Article(object):
 
     def set_title(self, input_title):
         if input_title:
+            input_title = input_title.strip()
             self.title = input_title[:self.config.MAX_TITLE]
 
     def set_text(self, text):
-        text = text[:self.config.MAX_TEXT]
         if text:
+            text = text.strip()
+            text = text.replace("  ", " ")
+            text = text[:self.config.MAX_TEXT]
             self.text = text
 
     def set_html(self, html):
