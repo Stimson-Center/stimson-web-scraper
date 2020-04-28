@@ -39,9 +39,12 @@ def load_stopwords(language):
         
         
 def summarize(url='', title='', text='', max_sents=5):
-    if not text or not title or max_sents <= 0:
+    if not text or max_sents <= 0:
         return []
 
+    # hack to allow NLP work when title is missing
+    if not title:
+        title = text
     summaries = []
     sentences = split_sentences(text)
     keys = keywords(text)
