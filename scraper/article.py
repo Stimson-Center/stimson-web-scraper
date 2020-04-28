@@ -207,7 +207,7 @@ class Article(object):
                     # if response.content started with "%PDF-"
                     self.set_authors([pdf_file_reader.documentInfo.author])
                     creation_date = str(pdf_file_reader.documentInfo.creation_date)
-                    publish_date = datetime.strptime(creation_date, "%Y%m%d%H%M%S%z")
+                    publish_date = datetime.strptime(creation_date[0:8], "%Y%m%d")
                     self.publish_date = publish_date.strftime("%Y-%m-%d")
                     self.set_text(html)
                     # return

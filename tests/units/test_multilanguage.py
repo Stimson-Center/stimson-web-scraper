@@ -80,3 +80,19 @@ def test_thai_fulltext_extract():
     text = mock_resource_with('thai', 'txt')
     assert text == article.text
     assert text == fulltext(article.html, 'th')
+
+
+@print_test
+def test_thai_pdf_extract():
+    article = Article(
+        url="http://tpch-th.listedcompany.com/misc/ShareholderMTG/egm201701/20170914-tpch-egm201701-enc02-th.pdf",
+        language='th')
+    article.build()
+    assert not article.html.startswith('%PDF-')
+    assert len(article.keywords)
+    assert len(article.authors)
+    assert article.publish_date
+    assert article.summary
+    assert len(article.text) > len(article.summary)
+    assert article.text
+    assert article.url
