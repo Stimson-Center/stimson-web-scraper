@@ -76,8 +76,9 @@ def test_get_mekong_delta_urls(fixture_directory):
 
     persist_start_time = time()
     for article in websites:
-        encoded = b64_encode(article.url)
-        filename = encoded + '.json'
+        # encoded = b64_encode(article.url)
+        # filename = encoded + '.json'
+        filename = article.link_hash + '.json'
         save_article(article, filename, filedir='/tmp')
     persist_end_time = time()
     persist_elapsed_time = persist_end_time - persist_start_time

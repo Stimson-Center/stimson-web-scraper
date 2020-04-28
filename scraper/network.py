@@ -95,17 +95,18 @@ def get_html_2XX_only(url, config=None, response=None):
 def _get_html_from_response(response, config):
     if response.headers.get('content-type') in config.ignored_content_types_defaults:
         return config.ignored_content_types_defaults[response.headers.get('content-type')]
-    if response.encoding != FAIL_ENCODING:
-        # return response as a unicode string
-        html = response.text
-    else:
+    if response.encoding == FAIL_ENCODING:
         html = response.content
         if 'charset' not in response.headers.get('content-type'):
             # TODO: Cooper, must revisit this hack!
-            encodings = deprecated.get_encodings_from_content(bytes(response.text, 'utf-8'))
+            encodings = deprecated.get_encodings_from_content(response.content)
             if len(encodings) > 0:
                 response.encoding = encodings[0]
                 html = response.text
+    else:
+        # return response as a unicode string
+        html = response.text
+
     return html or ''
 
 
