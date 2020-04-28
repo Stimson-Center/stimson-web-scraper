@@ -26,3 +26,7 @@ def test_article_pdf_fetching():
     article.build()
     assert not article.html.startswith('%PDF-')
     assert len(article.keywords)
+    assert len(article.authors)
+    assert(article.publish_date)
+    assert(article.text)
+    assert(article.url)
