@@ -41,13 +41,13 @@ def get_request_kwargs(timeout, useragent, proxies, headers):
 def get_html(url, config=None, response=None):
     """HTTP response code agnostic
     """
-    pdf = False
+    pdf_file_reader = None
     try:
-        html, pdf = get_html_2XX_only(url, config, response)
-        return html, pdf
+        html, pdf_file_reader = get_html_2XX_only(url, config, response)
+        return html, pdf_file_reader
     except requests.exceptions.RequestException as e:
         log.debug('get_html() error. %s on URL: %s' % (e, url))
-        return '', pdf
+        return '', pdf_file_reader
 
 
 def get_html_2XX_only(url, config=None, response=None):
@@ -61,12 +61,12 @@ def get_html_2XX_only(url, config=None, response=None):
     timeout = config.request_timeout
     proxies = config.proxies
     headers = config.headers
-    pdf = False
+    pdf_file_reader = None
     pdf_prefix = '%PDF-'
 
     try:
         if response is not None:
-            return _get_html_from_response(response, config), pdf
+            return _get_html_from_response(response, config), pdf_file_reader
 
         response = requests.get(
             url=url, **get_request_kwargs(timeout, useragent, proxies, headers))
@@ -79,18 +79,17 @@ def get_html_2XX_only(url, config=None, response=None):
 
         if html != pdf_prefix and response.text.startswith(pdf_prefix):
             html = ""
-            pdfReader = PdfFileReader(response.content)
-            # pdfReader = PdfFileReader("/Users/alan_cooper/Downloads/Seige_of_Vicksburg_Sample_OCR.pdf")
-            for page in range(pdfReader.getNumPages()):
+            pdf_file_reader = PdfFileReader(response.content)
+            # pdf_file_reader = PdfFileReader("/Users/alan_cooper/Downloads/Seige_of_Vicksburg_Sample_OCR.pdf")
+            for page in range(pdf_file_reader.getNumPages()):
                 # creating rotated page object
-                pageObj = pdfReader.getPage(page)
+                pageObj = pdf_file_reader.getPage(page)
                 html += pageObj.extractText()
             html = html.replace('\n', ' ')
-            pdf = True
 
-        return html, pdf
+        return html, pdf_file_reader
     except requests.exceptions.RequestException:
-        return get_page_source(url), pdf
+        return get_page_source(url), pdf_file_reader
 
 
 def _get_html_from_response(response, config):

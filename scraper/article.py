@@ -8,6 +8,7 @@ import copy
 import glob
 import logging
 import os
+from datetime import datetime
 from urllib.parse import urlparse
 
 import requests
@@ -181,8 +182,8 @@ class Article(object):
 
     def _parse_scheme_http(self):
         try:
-            html, pdf = network.get_html_2XX_only(self.url, self.config)
-            return html, pdf
+            html, pdf_file_reader = network.get_html_2XX_only(self.url, self.config)
+            return html, pdf_file_reader
         except requests.exceptions.RequestException as e:
             self.download_state = ArticleDownloadState.FAILED_RESPONSE
             self.download_exception_msg = str(e)
@@ -195,16 +196,21 @@ class Article(object):
         recursion_counter (currently 1) stops refreshes that are potentially
         infinite
         """
-        pdf = False
+        pdf_file_reader = None
         if input_html is None:
             parsed_url = urlparse(self.url)
             if parsed_url.scheme == "file":
                 html = self._parse_scheme_file(parsed_url.path)
             else:
-                html, pdf = self._parse_scheme_http()
-                if pdf:
+                html, pdf_file_reader = self._parse_scheme_http()
+                if pdf_file_reader:
                     # if response.content started with "%PDF-"
+                    self.set_authors([pdf_file_reader.documentInfo.author])
+                    creation_date = str(pdf_file_reader.documentInfo.creation_date)
+                    publish_date = datetime.strptime(creation_date, "%Y%m%d%H%M%S%z")
+                    self.publish_date = publish_date.strftime("%Y-%m-%d")
                     self.set_text(html)
+                    # return
                     # html = ""
             if html is None:
                 log.debug('Download failed on URL %s because of %s' %
@@ -213,7 +219,7 @@ class Article(object):
         else:
             html = input_html
 
-        if not pdf and self.config.follow_meta_refresh:
+        if not pdf_file_reader and self.config.follow_meta_refresh:
             meta_refresh_url = extract_meta_refresh(html)
             if meta_refresh_url and recursion_counter < 1:
                 input_html, pdf = network.get_html(meta_refresh_url)
@@ -276,9 +282,10 @@ class Article(object):
         meta_data = self.extractor.get_meta_data(self.clean_doc)
         self.set_meta_data(meta_data)
 
-        self.publish_date = self.extractor.get_publishing_date(
-            self.url,
-            self.clean_doc)
+        if not self.publish_date:
+            self.publish_date = self.extractor.get_publishing_date(
+                self.url,
+                self.clean_doc)
 
         # Before any computations on the body, clean DOM object
         self.doc = document_cleaner.clean(self.doc)

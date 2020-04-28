@@ -107,3 +107,10 @@ class DocumentInformation(DictionaryObject):
     or ``None`` if the producer is not specified."""
     producer_raw = property(lambda self: self.get("/Producer"))
     """The "raw" version of producer; can return a ``ByteStringObject``."""
+
+    creation_date = property(lambda self: self.getText("/CreationDate").replace("D:", ""))
+    """Read-only property accessing the document's **create_date**.
+    Returns a unicode string (``TextStringObject``) or ``None``
+    if the creation_date is not specified."""
+    creation_date_raw = property(lambda self: self.get("/CreationDate"))
+    """The "raw" version of creation_date; can return a ``ByteStringObject``."""
