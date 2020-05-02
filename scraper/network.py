@@ -85,7 +85,6 @@ def get_html_2XX_only(url, config=None, response=None):
                 # creating rotated page object
                 pageObj = pdf_file_reader.getPage(page)
                 html += pageObj.extractText()
-            html = html.replace('\n', ' ')
 
         return html, pdf_file_reader
     except requests.exceptions.RequestException:
