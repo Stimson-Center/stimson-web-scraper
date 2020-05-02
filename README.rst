@@ -28,17 +28,20 @@ Inspired by `requests`_ for its simplicity and powered by `lxml`_ for its speed:
 A Glance:
 ---------
 
+Get a Google Cloud API key and create an environment file
+
+.. code:: bash
+
+    cd ~/stimson-web-scraper
+
+    touch .env
+    echo "GOOGLE_SECRET_API_KEY="forty-alpha-numberical-key >> .env
+    echo "GOOGLE_SECRET_CUSTOM_SEARCH_ID="twenty-one-digit-code:eleven-alpha-numberical-key"" >> .env
+
+
 .. code-block:: pycon
 
     >>> from scraper import Article
-
-    >>> url = 'http://fox13now.com/2013/12/30/new-year-new-laws-obamacare-pot-guns-and-drones/'
-    >>> article = Article(url)
-    >>> from scraper import Article
-
-    >>> url = 'http://fox13now.com/2013/12/30/new-year-new-laws-obamacare-pot-guns-and-drones/'
-    >>> article = Article(url)
-    >>> from newspaper import Article
 
     >>> url = 'http://fox13now.com/2013/12/30/new-year-new-laws-obamacare-pot-guns-and-drones/'
     >>> article = Article(url)
@@ -71,7 +74,7 @@ A Glance:
 
 .. code-block:: pycon
 
-    >>> article.nlp()
+    >>> article.build()
 
     >>> article.keywords
     ['New Years', 'resolution', ...]
