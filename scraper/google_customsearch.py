@@ -1,11 +1,13 @@
-import requests
 import json
 import os
-from googleapiclient.discovery import build  # Import the library
+
+import requests
 from bs4 import BeautifulSoup
-from fake_useragent import UserAgent
 # https://preslav.me/2019/01/09/dotenv-files-python/
 from dotenv import load_dotenv
+from fake_useragent import UserAgent
+from googleapiclient.discovery import build  # Import the library
+
 
 # https://towardsdatascience.com/current-google-search-packages-using-python-3-7-a-simple-tutorial-3606e459e0d4
 class GoogleCustomSearch:
@@ -59,37 +61,41 @@ class GoogleCustomSearch:
     #     </td>,
     #     <td class="gsc_a_y"><span class="gsc_a_h gsc_a_hc gs_ibl">2005</span></td>,
     #  </tr>,
-    def get_sections(self, google_search_urls, html_tag, attrs):
-        # type: (list, str, dict) -> list
-
-        if len(google_search_urls):
-            for google_search_url in google_search_urls:
-                response = requests.get(google_search_url, {'User-Agent': self.ua.random})
-                soup = BeautifulSoup(response.text, 'html.parser')
-                return soup.find_all(html_tag, attrs)
-        else:
-            return []
-
     def get_scholar_list(self, google_search_urls):
         # type: (list) -> list
-
-        # https://www.pingshiuanchua.com/blog/post/scraping-search-results-from-google-search
-        attrs = {'class': 'gsc_a_tr'}
-        trs = self.get_sections(google_search_urls, 'tr', attrs)
         sites = list()
-        for tr in trs:
-            # Checks if each element is present, else, raise exception
-            try:
-                td = tr.find('td', attrs={'class': 'gsc_a_t'})
-                title = td.find('a', href=True).get_text()
 
-                td = tr.find('td', attrs={'class': 'gsc_a_c'})
-                link = td.find('a', href=True)
+        for google_search_url in google_search_urls:
+            response = requests.get(google_search_url, {'User-Agent': self.ua.random})
+            soup = BeautifulSoup(response.text, 'html.parser')
+            # https://www.pingshiuanchua.com/blog/post/scraping-search-results-from-google-search
+            for tr in soup.find_all('tr', {'class': 'gsc_a_tr'}):
+                # Checks if each element is present, else, raise exception
+                try:
+                    td = tr.find('td', attrs={'class': 'gsc_a_t'})
+                    title = td.find('a', href=True).get_text()
 
-                # Check to make sure everything is present before appending to lists
-                if link != '' and link['href'] != '' and title != '':
-                    sites.append({'title': title, 'link': link['href']})
-            # Next loop if one element is not present
-            except Exception as ex:
-                print(json.dumps(ex, sort_keys=True, indent=4))
+                    td = tr.find('td', attrs={'class': 'gsc_a_c'})
+                    link = td.find('a', href=True)
+
+                    # Check to make sure everything is present before appending to lists
+                    if link != '' and link['href'] != '' and title != '':
+                        sites.append({'title': title, 'link': link['href']})
+                # Next loop if one element is not present
+                except Exception as ex:
+                    print(json.dumps(ex, sort_keys=True, indent=4))
+
+            for h3 in soup.find_all('h3', {'class': 'gs_rt'}):
+                try:
+                    a = h3.find('a', href=True)
+                    title = a.get_text()
+                    link = a.attrs
+
+                    # Check to make sure everything is present before appending to lists
+                    if link != '' and link['href'] != '' and title != '':
+                        sites.append({'title': title, 'link': link['href']})
+                # Next loop if one element is not present
+                except Exception as ex:
+                    print(json.dumps(ex, sort_keys=True, indent=4))
+
         return sites
