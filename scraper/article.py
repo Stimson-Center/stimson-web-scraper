@@ -12,6 +12,9 @@ from datetime import datetime
 from urllib.parse import urlparse
 
 import requests
+from bs4 import BeautifulSoup
+# https://preslav.me/2019/01/09/dotenv-files-python/
+from fake_useragent import UserAgent
 
 from . import images
 from . import network
@@ -22,7 +25,6 @@ from .cleaners import DocumentCleaner
 from .configuration import Configuration
 from .extractors import ContentExtractor
 from .outputformatters import OutputFormatter
-from .urls import prepare_url
 from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh)
 from .videos.extractors import VideoExtractor
@@ -71,7 +73,7 @@ class Article(object):
         # URL to the main page of the news source which owns this article
         self.source_url = url  # prepare_url(source_url)
 
-        self.url = prepare_url(url, self.source_url) if url else ""
+        self.url = urls.prepare_url(url, self.source_url) if url else ""
 
         self.title = title
 
@@ -157,6 +159,8 @@ class Article(object):
 
         self.link_hash = None
 
+        self.tables = []
+
     def build(self):
         """Build a lone article from a URL independent of the source (scraper).
         Don't normally call this method b/c it's good to multithread articles
@@ -170,6 +174,10 @@ class Article(object):
             # recurse once!
             self.build()
         self.nlp()
+        url = self.url.lower()
+        if url.find(".wikipedia.org/wiki/"):
+            self.parse_tables(attributes={"class": "wikitable"})
+
 
     def _parse_scheme_file(self, path):
         try:
@@ -408,6 +416,74 @@ class Article(object):
         summary = '\n'.join(summary_sents)
         self.set_summary(summary)
 
+    def parse_tables(self, attributes={"class": "wikitable"}):
+        ua = UserAgent()
+        response = requests.get(self.url, headers={'User-Agent': ua.random})
+        soup = BeautifulSoup(response.text, 'html.parser')
+        tables = soup.findAll("table", attributes)
+
+        # # show tables
+        # for i, table in enumerate(tables):
+        #     print("#"*10 + "Table {}".format(i) + '#'*10)
+        #     print(table.text[:100])
+        #     print('.'*80)
+        # print("#"*80)
+
+        self.tables = list()
+        for tn, table in enumerate(tables):
+
+            # preinit list of lists
+            try:
+                caption = table.find('caption')
+                table_name = caption.get_text().rstrip()
+            except Exception as ex:
+                table_name = f"Table: {tn}"
+            rows = table.findAll("tr")
+            row_lengths = [len(r.findAll(['th', 'td'])) for r in rows]
+            ncols = max(row_lengths)
+            nrows = len(rows)
+            data = []
+            for i in range(nrows):
+                rowD = []
+                for j in range(ncols):
+                    rowD.append('')
+                data.append(rowD)
+
+            # process html
+            for i in range(len(rows)):
+                row = rows[i]
+                rowD = []
+                cells = row.findAll(["td", "th"])
+                for j in range(len(cells)):
+                    cell = cells[j]
+
+                    # lots of cells span cols and rows so lets deal with that
+                    cspan = int(cell.get('colspan', 1))
+                    rspan = int(cell.get('rowspan', 1))
+                    l = 0
+                    for k in range(rspan):
+                        # Shifts to the first empty cell of this row
+                        try:
+                            while data[i + k][j + l]:
+                                l += 1
+                        except Exception as ex:
+                            if l:
+                                l -= 1
+                            pass
+                        for m in range(cspan):
+                            cell_n = j + l + m
+                            row_n = i + k
+                            # in some cases the colspan can overflow the table, in those cases
+                            # just get the last item
+                            cell_n = min(cell_n, len(data[row_n])-1)
+                            data[row_n][cell_n] += cell.text
+                            # print(cell.text)
+
+
+                data.append(rowD)
+            self.tables.append({'name': table_name, 'rows': data})
+
+
     def get_parse_candidate(self):
         """A parse candidate is a wrapper object holding a link hash of this
         article and a final_url of the article
@@ -562,7 +638,7 @@ class Article(object):
         self.meta_data = meta_data
 
     def set_canonical_link(self, canonical_link):
-        self.canonical_link = prepare_url(canonical_link)
+        self.canonical_link = urls.prepare_url(canonical_link)
 
     def set_tags(self, tags):
         self.tags = tags
@@ -570,7 +646,7 @@ class Article(object):
     def set_movies(self, movie_objects):
         """Trim video objects into just urls
         """
-        movie_urls = [prepare_url(o.src) for o in movie_objects if o and o.src]
+        movie_urls = [urls.prepare_url(o.src) for o in movie_objects if o and o.src]
         self.movies = movie_urls
 
     def throw_if_not_downloaded_verbose(self):

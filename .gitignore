@@ -46,3 +46,8 @@ venv
 
 .mypy_cache
 tests/units/ghostdriver.log
+tests/units/output_International_Phonetic_Alphabet_chart_for_English_dialects_tEnglish consonants.tsv
+tests/units/output_International_Phonetic_Alphabet_chart_for_English_dialects_tEnglish vowels and diphthongs.tsv
+tests/units/output_International_Phonetic_Alphabet_chart_for_English_dialects_tOther symbols used in transcription of English pronunciation.tsv
+tests/units/output_International_Phonetic_Alphabet_chart_for_English_dialects_tTable: 3.tsv
+tests/units/output_International_Phonetic_Alphabet_chart_for_English_dialects_tTable: 4.tsv

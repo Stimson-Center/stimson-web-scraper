@@ -4,6 +4,7 @@ All unit tests for the scraper Article should be contained in this file.
 """
 import os
 import sys
+import codecs
 import unittest
 from collections import defaultdict, OrderedDict
 
@@ -223,3 +224,23 @@ class ArticleTestCase(unittest.TestCase):
         self.assertEqual(0, len(article.html))
         self.assertEqual(article.download_state, ArticleDownloadState.FAILED_RESPONSE)
         self.assertEqual(article.download_exception_msg, "No such file or directory")
+
+    @print_test
+    def test_wikipedia_tables(self):
+        url = "https://en.wikipedia.org/wiki/International_Phonetic_Alphabet_chart_for_English_dialects"
+        article = Article(url=url)
+        article.build()
+        self.assertEqual(article.download_state, ArticleDownloadState.SUCCESS)
+        self.assertEqual(article.download_exception_msg, None)
+        # write data out to tab seperated format
+        page = os.path.split(url)[1]
+        for table in article.tables:
+            fname = 'output_{}_t{}.tsv'.format(page, table['name'])
+            with codecs.open(fname, 'w') as f:
+                for i in range(len(table['rows'])):
+                    rowStr = '\t'.join(table['rows'][i])
+                    rowStr = rowStr.replace('\n', '')
+                    # print(rowStr)
+                    f.write(rowStr + '\n')
+                f.close()
+
