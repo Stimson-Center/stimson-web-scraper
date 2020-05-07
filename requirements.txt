@@ -11,7 +11,7 @@ python-dateutil>=2.8.1
 PyYAML>=5.3.1
 requests>=2.23.0
 requests_toolbelt>=0.9.1
-tinysegmenter==0.4  # TODO(codelucas): Investigate making this >=0.3
+tinysegmenter==0.4
 tldextract>=2.2.2
 selenium>=3.141.0
 fake_useragent>=0.1.11
