@@ -1,19 +1,6 @@
 stimson-web-scraping
 ====================
 
-.. image:: https://badge.fury.io/py/newspaper3k.svg
-    :target: http://badge.fury.io/py/newspaper3k.svg
-        :alt: Latest version
-
-.. image:: https://travis-ci.org/codelucas/newspaper.svg
-        :target: http://travis-ci.org/codelucas/newspaper/
-        :alt: Build status
-
-.. image:: https://coveralls.io/repos/github/codelucas/newspaper/badge.svg?branch=master
-        :target: https://coveralls.io/github/codelucas/newspaper
-        :alt: Coverage status
-
-
 Inspired by `requests`_ for its simplicity and powered by `lxml`_ for its speed:
 
     "Newspaper is an amazing python library for extracting & curating articles."
@@ -442,25 +429,6 @@ NOTE: You will still most likely need to install the following libraries via you
 
     $ curl https://raw.githubusercontent.com/codelucas/newspaper/master/download_corpora.py | python3
 
-Consulting
-----------
-
-*This service is already used around the world* by startups, top news organizations (CNN, NYT, etc),
-graduate school researchers, and, of course, hackers like you :) If you or your company are interested
-in more advanced features like: increased NLP and scraping accuracy, mis-information, fake news, author
-credibility, boosted coverage and accuracy for your use case, and etc; feel free to `email & contact me`_
-for consulting.
-
-Donations
----------
-
-Your donations are greatly appreciated! They will free me up to work on this project more,
-to take on things like: adding new features, bug-fix support, addressing concerns with the library.
-
-- My PayPal link: `https://www.paypal.me/codelucas`_
-- My `Venmo`_ handle: @Lucas-Ou-Yang
-
-
 Development
 -----------
 
@@ -473,47 +441,10 @@ Once you have a copy of the source, you can embed it in your Python package,
 or install it into your site-packages easily::
 
     $ pip3 install -r requirements.txt
+    $ python3 setup.py build
     $ python3 setup.py install
 
 Feel free to give our testing suite a shot, everything is mocked!::
 
-    $ python3 tests/unit_tests.py
+    $ py.test --verbose tests
 
-Planning on tweaking our full-text algorithm? Add the ``fulltext`` parameter::
-
-    $ python3 tests/unit_tests.py fulltext
-
-
-Demo
-----
-
-View a working online demo here: http://newspaper-demo.herokuapp.com
-
-This is another working online demo: http://newspaper.chinazt.cc/
-
-LICENSE
--------
-
-Authored and maintained by `Lucas Ou-Yang`_.
-
-`Parse.ly`_ sponsored some work on newspaper, specifically focused on
-automatic extraction.
-
-Newspaper uses a lot of `python-goose's`_ parsing code. View their license `here`_.
-
-Please feel free to `email & contact me`_ if you run into issues or just would like
-to talk about the future of this library and news extraction in general!
-
-.. _`Lucas Ou-Yang`: http://codelucas.com
-.. _`email & contact me`: mailto:lucasyangpersonal@gmail.com
-.. _`python-goose's`: https://github.com/grangier/python-goose
-.. _`here`: https://github.com/codelucas/newspaper/blob/master/GOOSE-LICENSE.txt
-
-.. _`https://www.paypal.me/codelucas`: https://www.paypal.me/codelucas
-.. _`Venmo`: https://www.venmo.com/Lucas-Ou-Yang
-
-.. _`Quickstart guide`: https://newspaper.readthedocs.io/en/latest/
-.. _`The Documentation`: https://newspaper.readthedocs.io
-.. _`lxml`: http://lxml.de/
-.. _`requests`: https://github.com/kennethreitz/requests
-.. _`Parse.ly`: http://parse.ly

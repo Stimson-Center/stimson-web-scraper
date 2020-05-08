@@ -39,8 +39,8 @@ See README for links to FAQ, documentation, homepage, etc.
 __author__ = "Mathieu Fenniak"
 __author_email__ = "biziqe@mathieu.fenniak.net"
 
-__maintainer__ = "Phaseit, Inc."
-__maintainer_email = "PyPDF2@phaseit.net"
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 from .generic import *
 

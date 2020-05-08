@@ -39,15 +39,16 @@ See README for links to FAQ, documentation, homepage, etc.
 __author__ = "Mathieu Fenniak"
 __author_email__ = "biziqe@mathieu.fenniak.net"
 
-__maintainer__ = "Phaseit, Inc."
-__maintainer_email = "PyPDF2@phaseit.net"
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 import uuid
 from hashlib import md5
 
 from .content_stream import ContentStream
 from .generic import *
-from .utils import _alg34, _alg35
+from .page_object import PageObject
+from .utils import _alg33, _alg34, _alg35
 from .utils import isString, b_, u_
 
 
@@ -305,14 +306,13 @@ class PdfFileWriter(object):
         Copy pages from reader to writer. Includes an optional callback parameter
         which is invoked after pages are appended to the writer.
         
+        :param after_page_append:
         :param reader: a PdfFileReader object from which to copy page
             annotations to this writer object.  The writer's annots
         will then be updated
         :callback after_page_append (function): Callback function that is invoked after
             each page is appended to the writer. Callback signature:
 
-            :param writer_pageref (PDF page reference): Reference to the page
-                appended to the writer.
         """
         # Get page count from writer and reader
         reader_num_pages = reader.getNumPages()
@@ -327,7 +327,7 @@ class PdfFileWriter(object):
             if callable(after_page_append): after_page_append(writer_page)
 
     def updatePageFormFieldValues(self, page, fields):
-        '''
+        """
         Update the form field values for a given page from a fields dictionary.
         Copy field texts and values from fields to page.
 
@@ -335,7 +335,7 @@ class PdfFileWriter(object):
             and field data will be updated.
         :param fields: a Python dictionary of field names (/T) and text
             values (/V)
-        '''
+        """
         # Iterate through pages, update field values
         for j in range(0, len(page['/Annots'])):
             writer_annot = page['/Annots'][j].getObject()
@@ -346,27 +346,26 @@ class PdfFileWriter(object):
                     })
 
     def cloneReaderDocumentRoot(self, reader):
-        '''
+        """
         Copy the reader document root to the writer.
-        
+
         :param reader:  PdfFileReader from the document root should be copied.
         :callback after_page_append
-        '''
+        """
         self._root_object = reader.trailer['/Root']
 
     def cloneDocumentFromReader(self, reader, after_page_append=None):
-        '''
+        """
         Create a copy (clone) of a document from a PDF file reader
 
+        :param after_page_append:
         :param reader: PDF file reader instance from which the clone
             should be created.
         :callback after_page_append (function): Callback function that is invoked after
             each page is appended to the writer. Signature includes a reference to the
             appended page (delegates to appendPagesFromReader). Callback signature:
 
-            :param writer_pageref (PDF page reference): Reference to the page just
-                appended to the document.
-        '''
+        """
         self.cloneReaderDocumentRoot(reader)
         self.appendPagesFromReader(reader, after_page_append)
 
@@ -520,6 +519,7 @@ class PdfFileWriter(object):
         if debug: print((data, "TYPE", data.__class__.__name__))
         if isinstance(data, DictionaryObject):
             for key, value in list(data.items()):
+                # noinspection PyUnusedLocal
                 origvalue = value
                 value = self._sweepIndirectReferences(externMap, value)
                 if isinstance(value, StreamObject):

@@ -217,7 +217,7 @@ class Article(object):
                     creation_date = str(pdf_file_reader.documentInfo.creation_date)
                     publish_date = datetime.strptime(creation_date[0:8], "%Y%m%d")
                     self.publish_date = publish_date.strftime("%Y-%m-%d")
-                    self.set_text(html.trim())
+                    self.set_text(html.strip())
                     # return
                     # html = ""
             if html is None:

@@ -31,7 +31,7 @@ def save_article(article, filename, filedir='/tmp'):
 
 # noinspection PyUnresolvedReferences
 def test_b64_encode(fixture_directory):
-    test_driver_file = os.path.join(fixture_directory, "stimson", "energy_investment_mekong_delta", "Thailand.url")
+    test_driver_file = os.path.join(fixture_directory, "energy_investment_mekong_delta", "Thailand.url")
     with open(test_driver_file, encoding='utf-8') as f:
         for line in f:
             url = line.rstrip()
@@ -41,7 +41,7 @@ def test_b64_encode(fixture_directory):
 
 # noinspection PyUnresolvedReferences
 def test_get_mekong_delta_urls(fixture_directory):
-    test_driver_file = os.path.join(fixture_directory, "stimson", "energy_investment_mekong_delta", "Thailand.url")
+    test_driver_file = os.path.join(fixture_directory, "energy_investment_mekong_delta", "Thailand.url")
     websites = list()
     config = Configuration()
     config.memoize_articles = False
@@ -61,7 +61,7 @@ def test_get_mekong_delta_urls(fixture_directory):
             # websites.append(scraper.build(line.rstrip(), config=config))
             websites.append(Article(line.rstrip(), request_timeout=config.request_timeout,
                                     ignored_content_types_defaults=pdf_defaults))
-            # break # only process the first url in file
+            break # only process the first url in file
 
         build_end_time = time()
         build_elapsed_time = build_end_time - build_start_time
