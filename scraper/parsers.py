@@ -64,7 +64,7 @@ class Parser(object):
         try:
             # lxml does not play well with <? ?> encoding tags
             if html.startswith('<?'):
-                html = re.sub(r'^\<\?.*?\?\>', '', html, flags=re.DOTALL)
+                html = re.sub(r'^<\?.*?\?>', '', html, flags=re.DOTALL)
             cls.doc = lxml.html.fromstring(html)
             return cls.doc
         except Exception:

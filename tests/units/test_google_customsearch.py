@@ -91,7 +91,7 @@ def test_google_customsearch():
     assert len(articles) == len(google_scholar_list)
 
 
-def test_goole_book():
+def test_google_book():
     config = Configuration()
     config.memoize_articles = False
     config.use_canonical_link = True

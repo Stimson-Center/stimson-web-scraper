@@ -105,14 +105,14 @@ class ContentExtractor(object):
             search_str = re.sub('<[^<]+?>', '', search_str)
 
             # Remove original By statement
-            search_str = re.sub('[bB][yY][\:\s]|[fF]rom[\:\s]', '', search_str)
+            search_str = re.sub('[bB][yY][:\s]|[fF]rom[:\s]', '', search_str)
 
             search_str = search_str.strip()
 
             # Chunk the line by non alphanumeric tokens (few name exceptions)
             # >>> re.split("[^\w\'\-\.]", "Tyler G. Jones, Lucas Ou, Dean O'Brian and Ronald")
             # ['Tyler', 'G.', 'Jones', '', 'Lucas', 'Ou', '', 'Dean', "O'Brian", 'and', 'Ronald']
-            name_tokens = re.split("[^\w\'\-\.]", search_str)
+            name_tokens = re.split("[^\w\'\-.]", search_str)
             name_tokens = [s.strip() for s in name_tokens]
 
             _authors = []
@@ -295,7 +295,7 @@ class ContentExtractor(object):
 
         # create filtered versions of title_text, title_text_h1, title_text_fb
         # for finer comparison
-        filter_regex = re.compile(r'[^\u4e00-\u9fa5a-zA-Z0-9\ ]')
+        filter_regex = re.compile(r'[^\u4e00-\u9fa5a-zA-Z0-9 ]')
         filter_title_text = filter_regex.sub('', title_text).lower()
         filter_title_text_h1 = filter_regex.sub('', title_text_h1).lower()
         filter_title_text_fb = filter_regex.sub('', title_text_fb).lower()
@@ -365,7 +365,7 @@ class ContentExtractor(object):
         large_text_index = 0
         title_pieces = splitter.split(title)
 
-        filter_regex = re.compile(r'[^a-zA-Z0-9\ ]')
+        filter_regex = re.compile(r'[^a-zA-Z0-9 ]')
         if hint:
             hint = filter_regex.sub('', hint).lower()
 
@@ -628,7 +628,7 @@ class ContentExtractor(object):
         if regex:
             doc_or_html = re.sub('<[^<]+?>', ' ', str(doc_or_html))
             doc_or_html = re.findall(
-                'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|'
+                'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|'
                 '(?:%[0-9a-fA-F][0-9a-fA-F]))+', doc_or_html)
             doc_or_html = [i.strip() for i in doc_or_html]
             return doc_or_html or []
