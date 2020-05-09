@@ -178,7 +178,6 @@ class Article(object):
         if url.find(".wikipedia.org/wiki/"):
             self.parse_tables(attributes={"class": "wikitable"})
 
-
     def _parse_scheme_file(self, path):
         try:
             with open(path, "r") as fin:
@@ -473,14 +472,12 @@ class Article(object):
                             row_n = i + k
                             # in some cases the colspan can overflow the table, in those cases
                             # just get the last item
-                            cell_n = min(cell_n, len(data[row_n])-1)
+                            cell_n = min(cell_n, len(data[row_n]) - 1)
                             data[row_n][cell_n] += cell.text
                             # print(cell.text)
 
-
                 data.append(rowD)
             self.tables.append({'name': table_name, 'rows': data})
-
 
     def get_parse_candidate(self):
         """A parse candidate is a wrapper object holding a link hash of this

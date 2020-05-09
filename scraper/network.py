@@ -80,7 +80,7 @@ def get_html_2XX_only(url, config=None, response=None):
 
         if html != pdf_prefix and response.text.startswith(pdf_prefix):
             html = ""
-            pdf_file = tempfile.TemporaryFile()
+            pdf_file = tempfile.TemporaryFile(mode='wb+')
             pdf_file.write(response.content)
             pdf_file.flush()
             pdf_file_reader = PyPDF4.PdfFileReader(pdf_file)
