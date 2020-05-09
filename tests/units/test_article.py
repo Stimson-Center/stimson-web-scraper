@@ -235,7 +235,7 @@ class ArticleTestCase(unittest.TestCase):
         # write data out to tab seperated format
         page = os.path.split(url)[1]
         for table in article.tables:
-            fname = 'output_{}_t{}.tsv'.format(page, table['name'])
+            fname = '../{}_t{}.tsv'.format(page, table['name'])
             with codecs.open(fname, 'w') as f:
                 for i in range(len(table['rows'])):
                     rowStr = '\t'.join(table['rows'][i])

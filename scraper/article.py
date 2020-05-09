@@ -428,28 +428,27 @@ class Article(object):
 
         self.tables = list()
         for tn, table in enumerate(tables):
-
             # preinit list of lists
             try:
                 caption = table.find('caption')
                 table_name = caption.get_text().rstrip()
             except Exception as ex:
-                table_name = f"Table: {tn}"
+                table_name = f"{tn}"
             rows = table.findAll("tr")
             row_lengths = [len(r.findAll(['th', 'td'])) for r in rows]
             ncols = max(row_lengths)
             nrows = len(rows)
             data = []
             for i in range(nrows):
-                rowD = []
+                row_data = []
                 for j in range(ncols):
-                    rowD.append('')
-                data.append(rowD)
+                    row_data.append('')
+                data.append(row_data)
 
             # process html
             for i in range(len(rows)):
                 row = rows[i]
-                rowD = []
+                row_data = []
                 cells = row.findAll(["td", "th"])
                 for j in range(len(cells)):
                     cell = cells[j]
@@ -476,7 +475,7 @@ class Article(object):
                             data[row_n][cell_n] += cell.text
                             # print(cell.text)
 
-                data.append(rowD)
+                data.append(row_data)
             self.tables.append({'name': table_name, 'rows': data})
 
     def get_parse_candidate(self):
