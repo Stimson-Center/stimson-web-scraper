@@ -472,3 +472,31 @@ def get_load_time(url):
     # get page load time
     load_time = response.elapsed.total_seconds()
     return load_time
+
+
+def fulltext(html, language='en'):
+    """Takes article HTML string input and outputs the fulltext
+    Input string is decoded via UnicodeDammit if needed
+    """
+    from .cleaners import DocumentCleaner
+    from .configuration import Configuration
+    from .extractors import ContentExtractor
+    from .outputformatters import OutputFormatter
+
+    config = Configuration()
+    config.language = language
+
+    extractor = ContentExtractor(config)
+    document_cleaner = DocumentCleaner(config)
+    output_formatter = OutputFormatter(config)
+
+    doc = config.get_parser().fromstring(html)
+    doc = document_cleaner.clean(doc)
+
+    top_node = extractor.calculate_best_node(doc)
+    if top_node is not None:
+        top_node = extractor.post_cleanup(top_node)
+        text, article_html = output_formatter.get_formatted(top_node)
+    else:
+        text = ''
+    return text

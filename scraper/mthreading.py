@@ -132,7 +132,7 @@ class NewsPool(object):
             if isinstance(news_object, Article):
                 self.pool.add_task(news_object.build)
             elif isinstance(news_object, Source):
-                self.pool.add_task(news_object.download_articles)
+                self.pool.add_task(news_object.build)
             elif isinstance(news_object, Sources):
                 self.pool.add_task(news_object.download)
             else:
