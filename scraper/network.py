@@ -15,7 +15,8 @@ from requests_toolbelt.utils import deprecated
 
 # This site doesn’t like and want scraping. This gives you the same dreaded error 54, connection reset by the peer.
 from scraper.chromium import get_page_source
-from scraper.pdf.pdf_reader import PdfFileReader
+import tempfile
+import PyPDF4
 from .configuration import Configuration
 from .mthreading import ThreadPool
 from .settings import cj
@@ -79,7 +80,10 @@ def get_html_2XX_only(url, config=None, response=None):
 
         if html != pdf_prefix and response.text.startswith(pdf_prefix):
             html = ""
-            pdf_file_reader = PdfFileReader(response.content)
+            pdf_file = tempfile.TemporaryFile()
+            pdf_file.write(response.content)
+            pdf_file.flush()
+            pdf_file_reader = PyPDF4.PdfFileReader(pdf_file)
             # pdf_file_reader = PdfFileReader("/Users/alan_cooper/Downloads/Seige_of_Vicksburg_Sample_OCR.pdf")
             for page in range(pdf_file_reader.getNumPages()):
                 # creating rotated page object

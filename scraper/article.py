@@ -214,12 +214,10 @@ class Article(object):
                 if pdf_file_reader:
                     # if response.content started with "%PDF-"
                     self.set_authors([pdf_file_reader.documentInfo.author])
-                    creation_date = str(pdf_file_reader.documentInfo.creation_date)
+                    creation_date = pdf_file_reader.documentInfo.getText("/CreationDate").replace("D:", "")
                     publish_date = datetime.strptime(creation_date[0:8], "%Y%m%d")
                     self.publish_date = publish_date.strftime("%Y-%m-%d")
                     self.set_text(html.strip())
-                    # return
-                    # html = ""
             if html is None:
                 log.debug('Download failed on URL %s because of %s' %
                           (self.url, self.download_exception_msg))
