@@ -121,9 +121,10 @@ def test_google_book():
 #     print(p_element.text)
 #     x = driver.page_source
 
+
 def test_chromium():
     from scraper.chromium import get_page_source
     x = get_page_source('https://scholar.google.com/scholar?oi=bibs&hl=en&oe=ASCII&cites=17455492728027388341')
-    soup = BeautifulSoup(x)
+    soup = BeautifulSoup(x, 'html.parser')
     y = soup.findAll(name='div', attrs={'class': 'gs_a'})
     pass

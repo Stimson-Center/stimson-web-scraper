@@ -45,7 +45,8 @@ class GoogleCustomSearch:
                 a value [1..10]
         :return: list of urls
         """
-        query_service = build("customsearch", "v1", developerKey=self.api_key)
+        # https://github.com/googleapis/google-api-python-client/issues/817
+        query_service = build("customsearch", "v1", developerKey=self.api_key, cache_discovery=False)
         kwargs = {
             'num': number_of_search_results_return
         }
@@ -125,7 +126,7 @@ class GoogleCustomSearch:
         article.build()
         if not article.authors:
             x = response.text.find('"authors":[{"name":')
-            if x:
+            if x > 0:
                 a = response.text[x + 10:]
                 y = a.find(']')
                 a = a[:y + 1]
