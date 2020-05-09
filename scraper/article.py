@@ -227,7 +227,7 @@ class Article(object):
         if not pdf_file_reader and self.config.follow_meta_refresh:
             meta_refresh_url = extract_meta_refresh(html)
             if meta_refresh_url and recursion_counter < 1:
-                input_html, pdf = network.get_html(meta_refresh_url)
+                input_html, pdf_file_reader = network.get_html(meta_refresh_url)
                 return self.download(input_html, recursion_counter=recursion_counter + 1)
 
         self.set_html(html)
@@ -269,12 +269,10 @@ class Article(object):
         meta_site_name = self.extractor.get_meta_site_name(self.clean_doc)
         self.set_meta_site_name(meta_site_name)
 
-        meta_description = \
-            self.extractor.get_meta_description(self.clean_doc)
+        meta_description = self.extractor.get_meta_description(self.clean_doc)
         self.set_meta_description(meta_description)
 
-        canonical_link = self.extractor.get_canonical_link(
-            self.url, self.clean_doc)
+        canonical_link = self.extractor.get_canonical_link(self.url, self.clean_doc)
         self.set_canonical_link(canonical_link)
 
         tags = self.extractor.extract_tags(self.clean_doc)
