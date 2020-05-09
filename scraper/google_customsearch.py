@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json
 import os
 
@@ -7,7 +9,15 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from fake_useragent import UserAgent
 from googleapiclient.discovery import build  # Import the library
+
 from scraper import Article
+
+__title__ = 'scraper'
+__author__ = 'Alan S. Cooper'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2020, The Stimson Center'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 
 # https://towardsdatascience.com/current-google-search-packages-using-python-3-7-a-simple-tutorial-3606e459e0d4
@@ -116,9 +126,9 @@ class GoogleCustomSearch:
         if not article.authors:
             x = response.text.find('"authors":[{"name":')
             if x:
-                a = response.text[x+10:]
+                a = response.text[x + 10:]
                 y = a.find(']')
-                a = a[:y+1]
+                a = a[:y + 1]
                 authors = json.loads(a)
                 for author in authors:
                     article.authors.append(author['name'])
