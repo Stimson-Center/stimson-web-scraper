@@ -6,6 +6,13 @@ from . import urls
 from .article import Article
 from .source import Source
 
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
+
 
 class Sources:
     def __init__(self, url, language='en'):

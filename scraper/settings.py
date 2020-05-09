@@ -3,25 +3,24 @@
 Unlike configuration.py, this file is meant for static, entire project
 encompassing settings, like memoization and caching file directories.
 """
-__title__ = 'scraper'
-__author__ = 'Lucas Ou-Yang'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
 import logging
 import os
 import tempfile
 
-from http.cookiejar import CookieJar as cj
-
 from .version import __version__
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 
 PARENT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
-POPULAR_URLS = os.path.join(
-    PARENT_DIRECTORY, 'resources/misc/popular_sources.txt')
 USERAGENTS = os.path.join(PARENT_DIRECTORY, 'resources/misc/useragents.txt')
 
 STOPWORDS_DIR = os.path.join(PARENT_DIRECTORY, 'resources/text')
@@ -46,8 +45,6 @@ MEMO_DIR = os.path.join(TOP_DIRECTORY, MEMO_FILE)
 # category and feed cache
 CF_CACHE_DIRECTORY = 'feed_category_cache'
 ANCHOR_DIRECTORY = os.path.join(TOP_DIRECTORY, CF_CACHE_DIRECTORY)
-
-TRENDING_URL = 'http://www.google.com/trends/hottrends/atom/feed?pn=p1'
 
 for path in (TOP_DIRECTORY, MEMO_DIR, ANCHOR_DIRECTORY):
     try:

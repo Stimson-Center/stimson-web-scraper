@@ -1,6 +1,13 @@
 from selenium import webdriver
 
 
+__title__ = 'scraper'
+__author__ = 'Alan S. Cooper'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2020, The Stimson Center'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
+
 # https://testdriven.io/blog/building-a-concurrent-web-scraper-with-python-and-selenium/
 def get_driver():
     # initialize options

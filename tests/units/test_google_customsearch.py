@@ -20,7 +20,7 @@ def test_google_customsearch():
 
     google_customsearch = GoogleCustomSearch()
     number_of_search_results_return = 10
-    google_customsearch_urls = google_customsearch.get_search_urls("child AND soldiers",
+    google_customsearch_urls = google_customsearch.get_search_urls("Energy AND Investment AND Thailand",
                                                                    number_of_search_results_return)
     assert len(google_customsearch_urls) == number_of_search_results_return
     print(json.dumps(google_customsearch_urls, sort_keys=True, indent=4))
@@ -36,6 +36,9 @@ def test_google_customsearch():
     #     "http://scholar.google.com/citations?user=Zc3O_PIAAAAJ&hl=en",
     #     "http://scholar.google.com/citations?user=ZvKEMG4AAAAJ&hl=en"
     # ]
+
+    # google_customsearch_urls = ['https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=Energy+AND+Investment+AND+Thailand&btnG=']
+
     google_scholar_list = google_customsearch.get_scholar_list(google_customsearch_urls)
     assert len(google_scholar_list)
     # [
@@ -82,13 +85,9 @@ def test_google_customsearch():
     # ]
     articles = []
     for google_scholar in google_scholar_list:
-        sources = Sources(google_scholar['link'], language='en')
-        sources.download()
-        assert len(sources.article.html)
-        articles.append(sources.article)
-        article = sources.article
-        article.build()
-        pass
+        google_customsearch = GoogleCustomSearch()
+        article = google_customsearch.get_article(google_scholar['link'], language='en')
+        articles.append(article)
     assert len(articles) == len(google_scholar_list)
 
 

@@ -2,18 +2,20 @@
 """
 Anything natural language related should be abstracted into this file.
 """
+
+import math
+import re
+from collections import Counter
+from os import path
+
+from . import settings
+
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
-
-import re
-import math
-from os import path
-
-from collections import Counter
-
-from . import settings
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 ideal = 20.0
 
@@ -25,19 +27,18 @@ def load_stopwords(language):
     Loads language-specific stopwords for keyword selection
     """
     global stopwords
-    
+
     # stopwords for nlp in English are not the regular stopwords
     # to pass the tests
     # can be changed with the tests
     if language == 'en':
         stopwordsFile = settings.NLP_STOPWORDS_EN
     else:
-        stopwordsFile = path.join(settings.STOPWORDS_DIR,\
-                                  'stopwords-{}.txt'.format(language))
+        stopwordsFile = path.join(settings.STOPWORDS_DIR, 'stopwords-{}.txt'.format(language))
     with open(stopwordsFile, 'r', encoding='utf-8') as f:
         stopwords.update(set([w.strip() for w in f.readlines()]))
-        
-        
+
+
 def summarize(url='', title='', text='', max_sents=5):
     if not text or max_sents <= 0:
         return []
@@ -72,15 +73,15 @@ def score(sentences, titleWords, keywords):
         dbsFeature = dbs(sentence, keywords)
         frequency = (sbsFeature + dbsFeature) / 2.0 * 10.0
         # Weighted average of scores from four categories
-        totalScore = (titleFeature*1.5 + frequency*2.0 +
-                      sentenceLength*1.0 + sentencePosition*1.0)/4.0
+        totalScore = (titleFeature * 1.5 + frequency * 2.0 +
+                      sentenceLength * 1.0 + sentencePosition * 1.0) / 4.0
         ranks[(i, s)] = totalScore
     return ranks
 
 
 def sbs(words, keywords):
     score = 0.0
-    if (len(words) == 0):
+    if len(words) == 0:
         return 0
     for word in words:
         if word in keywords:
@@ -89,7 +90,7 @@ def sbs(words, keywords):
 
 
 def dbs(words, keywords):
-    if (len(words) == 0):
+    if len(words) == 0:
         return 0
     summ = 0
     first = []
@@ -107,7 +108,7 @@ def dbs(words, keywords):
                 summ += (first[1] * second[1]) / (dif ** 2)
     # Number of intersections
     k = len(set(keywords.keys()).intersection(set(words))) + 1
-    return (1 / (k * (k + 1.0)) * summ)
+    return 1 / (k * (k + 1.0)) * summ
 
 
 def split_words(text):
@@ -173,7 +174,7 @@ def title_score(title, sentence):
         title = [x for x in title if x not in stopwords]
         count = 0.0
         for word in sentence:
-            if (word not in stopwords and word in title):
+            if word not in stopwords and word in title:
                 count += 1.0
         return count / max(len(title), 1)
     else:
@@ -185,27 +186,27 @@ def sentence_position(i, size):
     probability of being an important sentence.
     """
     normalized = i * 1.0 / size
-    if (normalized > 1.0):
+    if normalized > 1.0:
         return 0
-    elif (normalized > 0.9):
+    elif normalized > 0.9:
         return 0.15
-    elif (normalized > 0.8):
+    elif normalized > 0.8:
         return 0.04
-    elif (normalized > 0.7):
+    elif normalized > 0.7:
         return 0.04
-    elif (normalized > 0.6):
+    elif normalized > 0.6:
         return 0.06
-    elif (normalized > 0.5):
+    elif normalized > 0.5:
         return 0.04
-    elif (normalized > 0.4):
+    elif normalized > 0.4:
         return 0.05
-    elif (normalized > 0.3):
+    elif normalized > 0.3:
         return 0.08
-    elif (normalized > 0.2):
+    elif normalized > 0.2:
         return 0.14
-    elif (normalized > 0.1):
+    elif normalized > 0.1:
         return 0.23
-    elif (normalized > 0):
+    elif normalized > 0:
         return 0.17
     else:
         return 0

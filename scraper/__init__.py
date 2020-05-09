@@ -2,17 +2,20 @@
 """
 Wherever smart people work, doors are unlocked. -- Steve Wozniak
 """
+
+from .article import Article, ArticleException
+from .configuration import Configuration
+from .mthreading import NewsPool
+from .source import Source
+from .utils import get_available_languages, fulltext
+from .version import __version__
+
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
-
-from .configuration import Configuration
-from .utils import get_available_languages, fulltext
-from .article import Article, ArticleException
-from .mthreading import NewsPool
-from .source import Source
-from .version import __version__
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 news_pool = NewsPool()
 

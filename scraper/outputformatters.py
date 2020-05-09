@@ -2,16 +2,18 @@
 """
 Output formatting to text via lxml xpath nodes abstracted in this file.
 """
+
+import logging
+from html import unescape
+
+from .text import innerTrim
+
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
-
-from html import unescape
-import logging
-
-from .text import innerTrim
-
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 
@@ -133,11 +135,11 @@ class OutputFormatter(object):
             if (tag != 'br' or text != '\\r') \
                     and not text \
                     and len(self.parser.getElementsByTag(
-                        el, tag='object')) == 0 \
+                el, tag='object')) == 0 \
                     and len(self.parser.getElementsByTag(
-                        el, tag='embed')) == 0 \
+                el, tag='embed')) == 0 \
                     and len(self.parser.getElementsByTag(
-                        el, tag='img')) == 0 \
+                el, tag='img')) == 0 \
                     and tag not in {'img', }:
                 self.parser.remove(el)
 
@@ -148,7 +150,7 @@ class OutputFormatter(object):
         last top level node's class is one of NON_MEDIA_CLASSES.
         """
 
-        NON_MEDIA_CLASSES = ('zn-body__read-all', )
+        NON_MEDIA_CLASSES = ('zn-body__read-all',)
 
         def get_depth(node, depth=1):
             """Computes depth of an lxml element via BFS, this would be

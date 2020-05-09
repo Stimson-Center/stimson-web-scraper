@@ -3,10 +3,6 @@
 Source objects abstract online news source websites & domains.
 www.cnn.com would be its own source.
 """
-__title__ = 'scraper'
-__author__ = 'Lucas Ou-Yang'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
 import logging
 from urllib.parse import urljoin, urlsplit, urlunsplit
@@ -21,6 +17,13 @@ from .configuration import Configuration
 from .extractors import ContentExtractor
 from .settings import ANCHOR_DIRECTORY
 from .urls import prepare_url
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 
@@ -196,7 +199,7 @@ class Source(object):
             else:
                 log.warning(('Deleting category %s from source %s due to '
                              'download error') %
-                             (self.categories[index].url, self.url))
+                            (self.categories[index].url, self.url))
         self.categories = [c for c in self.categories if c.html]
 
     def download_feeds(self):
@@ -212,7 +215,7 @@ class Source(object):
             else:
                 log.warning(('Deleting feed %s from source %s due to '
                              'download error') %
-                             (self.categories[index].url, self.url))
+                            (self.categories[index].url, self.url))
         self.feeds = [f for f in self.feeds if f.rss]
 
     def parse(self):
@@ -354,7 +357,7 @@ class Source(object):
         else:
             if threads > NUM_THREADS_PER_SOURCE_WARN_LIMIT:
                 log.warning(('Using %s+ threads on a single source '
-                            'may result in rate limiting!') % NUM_THREADS_PER_SOURCE_WARN_LIMIT)
+                             'may result in rate limiting!') % NUM_THREADS_PER_SOURCE_WARN_LIMIT)
             filled_requests = network.multithread_request(urls, self.config)
             # Note that the responses are returned in original order
             for index, req in enumerate(filled_requests):

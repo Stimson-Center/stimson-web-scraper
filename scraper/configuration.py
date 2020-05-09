@@ -5,10 +5,6 @@ as settings.py but dynamic and changing for whatever parent object
 holds them. For example, pass in a config object to an Article
 object, Source object, or even network methods, and it just works.
 """
-__title__ = 'scraper'
-__author__ = 'Lucas Ou-Yang'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
 import logging
 
@@ -16,6 +12,13 @@ from .parsers import Parser
 from .text import (StopWords, StopWordsArabic, StopWordsChinese,
                    StopWordsKorean, StopWordsHindi, StopWordsJapanese, StopWordsThai, StopWordsNepali)
 from .version import __version__
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 

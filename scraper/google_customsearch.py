@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from fake_useragent import UserAgent
 from googleapiclient.discovery import build  # Import the library
+from scraper import Article
 
 
 # https://towardsdatascience.com/current-google-search-packages-using-python-3-7-a-simple-tutorial-3606e459e0d4
@@ -19,7 +20,7 @@ class GoogleCustomSearch:
     ua = UserAgent()
 
     def get_search_urls(self, query, number_of_search_results_return):
-        # type: (str, number_of_search_results_return) -> list
+        # type: (str, int) -> list
 
         """Google Custom Search enables you to create a search engine for your website, your blog, or a collection
            of websites. You can configure your engine to search both web pages and images
@@ -66,7 +67,7 @@ class GoogleCustomSearch:
         sites = list()
 
         for google_search_url in google_search_urls:
-            response = requests.get(google_search_url, {'User-Agent': self.ua.random})
+            response = requests.get(google_search_url, headers={'User-Agent': self.ua.random})
             soup = BeautifulSoup(response.text, 'html.parser')
             # https://www.pingshiuanchua.com/blog/post/scraping-search-results-from-google-search
             for tr in soup.find_all('tr', {'class': 'gsc_a_tr'}):
@@ -91,6 +92,13 @@ class GoogleCustomSearch:
                     title = a.get_text()
                     link = a.attrs
 
+                    # for tag in soup.find_all("meta"):
+                    #     if tag.get("property", None) == "og:title":
+                    #         x = tag.get("content", None)
+                    #         print(tag.get("content", None))
+                    #     elif tag.get("property", None) == "og:url":
+                    #         x = tag.get("content", None)
+                    #         print(tag.get("content", None))
                     # Check to make sure everything is present before appending to lists
                     if link != '' and link['href'] != '' and title != '':
                         sites.append({'title': title, 'link': link['href']})
@@ -99,3 +107,19 @@ class GoogleCustomSearch:
                     print(json.dumps(ex, sort_keys=True, indent=4))
 
         return sites
+
+    def get_article(self, url, language='en'):
+        response = requests.get(url, headers={'User-Agent': self.ua.random})
+        soup = BeautifulSoup(response.text, 'lxml')
+        article = Article(url, language=language)
+        article.build()
+        if not article.authors:
+            x = response.text.find('"authors":[{"name":')
+            if x:
+                a = response.text[x+10:]
+                y = a.find(']')
+                a = a[:y+1]
+                authors = json.loads(a)
+                for author in authors:
+                    article.authors.append(author['name'])
+        return article

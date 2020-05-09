@@ -3,10 +3,6 @@
 Holds misc. utility methods which prove to be
 useful throughout this library.
 """
-__title__ = 'scraper'
-__author__ = 'Lucas Ou-Yang'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
 import codecs
 import hashlib
@@ -19,11 +15,19 @@ import string
 import sys
 import threading
 import time
-import requests
-
 from hashlib import sha1
+
+import requests
 from bs4 import BeautifulSoup
+
 from . import settings
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
@@ -437,7 +441,7 @@ def get_available_languages():
     languages = get_languages()
 
     codes = get_available_language_codes()
-    for k,v in languages.items():
+    for k, v in languages.items():
         if k not in codes:
             del languages[k]
 

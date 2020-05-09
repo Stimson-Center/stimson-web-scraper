@@ -2,16 +2,19 @@
 """
 Stopword extraction and stopword classes.
 """
-__title__ = 'scraper'
-__author__ = 'Lucas Ou-Yang'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
 import os
 import re
 import string
 
 from .utils import FileHelper
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 TABSSPACE = re.compile(r'[\s\t]+')
 
@@ -57,7 +60,6 @@ class WordStats(object):
 
 
 class StopWords(object):
-
     TRANS_TABLE = str.maketrans('', '')
     _cached_stop_words = {}
 
@@ -104,6 +106,7 @@ class StopWords(object):
 class StopWordsChinese(StopWords):
     """Chinese segmentation
     """
+
     def __init__(self, language='zh'):
         super(StopWordsChinese, self).__init__(language='zh')
 
@@ -117,6 +120,7 @@ class StopWordsChinese(StopWords):
 class StopWordsArabic(StopWords):
     """Arabic segmentation
     """
+
     def __init__(self, language='ar'):
         # force ar languahe code
         super(StopWordsArabic, self).__init__(language='ar')
@@ -136,6 +140,7 @@ class StopWordsArabic(StopWords):
 class StopWordsKorean(StopWords):
     """Korean segmentation
     """
+
     def __init__(self, language='ko'):
         super(StopWordsKorean, self).__init__(language='ko')
 
@@ -162,6 +167,7 @@ class StopWordsKorean(StopWords):
 class StopWordsHindi(StopWords):
     """Hindi segmentation
     """
+
     def __init__(self, language='hi'):
         super(StopWordsHindi, self).__init__(language='hi')
 
@@ -187,6 +193,7 @@ class StopWordsHindi(StopWords):
 class StopWordsNepali(StopWords):
     """Nepali segmentation
     """
+
     def __init__(self, language='np'):
         super(StopWordsNepali, self).__init__(language=language)
 
@@ -194,6 +201,7 @@ class StopWordsNepali(StopWords):
 class StopWordsJapanese(StopWords):
     """Japanese segmentation
     """
+
     def __init__(self, language='ja'):
         super(StopWordsJapanese, self).__init__(language='ja')
 
@@ -207,6 +215,7 @@ class StopWordsJapanese(StopWords):
 class StopWordsThai(StopWords):
     """Thai segmentation
     """
+
     def __init__(self, language='th'):
         super(StopWordsThai, self).__init__(language='th')
 

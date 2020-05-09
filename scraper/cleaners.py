@@ -4,7 +4,15 @@ Holds the code for cleaning out unwanted tags from the lxml
 dom xpath.
 """
 import copy
+
 from .utils import ReplaceSequence
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 
 class DocumentCleaner(object):
@@ -46,9 +54,9 @@ class DocumentCleaner(object):
         self.facebook_re = "[^-]facebook"
         self.facebook_broadcasting_re = "facebook-broadcasting"
         self.twitter_re = "[^-]twitter"
-        self.tablines_replacements = ReplaceSequence()\
-            .create("\n", "\n\n")\
-            .append("\t")\
+        self.tablines_replacements = ReplaceSequence() \
+            .create("\n", "\n\n") \
+            .append("\t") \
             .append("^\\s+$")
         self.contains_article = './/article|.//*[@id="article"]|.//*[@itemprop="articleBody"]'
 
@@ -100,7 +108,7 @@ class DocumentCleaner(object):
 
     def remove_drop_caps(self, doc):
         items = self.parser.css_select(doc, 'span[class~=dropcap], '
-                                       'span[class~=drop_cap]')
+                                            'span[class~=drop_cap]')
         for item in items:
             self.parser.drop_tag(item)
         return doc
@@ -166,7 +174,7 @@ class DocumentCleaner(object):
             while prev_node is not None \
                     and self.parser.getTag(prev_node) == "a" \
                     and self.parser.getAttribute(
-                        prev_node, 'grv-usedalready') != 'yes':
+                prev_node, 'grv-usedalready') != 'yes':
                 outer = " " + self.parser.outerHtml(prev_node) + " "
                 replacement_text.append(outer)
                 nodes_to_remove.append(prev_node)
@@ -179,7 +187,7 @@ class DocumentCleaner(object):
             while next_node is not None \
                     and self.parser.getTag(next_node) == "a" \
                     and self.parser.getAttribute(
-                        next_node, 'grv-usedalready') != 'yes':
+                next_node, 'grv-usedalready') != 'yes':
                 outer = " " + self.parser.outerHtml(next_node) + " "
                 replacement_text.append(outer)
                 nodes_to_remove.append(next_node)

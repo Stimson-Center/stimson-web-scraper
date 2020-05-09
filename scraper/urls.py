@@ -3,18 +3,20 @@
 Newspaper treats urls for news articles as critical components.
 Hence, we have an entire module dedicated to them.
 """
+
+import logging
+import re
+from base64 import b64encode, b64decode
+from urllib.parse import parse_qs, urljoin, urlparse, urlsplit, urlunsplit
+
+from tldextract import tldextract
+
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
-
-import logging
-import os
-import re
-from base64 import b64encode, b64decode
-from urllib.parse import parse_qs, urljoin, urlparse, urlsplit, urlunsplit, quote
-
-from tldextract import tldextract
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 
@@ -312,4 +314,3 @@ def b64_encode(url):
     if decoded_url != clean_url:
         raise Exception('Error encoding url %s' % url)
     return encoded.decode("utf-8")
-

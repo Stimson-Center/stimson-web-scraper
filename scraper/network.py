@@ -3,24 +3,28 @@
 All code involving requests and responses over the http network
 must be abstracted in this file.
 """
+
+import logging
+import tempfile
+
+import PyPDF4
+import pdftotext
+import requests
+from requests_toolbelt.utils import deprecated
+
+from http.cookiejar import CookieJar as cj
+# This site doesn’t like and want scraping. This gives you the same dreaded error 54,
+# connection reset by the peer.
+from scraper.chromium import get_page_source
+from .configuration import Configuration
+from .mthreading import ThreadPool
+
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
-
-import logging
-
-import requests
-from requests_toolbelt.utils import deprecated
-
-# This site doesn’t like and want scraping. This gives you the same dreaded error 54, connection reset by the peer.
-from scraper.chromium import get_page_source
-import tempfile
-import PyPDF4
-import pdftotext
-from .configuration import Configuration
-from .mthreading import ThreadPool
-from .settings import cj
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 

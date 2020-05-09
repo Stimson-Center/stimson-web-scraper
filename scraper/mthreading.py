@@ -4,18 +4,20 @@ Anything that has to do with threading in this library
 must be abstracted in this file. If we decide to do gevent
 also, it will deserve its own gevent file.
 """
-__title__ = 'scraper'
-__author__ = 'Lucas Ou-Yang'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
 import logging
 import queue
 import traceback
-
 from threading import Thread
 
 from .configuration import Configuration
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 
@@ -28,6 +30,7 @@ class Worker(Thread):
     """
     Thread executing tasks from a given tasks queue.
     """
+
     def __init__(self, tasks, timeout_seconds):
         Thread.__init__(self)
         self.tasks = tasks
@@ -42,6 +45,7 @@ class Worker(Thread):
             except queue.Empty:
                 # Extra thread allocated, no job, exit gracefully
                 break
+            # noinspection PyBroadException
             try:
                 func(*args, **kargs)
             except Exception:
@@ -74,12 +78,11 @@ class NewsPool(object):
         We allocate one thread per source to avoid rate limiting.
         5 sources = 5 threads, one per source.
 
-        >>> import scraper
-        >>> from scraper import news_pool
+        >>> from scraper import news_pool, Source
 
-        >>> cnn_paper = scraper.build('http://cnn.com')
-        >>> tc_paper = scraper.build('http://techcrunch.com')
-        >>> espn_paper = scraper.build('http://espn.com')
+        >>> cnn_paper = Source('http://cnn.com')
+        >>> tc_paper = Source('http://techcrunch.com')
+        >>> espn_paper = Source('http://espn.com')
 
         >>> papers = [cnn_paper, tc_paper, espn_paper]
         >>> news_pool.set(papers)

@@ -3,14 +3,10 @@
 The following image extraction implementation was taken from an old
 copy of Reddit's source code.
 """
-__title__ = 'scraper'
-__author__ = 'Lucas Ou-Yang'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
+import io
 import logging
 import math
-import io
 import traceback
 import urllib.parse
 
@@ -18,6 +14,13 @@ import requests
 from PIL import Image, ImageFile
 
 from . import urls
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 
@@ -79,7 +82,7 @@ def clean_url(url):
     """
     url = url.encode('utf8')
     url = ''.join([urllib.parse.quote(c)
-                  if ord(c) >= 127 else c for c in url.decode('utf-8')])
+                   if ord(c) >= 127 else c for c in url.decode('utf-8')])
     return url
 
 
@@ -92,6 +95,7 @@ def fetch_url(url, useragent, referer=None, retries=1, dimension=False):
 
     response = None
     while True:
+        # noinspection PyUnusedLocal,PyUnusedLocal
         try:
             response = requests.get(url, stream=True, timeout=5, headers={
                 'User-Agent': useragent,
@@ -167,7 +171,7 @@ def fetch_image_dimension(url, useragent, referer=None, retries=1):
     return fetch_url(url, useragent, referer, retries, dimension=True)
 
 
-class Scraper:
+class ImageScraper:
 
     def __init__(self, article):
         self.url = article.url
@@ -230,7 +234,8 @@ class Scraper:
         """
         image_url = self.largest_image_url()
         if image_url:
-            content_type, image_str = fetch_url(image_url, referer=self.url)
+            useragent = self.config.browser_user_agent
+            content_type, image_str = fetch_url(image_url, useragent, referer=self.url)
             if image_str:
                 image = str_to_image(image_str)
                 try:

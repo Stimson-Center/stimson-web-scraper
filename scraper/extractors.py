@@ -6,10 +6,6 @@ https://github.com/codelucas/newspaper/blob/master/GOOSE-LICENSE.txt
 Keep all html page extraction code within this file. Abstract any
 lxml or soup parsing code in the parsers.py file!
 """
-__title__ = 'scraper'
-__author__ = 'Lucas Ou-Yang'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 
 import copy
 import logging
@@ -21,8 +17,15 @@ from dateutil.parser import parse as date_parser
 from tldextract import tldextract
 
 from . import urls
-from .utils import StringReplacement, StringSplitter
 from .urls import prepare_url
+from .utils import StringReplacement, StringSplitter
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 

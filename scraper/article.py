@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
-__title__ = 'scraper'
-__author__ = 'Lucas Ou-Yang'
-__license__ = 'MIT'
-__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+
 
 import copy
 import glob
@@ -28,6 +25,13 @@ from .outputformatters import OutputFormatter
 from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh)
 from .videos.extractors import VideoExtractor
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 
@@ -411,7 +415,9 @@ class Article(object):
         summary = '\n'.join(summary_sents)
         self.set_summary(summary)
 
-    def parse_tables(self, attributes={"class": "wikitable"}):
+    def parse_tables(self, attributes=None):
+        if attributes is None:
+            attributes = {"class": "wikitable"}
         ua = UserAgent()
         response = requests.get(self.url, headers={'User-Agent': ua.random})
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -517,7 +523,7 @@ class Article(object):
         first, then uses Reddit's image algorithm as a fallback.
         """
         try:
-            s = images.Scraper(self)
+            s = images.ImageScraper(self)
             self.set_top_img(s.largest_image_url())
         except TypeError as e:
             if "Can't convert 'NoneType' object to str implicitly" in e.args[0]:
@@ -565,7 +571,7 @@ class Article(object):
 
     def set_top_img(self, src_url):
         if src_url is not None:
-            s = images.Scraper(self)
+            s = images.ImageScraper(self)
             if s.satisfies_requirements(src_url):
                 self.set_top_img_no_check(src_url)
 
