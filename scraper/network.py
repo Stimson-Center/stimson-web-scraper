@@ -17,6 +17,7 @@ from requests_toolbelt.utils import deprecated
 from scraper.chromium import get_page_source
 import tempfile
 import PyPDF4
+import pdftotext
 from .configuration import Configuration
 from .mthreading import ThreadPool
 from .settings import cj
@@ -83,12 +84,12 @@ def get_html_2XX_only(url, config=None, response=None):
             pdf_file = tempfile.TemporaryFile(mode='wb+')
             pdf_file.write(response.content)
             pdf_file.flush()
+            pdf_file.seek(0)
+            pagesAsListOfText = pdftotext.PDF(pdf_file)
+            for text in pagesAsListOfText:
+                html += text
+            pdf_file.seek(0)
             pdf_file_reader = PyPDF4.PdfFileReader(pdf_file)
-            # pdf_file_reader = PdfFileReader("/Users/alan_cooper/Downloads/Seige_of_Vicksburg_Sample_OCR.pdf")
-            for page in range(pdf_file_reader.getNumPages()):
-                # creating rotated page object
-                pageObj = pdf_file_reader.getPage(page)
-                html += pageObj.extractText()
 
         return html, pdf_file_reader
     except requests.exceptions.RequestException:
