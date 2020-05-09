@@ -36,4 +36,5 @@ class Sources:
         return self.source.category_urls()
 
     def download(self):
+        # type: () -> None
         self.article.build()

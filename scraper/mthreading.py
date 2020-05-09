@@ -67,6 +67,10 @@ class ThreadPool:
         self.tasks.join()
 
 
+class NewsPoolException(Exception):
+    pass
+
+
 class NewsPool(object):
 
     def __init__(self, config=None):
@@ -117,9 +121,9 @@ class NewsPool(object):
 
         If both of the above conditions are not true, default to 1 thread.
         """
+        from .article import Article
         from .source import Source
         from .sources import Sources
-        from .article import Article
 
         if override_threads is not None:
             num_threads = override_threads
@@ -132,11 +136,9 @@ class NewsPool(object):
         self.pool = ThreadPool(num_threads, timeout)
 
         for news_object in news_list:
-            if isinstance(news_object, Article):
+            if isinstance(news_object, Article) or \
+                    isinstance(news_object, Source) or \
+                    isinstance(news_object, Sources):
                 self.pool.add_task(news_object.build)
-            elif isinstance(news_object, Source):
-                self.pool.add_task(news_object.build)
-            elif isinstance(news_object, Sources):
-                self.pool.add_task(news_object.download)
             else:
-                self.pool.add_task(news_object.download)
+                raise NewsPoolException('Unsupported Class instance type')
