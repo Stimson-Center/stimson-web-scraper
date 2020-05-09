@@ -79,7 +79,7 @@ class GoogleCustomSearch:
 
         for google_search_url in google_search_urls:
             response = requests.get(google_search_url, headers={'User-Agent': self.ua.random})
-            soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response.text, 'lxml')
             # https://www.pingshiuanchua.com/blog/post/scraping-search-results-from-google-search
             for tr in soup.find_all('tr', {'class': 'gsc_a_tr'}):
                 # Checks if each element is present, else, raise exception
@@ -120,14 +120,14 @@ class GoogleCustomSearch:
         return sites
 
     def get_article(self, url, language='en'):
-        response = requests.get(url, headers={'User-Agent': self.ua.random})
-        soup = BeautifulSoup(response.text, 'lxml')
         article = Article(url, language=language)
         article.build()
         if not article.authors:
-            x = response.text.find('"authors":[{"name":')
+            # response = requests.get(url, headers={'User-Agent': self.ua.random})
+            # soup = BeautifulSoup(response.text, 'lxml')
+            x = article.html.find('"authors":[{"name":')
             if x > 0:
-                a = response.text[x + 10:]
+                a = article.html.text[x + 10:]
                 y = a.find(']')
                 a = a[:y + 1]
                 authors = json.loads(a)

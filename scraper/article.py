@@ -420,7 +420,7 @@ class Article(object):
             attributes = {"class": "wikitable"}
         ua = UserAgent()
         response = requests.get(self.url, headers={'User-Agent': ua.random})
-        soup = BeautifulSoup(response.text, 'html.parser')
+        soup = BeautifulSoup(response.text, 'lxml')
         tables = soup.findAll("table", attributes)
 
         # # show tables
