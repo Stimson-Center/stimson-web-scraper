@@ -10,8 +10,8 @@ from scraper.configuration import Configuration
 
 
 def setUp():
-    extractor = scraper.extractors.ContentExtractor(Configuration())
-    parser = scraper.parsers.Parser
+    extractor = scraper.content_extractor.ContentExtractor(Configuration())
+    parser = scraper.parser.Parser
     return extractor, parser
 
 

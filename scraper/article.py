@@ -13,15 +13,15 @@ from bs4 import BeautifulSoup
 # https://preslav.me/2019/01/09/dotenv-files-python/
 from fake_useragent import UserAgent
 
-from . import images
+from . import image_scraper
 from . import network
 from . import nlp
 from . import settings
 from . import urls
-from .cleaners import DocumentCleaner
+from .document_cleaner import DocumentCleaner
 from .configuration import Configuration
-from .extractors import ContentExtractor
-from .outputformatters import OutputFormatter
+from .content_extractor import ContentExtractor
+from .output_formatter import OutputFormatter
 from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh)
 from scraper.video_extractor import VideoExtractor
@@ -523,7 +523,7 @@ class Article(object):
         first, then uses Reddit's image algorithm as a fallback.
         """
         try:
-            s = images.ImageScraper(self)
+            s = image_scraper.ImageScraper(self)
             self.set_top_img(s.largest_image_url())
         except TypeError as e:
             if "Can't convert 'NoneType' object to str implicitly" in e.args[0]:
@@ -571,7 +571,7 @@ class Article(object):
 
     def set_top_img(self, src_url):
         if src_url is not None:
-            s = images.ImageScraper(self)
+            s = image_scraper.ImageScraper(self)
             if s.satisfies_requirements(src_url):
                 self.set_top_img_no_check(src_url)
 

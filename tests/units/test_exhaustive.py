@@ -40,9 +40,8 @@ class ExhaustiveFullTextCase(unittest.TestCase):
     @staticmethod
     def check_url(args):
         """
-        :param (basestr, basestr) url, res_filename:
-        :return: (pubdate_failed, fulltext_failed)
-        """
+        :param args:
+      """
         url, res_filename = args
         pubdate_failed, fulltext_failed = False, False
         html = mock_resource_with(res_filename, 'html')

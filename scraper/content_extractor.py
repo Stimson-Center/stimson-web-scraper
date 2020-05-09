@@ -4,7 +4,7 @@ Newspaper uses much of python-goose's extraction code. View their license:
 https://github.com/codelucas/newspaper/blob/master/GOOSE-LICENSE.txt
 
 Keep all html page extraction code within this file. Abstract any
-lxml or soup parsing code in the parsers.py file!
+lxml or soup parsing code in the parser.py file!
 """
 
 import copy

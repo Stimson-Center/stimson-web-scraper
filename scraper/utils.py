@@ -482,10 +482,10 @@ def fulltext(html, language='en'):
     """Takes article HTML string input and outputs the fulltext
     Input string is decoded via UnicodeDammit if needed
     """
-    from .cleaners import DocumentCleaner
+    from .document_cleaner import DocumentCleaner
     from .configuration import Configuration
-    from .extractors import ContentExtractor
-    from .outputformatters import OutputFormatter
+    from .content_extractor import ContentExtractor
+    from .output_formatter import OutputFormatter
 
     config = Configuration()
     config.language = language

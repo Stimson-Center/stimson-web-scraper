@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from scraper.video import Video
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -12,9 +11,30 @@ VIDEOS_TAGS = ['iframe', 'embed', 'object', 'video']
 VIDEO_PROVIDERS = ['youtube', 'youtu.be', 'twitch', 'vimeo', 'dailymotion', 'kewego']
 
 
+class Video(object):
+    """Video object
+    """
+
+    def __init__(self):
+        # type of embed
+        # embed, object, iframe
+        self.embed_type = None
+        # video provider name
+        self.provider = None
+        # width
+        self.width = None
+        # height
+        self.height = None
+        # embed code
+        self.embed_code = None
+        # src
+        self.src = None
+
+
 class VideoExtractor(object):
     """Extracts a list of video from Article top node
     """
+
     def __init__(self, config, top_node):
         self.config = config
         self.parser = self.config.get_parser()

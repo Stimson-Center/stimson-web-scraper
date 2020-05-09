@@ -8,7 +8,7 @@ object, Source object, or even network methods, and it just works.
 
 import logging
 
-from .parsers import Parser
+from .parser import Parser
 from .text import (StopWords, StopWordsArabic, StopWordsChinese,
                    StopWordsKorean, StopWordsHindi, StopWordsJapanese, StopWordsThai, StopWordsNepali)
 from .version import __version__

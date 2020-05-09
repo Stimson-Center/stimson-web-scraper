@@ -14,7 +14,7 @@ from . import urls
 from . import utils
 from .article import Article
 from .configuration import Configuration
-from .extractors import ContentExtractor
+from .content_extractor import ContentExtractor
 from .settings import ANCHOR_DIRECTORY
 from .urls import prepare_url
 
