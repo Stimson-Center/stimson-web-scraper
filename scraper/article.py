@@ -24,7 +24,7 @@ from .extractors import ContentExtractor
 from .outputformatters import OutputFormatter
 from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh)
-from .videos.extractors import VideoExtractor
+from scraper.video_extractor import VideoExtractor
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'

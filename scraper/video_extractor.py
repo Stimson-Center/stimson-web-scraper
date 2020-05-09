@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-from .videos import Video
+from scraper.video import Video
+
+__title__ = 'scraper'
+__author__ = 'Lucas Ou-Yang'
+__license__ = 'MIT'
+__copyright__ = 'Copyright 2014, Lucas Ou-Yang'
+__maintainer__ = "The Stimson Center"
+__maintainer_email = "cooper@pobox.com"
 
 VIDEOS_TAGS = ['iframe', 'embed', 'object', 'video']
 VIDEO_PROVIDERS = ['youtube', 'youtu.be', 'twitch', 'vimeo', 'dailymotion', 'kewego']
