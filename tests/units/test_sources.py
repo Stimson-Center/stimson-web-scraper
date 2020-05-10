@@ -2,7 +2,7 @@
 
 from time import time
 
-from scraper.sources import Sources
+from scraper import Sources
 
 
 # noinspection PyUnresolvedReferences

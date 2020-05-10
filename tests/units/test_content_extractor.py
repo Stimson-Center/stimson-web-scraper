@@ -3,15 +3,17 @@
 All unit tests for the content extractors should be contained in this file.
 """
 
-import scraper
-from scraper.configuration import Configuration
+from scraper.content_extractor import ContentExtractor
+from scraper.parser import Parser
+from scraper import Configuration
 
 """Test specific element extraction cases"""
 
 
+# noinspection PyPep8Naming
 def setUp():
-    extractor = scraper.content_extractor.ContentExtractor(Configuration())
-    parser = scraper.parser.Parser
+    extractor = ContentExtractor(Configuration())
+    parser = Parser
     return extractor, parser
 
 

@@ -3,7 +3,6 @@
 import json
 
 from scraper.google_customsearch import GoogleCustomSearch
-from scraper.sources import Sources
 from scraper import Article
 from scraper.configuration import Configuration
 from bs4 import BeautifulSoup

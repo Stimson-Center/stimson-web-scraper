@@ -10,6 +10,7 @@ from tests.conftest import print_test
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))
 FIXTURES_DIR = os.path.abspath(os.path.join(TEST_DIR, '../fixtures'))
 
+
 @print_test
 def test_valid_urls():
     """Prints out a list of urls with our heuristic guess if it is a
