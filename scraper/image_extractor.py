@@ -171,7 +171,7 @@ def fetch_image_dimension(url, useragent, referer=None, retries=1):
     return fetch_url(url, useragent, referer, retries, dimension=True)
 
 
-class ImageScraper:
+class ImageExtractor:
 
     def __init__(self, article):
         self.url = article.url

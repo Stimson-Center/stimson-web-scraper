@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 # https://preslav.me/2019/01/09/dotenv-files-python/
 from fake_useragent import UserAgent
 
-from . import image_scraper
+from . import image_extractor
 from . import network
 from . import nlp
 from . import settings
@@ -523,7 +523,7 @@ class Article(object):
         first, then uses Reddit's image algorithm as a fallback.
         """
         try:
-            s = image_scraper.ImageScraper(self)
+            s = image_extractor.ImageExtractor(self)
             self.set_top_img(s.largest_image_url())
         except TypeError as e:
             if "Can't convert 'NoneType' object to str implicitly" in e.args[0]:
@@ -571,7 +571,7 @@ class Article(object):
 
     def set_top_img(self, src_url):
         if src_url is not None:
-            s = image_scraper.ImageScraper(self)
+            s = image_extractor.ImageExtractor(self)
             if s.satisfies_requirements(src_url):
                 self.set_top_img_no_check(src_url)
 
