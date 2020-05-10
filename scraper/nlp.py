@@ -39,7 +39,7 @@ def load_stopwords(language):
         stopwords.update(set([w.strip() for w in f.readlines()]))
 
 
-def summarize(url='', title='', text='', max_sents=5):
+def summarize(title='', text='', max_sents=5):
     if not text or max_sents <= 0:
         return []
 
