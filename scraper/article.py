@@ -179,7 +179,7 @@ class Article(object):
             self.build()
         self.nlp()
         url = self.url.lower()
-        if url.find(".wikipedia.org/wiki/"):
+        if url.find(".wikipedia.org/wiki/") >= 0:
             self.parse_tables(attributes={"class": "wikitable"})
 
     def _parse_scheme_file(self, path):
