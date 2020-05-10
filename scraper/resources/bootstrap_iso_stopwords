@@ -1,15 +1,13 @@
 #!/usr/bin/env python3
 
 import requests
-import json
 
-stopwords = requests.get('https://raw.githubusercontent.com/stopwords-iso/stopwords-iso/master/stopwords-iso.json').json()
+stopwords = requests.get(
+    'https://raw.githubusercontent.com/stopwords-iso/stopwords-iso/master/stopwords-iso.json').json()
 
-for k,v in stopwords.items():
+for k, v in stopwords.items():
     with open('stopwords-' + k + '.txt', 'w') as f:
         for item in v:
             f.write(item + '\n')
         f.flush()
         f.close()
-
-
