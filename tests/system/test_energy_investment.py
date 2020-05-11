@@ -87,3 +87,22 @@ def test_get_mekong_delta_urls(fixture_directory):
     total_end_time = time()
     total_elapsed_time = total_end_time - total_start_time
     print(f'Total elapsed time {total_elapsed_time} seconds')
+
+
+def test_wikipedia():
+    import codecs
+    url = "https://en.wikipedia.org/wiki/List_of_power_stations_in_Vietnam"
+    article = Article(url=url)
+    article.build()
+
+    # write data out to tab seperated format
+    page = os.path.split(url)[1]
+    for table in article.tables:
+        fname = '../{}_t{}.tsv'.format(page, table['name'])
+        with codecs.open(fname, 'w') as f:
+            for i in range(len(table['rows'])):
+                rowStr = '\t'.join(table['rows'][i])
+                rowStr = rowStr.replace('\n', '')
+                # print(rowStr)
+                f.write(rowStr + '\n')
+            f.close()
