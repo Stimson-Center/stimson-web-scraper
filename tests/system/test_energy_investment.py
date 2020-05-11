@@ -61,7 +61,7 @@ def test_get_mekong_delta_urls(fixture_directory):
             # websites.append(scraper.build(line.rstrip(), config=config))
             websites.append(Article(line.rstrip(), request_timeout=config.request_timeout,
                                     ignored_content_types_defaults=pdf_defaults))
-            break # only process the first url in file
+            # break # only process the first url in file
 
         build_end_time = time()
         build_elapsed_time = build_end_time - build_start_time
@@ -76,9 +76,9 @@ def test_get_mekong_delta_urls(fixture_directory):
 
     persist_start_time = time()
     for article in websites:
-        # encoded = b64_encode(article.url)
-        # filename = encoded + '.json'
-        filename = article.link_hash + '.json'
+        encoded = b64_encode(article.url)
+        filename = encoded + '.json'
+        # # filename = article.link_hash + '.json'
         save_article(article, filename, filedir='/tmp')
     persist_end_time = time()
     persist_elapsed_time = persist_end_time - persist_start_time
