@@ -102,13 +102,13 @@ can work properly. The driver for Chrome is a standalone executable that should 
 ```bash
    unzip chromedriver_mac64.zip
 ```
-* copy the file to a directory or folder in the terminal window search path
+* copy the file to a directory or folder in the terminal window's search path
 
+For example:
 ```bash
    cp -p chromedriver /usr/local/bin/
 ```
 
-For example:
 ## get project source code
 
 ```bash
