@@ -139,7 +139,6 @@ article.top_image
 article.movies
 ['http://youtube.com/path/to/link.com', ...]
 
-
 article.keywords
 ['New Years', 'resolution', ...]
 
@@ -148,7 +147,6 @@ article.summary
 
 article.html
 '<!DOCTYPE HTML><html itemscope itemtype="http://...'
-
 ```
 
 #### Foreign Language Websites
