@@ -92,20 +92,23 @@ You must download and install the Selenium Chrome driver component so that websi
 can work properly. The driver for Chrome is a standalone executable that should be placed on your system
 [PATH]. 
 
+* Download the chrome driver that matches the host operating system of this project
+
 ```bash
     open https://sites.google.com/a/chromium.org/chromedriver/downloads
 ```
-
-* Download the chrome driver that matches the host operating system of this project
 * unzip the file
-* copy the file to a directory or folder in the terminal window search path
-
-For example:
 
 ```bash
-   unzip chromedriver_mac64.zip .
+   unzip chromedriver_mac64.zip
+```
+* copy the file to a directory or folder in the terminal window search path
+
+```bash
    cp -p chromedriver /usr/local/bin/
 ```
+
+For example:
 ## get project source code
 
 ```bash
