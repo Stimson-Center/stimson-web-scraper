@@ -14,7 +14,7 @@ Table of Contents
      * [Download GitHub desktop](#download-github-desktop)
      * [Optionally Download PyCharm Professional](#optionally-download-pycharm-professional)
   * [Git on the Server Generating Your SSH Public Key](#git-on-the-server-generating-your-ssh-public-key)
-  * [Install the selenium-webdriver](#selenium-webdriver)
+  * [Install the selenium-webdriver](#install-the-selenium-webdriver)
   * [get project source code](#get-project-source-code)
   * [Getting started with Web Scraping](#getting-started-with-web-scraping)
      * [Execute test suite to ensure environmental integrity](#execute-test-suite-to-ensure-environmental-integrity)
