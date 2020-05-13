@@ -290,6 +290,19 @@ article.build()
 print(article.text)
 ```
 
+#### Get all of the URLs within a Website
+
+```python
+from scraper import Source
+url = "https://www.cnn.com"
+source = Source(url)
+source.build()
+source.set_categories()
+print(source.category_urls)
+print(source.feeds)
+```
+
+
 ## Optionally Setting up a Docker environment
         
 ```bash
@@ -302,4 +315,6 @@ print(article.text)
     (you are automatically put into: /mnt )
 ```
 
-See DOCKER.md for more details
+For more details see:
+
+[Docker Tutorial](https://github.com/praktikos/stimson-web-scraper/blob/master/DOCKER.md)
