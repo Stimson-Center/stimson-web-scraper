@@ -14,7 +14,7 @@ Table of Contents
      * [Download GitHub desktop](#download-github-desktop)
      * [Optionally Download PyCharm Professional](#optionally-download-pycharm-professional)
   * [Git on the Server Generating Your SSH Public Key](#git-on-the-server-generating-your-ssh-public-key)
-  * [selenium-webdriver](#selenium-webdriver)
+  * [Install the selenium-webdriver](#selenium-webdriver)
   * [get project source code](#get-project-source-code)
   * [Getting started with Web Scraping](#getting-started-with-web-scraping)
      * [Execute test suite to ensure environmental integrity](#execute-test-suite-to-ensure-environmental-integrity)
@@ -86,7 +86,7 @@ check to make sure your github key has been added to the ssh-agent list.  Here's
     ssh-add -K ~/.ssh/id_rsa
     ssh-add -L
 ```
-## selenium-webdriver
+## Install the selenium-webdriver
 
 You will need to download the Selenium Chrome driver component to work with 
 browsers. The driver for Chrome is a standalone executable that should be placed on your system
