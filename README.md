@@ -88,8 +88,8 @@ check to make sure your github key has been added to the ssh-agent list.  Here's
 ```
 ## Install the selenium-webdriver
 
-You will need to download the Selenium Chrome driver component to work with 
-browsers. The driver for Chrome is a standalone executable that should be placed on your system
+You must download and install the Selenium Chrome driver component so that website page scraping 
+can work properly. The driver for Chrome is a standalone executable that should be placed on your system
 [PATH]. 
 
 ```bash
