@@ -36,7 +36,6 @@ In a terminal window:
 
     git --version
     git version 2.24.1 (Apple Git-126)
-    open https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
 
     brew install python3
     python3 --version
@@ -64,6 +63,10 @@ In a terminal window:
 ## Git on the Server Generating Your SSH Public Key
 
 [Reference](https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-)
+
+```bash
+open https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/
+```
 
 ```
 check to make sure your github key has been added to the ssh-agent list.  Here's my ~/.ssh/config file
