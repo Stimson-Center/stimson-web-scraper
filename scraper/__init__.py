@@ -11,7 +11,7 @@ from .configuration import Configuration
 from .mthreading import NewsPool
 from .source import Source
 from .sources import Sources
-from .utils import get_available_languages, fulltext
+from .utils import get_languages, get_available_languages, fulltext
 from .version import __version__
 
 __title__ = 'scraper'

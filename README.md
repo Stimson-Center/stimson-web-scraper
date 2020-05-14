@@ -186,7 +186,7 @@ If you are certain that an from scraper then you can specify it by two letter IS
 To see list of supported ISO languages
 ```python
 import scraper
-scraper.languages()
+scraper.get_languages()
 ```
 ```
 Your available languages are:
@@ -256,6 +256,11 @@ vi			  Vietnamese
 yo			  Yoruba
 zh			  Chinese
 zu			  Zulu
+```
+
+```python
+import scraper
+scraper.get_available_languages()
 
 {'ar': 'Arabic', 'af': 'Afrikaans', 'be': 'Belarusian', 'bg': 'Bulgarian', 'bn': 'Bengali', 'br': 'Portuguese, Brazil', 'ca': 'Catalan', 'cs': 'Czech', 'da': 'Danish', 'de': 'German', 'el': 'Greek', 'en': 'English', 'eo': 'Esperanto', 'es': 'Spanish', 'et': 'Estonian', 'eu': 'Basque', 'fa': 'Persian', 'fi': 'Finnish', 'fr': 'French', 'ga': 'Irish', 'gl': 'Galician', 'gu': 'Gujarati', 'ha': 'Hausa', 'he': 'Hebrew', 'hi': 'Hindi', 'hr': 'Croatian', 'hu': 'Hungarian', 'hy': 'Armenian', 'id': 'Indonesian', 'it': 'Italian', 'ja': 'Japanese', 'ka': 'Georgian', 'ko': 'Korean', 'ku': 'Kurdish', 'la': 'Latin', 'lt': 'Lithuanian', 'lv': 'Latvian', 'mk': 'Macedonian', 'mr': 'Marathi', 'ms': 'Malay', 'nb': 'Norwegian (Bokmål)', 'nl': 'Dutch', 'no': 'Norwegian', 'np': 'Nepali', 'pl': 'Polish', 'pt': 'Portuguese', 'ro': 'Romanian', 'ru': 'Russian', 'sk': 'Slovak', 'sl': 'Slovenian', 'so': 'Somali', 'sr': 'Serbian', 'st': 'Sotho, Southern', 'sv': 'Swedish', 'sw': 'Swahili', 'ta': 'Tamil', 'th': 'Thai', 'tl': 'Tagalog', 'tr': 'Turkish', 'uk': 'Ukrainian', 'ur': 'Urdu', 'vi': 'Vietnamese', 'yo': 'Yoruba', 'zh': 'Chinese', 'zu': 'Zulu'}
 
