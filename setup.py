@@ -2,54 +2,52 @@
 # -*- coding: utf-8 -*-
 """
 Alan S. Cooper
+https://packaging.python.org/tutorials/packaging-projects/
 """
 
-import codecs
 import os
 import sys
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+import setuptools
 
-packages = [
-    'scraper',
-]
 
-if sys.argv[-1] == 'publish':
+if sys.argv[-1] == "publish":
     # PYPI now uses twine for package management.
     # For this to work you must first `$ pip3 install twine`
-    os.system('python3 setup.py sdist bdist_wheel')
-    os.system('twine upload dist/*')
+    os.system("python3 setup.py sdist bdist_wheel")
+    os.system("twine upload dist/*")
     sys.exit()
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
+with open("requirements.txt") as f:
+    install_requires = f.read().splitlines()
 
-with codecs.open('README.md', 'r', 'utf-8') as f:
-    readme = f.read()
+with open("README.md", "r") as f:
+    long_description = f.read()
 
-setup(
-    name='stimson-web-scraper',
-    version='0.0.1',
-    description='python article / adobe pdf file discovery & extraction.',
-    long_description=readme,
-    author='Alan S. Cooper',
-    author_email='cooper@pobox.com',
-    url='https://github.com/praktikos/stimson-web-scraper.git',
-    packages=packages,
+setuptools.setup(
+    name="stimson-web-scraper",
+    version="0.0.1",
+    author="Alan S. Cooper",
+    author_email="cooper@pobox.com",
+    description="website article / adobe pdf file discovery & extraction",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/Stimson-Center/stimson-web-scraper",
+    packages=setuptools.find_packages(),
     include_package_data=True,
-    install_requires=required,
-    license='MIT',
+    install_requires=install_requires,
+    license="MIT",
     zip_safe=False,
     classifiers=[
-        'Programming Language :: Python :: 3',
-        'Natural Language :: English',
-        'Intended Audience :: Developers',
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: English",
+        "Intended Audience :: Developers",
+        "Operating System :: OS Independent",
     ],
     entry_points='''
         [console_scripts]
         scraper=scraper.cli:parse
     ''',
+    python_requires=">=3.6",
 )
