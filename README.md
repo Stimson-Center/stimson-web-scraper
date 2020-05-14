@@ -133,7 +133,7 @@ For example:
 
 ```bash
     cd ~/stimson-web-scraper/scraper
-    ./cli -u https://www.cnn.com -l en
+    ./cli.py -u https://www.yahoo.com -l en
 ```
 
 ### Execute as an Python3 package
