@@ -349,3 +349,13 @@ print(source.feeds)
 For more details see:
 
 [Docker Tutorial](https://github.com/praktikos/stimson-web-scraper/blob/master/DOCKER.md)
+
+
+# Contributing
+   * Fork it
+   * Create your feature branch (`git checkout -b your_github_name-feature`)
+   * Commit your changes (`git commit -am 'Added some feature'`)
+   * Make sure to add tests for it. This is important so we don't break it in a future version unintentionally.
+   * [File an Issue](https://github.com/https://github.com/Stimson-Center/stimson-web-scraper/issues)
+   * Push to the branch (`git push origin your_github_name-feature`)
+   * Create new Pull Request
