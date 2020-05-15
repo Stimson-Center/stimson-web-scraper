@@ -3,7 +3,6 @@ stimson-web-scraper
 
 Scrapes and crawls websites for textual data and urls in any ISO language
 
-Branched from https://github.com/codelucas/newspaper
  
 Table of Contents
 =================

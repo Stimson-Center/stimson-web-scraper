@@ -7,7 +7,6 @@ https://packaging.python.org/tutorials/packaging-projects/
 
 import os
 import sys
-
 import setuptools
 
 
@@ -15,7 +14,7 @@ if sys.argv[-1] == "publish":
     # PYPI now uses twine for package management.
     # For this to work you must first `$ pip3 install twine`
     os.system("python3 setup.py sdist bdist_wheel")
-    os.system("twine upload dist/*")
+    os.system("python3 -m twine upload dist/*")
     sys.exit()
 
 with open("requirements.txt") as f:
@@ -26,7 +25,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="stimson-web-scraper",
-    version="0.0.1",
+    version="0.0.2",
     author="Alan S. Cooper",
     author_email="cooper@pobox.com",
     description="website article / adobe pdf file discovery & extraction",
