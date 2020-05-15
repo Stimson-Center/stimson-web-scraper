@@ -14,7 +14,7 @@ from tests.conftest import print_test, mock_resource_with
 
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))
 FIXTURES_DIR = os.path.abspath(os.path.join(TEST_DIR, '../fixtures'))
-URLS_FILE = os.path.abspath(os.path.join(FIXTURES_DIR, 'fulltext_url_list.txt'))
+URLS_FILE = os.path.abspath(os.path.join(FIXTURES_DIR, 'url/fulltext_list.txt'))
 
 
 def get_base_domain(url):

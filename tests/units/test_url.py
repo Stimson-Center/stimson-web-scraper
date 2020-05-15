@@ -18,7 +18,7 @@ def test_valid_urls():
     """
     from scraper.urls import valid_url
 
-    with open(os.path.join(FIXTURES_DIR, 'test_urls.txt'), 'r') as f:
+    with open(os.path.join(FIXTURES_DIR, 'url/test_list.txt'), 'r') as f:
         lines = f.readlines()
         test_tuples = [tuple(line.strip().split(' ')) for line in lines]
         # tuples are ('1', 'url_goes_here') form, '1' means valid,
@@ -38,7 +38,7 @@ def test_pubdate():
     """Checks that irrelevant data in url isn't considered as publishing date"""
     from scraper.urls import STRICT_DATE_REGEX
 
-    with open(os.path.join(FIXTURES_DIR, 'test_urls_pubdate.txt'), 'r') as f:
+    with open(os.path.join(FIXTURES_DIR, 'url/test_pubdate.txt'), 'r') as f:
         lines = f.readlines()
         test_tuples = [tuple(line.strip().split(' ')) for line in lines]
         # tuples are ('1', 'url_goes_here') form, '1' means publishing date
@@ -64,7 +64,7 @@ def test_prepare_url():
     """
     from scraper.urls import prepare_url
 
-    with open(os.path.join(FIXTURES_DIR, 'test_prepare_urls.txt'), 'r') as f:
+    with open(os.path.join(FIXTURES_DIR, 'url/test_prepare.txt'), 'r') as f:
         lines = f.readlines()
         test_tuples = [tuple(line.strip().split(' ')) for line in lines]
         # tuples are ('real_url', 'url_path', 'source_url') form
