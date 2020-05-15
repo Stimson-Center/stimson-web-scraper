@@ -7,7 +7,6 @@ Scrapes and crawls websites for textual data and urls in any ISO language
 Table of Contents
 =================
 
-  * [stimson-web-scraper](#stimson-web-scraper)
   * [Getting Started on Mac OS](#getting-started-on-mac-os)
   * [Install Desktop tools](#install-desktop-tools)
      * [Download GitHub desktop](#download-github-desktop)
@@ -21,10 +20,12 @@ Table of Contents
      * [Execute as an Python3 package](#execute-as-an-python3-package)
         * [Get an article from a Website Page](#get-an-article-from-a-website-page)
         * [Foreign Language Websites](#foreign-language-websites)
-        * [Works with Adobe PDF files as well in any ISO language](#works-with-adobe-pdf-files-as-well-in-any-iso-language)
+        * [Extract text from Adobe PDF files in any ISO language](#extract-text-from-adobe-pdf-files-in-any-iso-language)
         * [Get all of the URLs within a Website](#get-all-of-the-urls-within-a-website)
+        * [Get a Wikipedia Article including embedded tables](#get-a-wikipedia-article-including-embedded-tables)
   * [Optionally Setting up a Docker environment](#optionally-setting-up-a-docker-environment)
-
+* [Contributing](#contributing)
+   
 ## Getting Started on Mac OS
 
 In a terminal window:
@@ -271,7 +272,6 @@ from scraper import Article
 url = 'http://www.bbc.co.uk/zhongwen/simp/chinese_news/2012/12/121210_hongkong_politics.shtml'
 
 article = Article(url, language='zh') # Chinese
-
 article.build()
 
 print(article.text[:150])
@@ -292,7 +292,6 @@ print(article.title)
 url = 'http://www.bbc.co.uk/zhongwen/simp/chinese_news/2012/12/121210_hongkong_politics.shtml'
 
 article = Article(url, language='zh') # Chinese
-
 article.build()
 
 print(article.text[:150])
@@ -308,14 +307,12 @@ print(article.title)
 
 ```
 
-#### Works with Adobe PDF files as well in any ISO language
+#### Extract text from Adobe PDF files in any ISO language
 
 ```python
 from scraper import Article
 url = "http://tpch-th.listedcompany.com/misc/ShareholderMTG/egm201701/20170914-tpch-egm201701-enc02-th.pdf"
-article = Article(
-    url=url,
-    language='th')
+article = Article(url=url, language='th')
 article.build()
 print(article.text)
 ```
@@ -327,11 +324,23 @@ from scraper import Source
 url = "https://www.cnn.com"
 source = Source(url)
 source.build()
+
 source.set_categories()
 print(source.category_urls)
 print(source.feeds)
 ```
 
+#### Get a Wikipedia Article including embedded tables
+
+```python
+from scraper import Article
+url = "https://en.wikipedia.org/wiki/International_Phonetic_Alphabet_chart_for_English_dialects"
+article = Article(url=url, language='en')
+article.build()
+
+print(article.text)
+print(article.tables)
+```
 
 ## Optionally Setting up a Docker environment
         
