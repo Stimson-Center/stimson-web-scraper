@@ -173,8 +173,7 @@ class DocumentCleaner(object):
             prev_node = self.parser.previousSibling(kid_text_node)
             while prev_node is not None \
                     and self.parser.getTag(prev_node) == "a" \
-                    and self.parser.getAttribute(
-                prev_node, 'grv-usedalready') != 'yes':
+                    and self.parser.getAttribute(prev_node, 'grv-usedalready') != 'yes':
                 outer = " " + self.parser.outerHtml(prev_node) + " "
                 replacement_text.append(outer)
                 nodes_to_remove.append(prev_node)
@@ -186,8 +185,7 @@ class DocumentCleaner(object):
             next_node = self.parser.nextSibling(kid_text_node)
             while next_node is not None \
                     and self.parser.getTag(next_node) == "a" \
-                    and self.parser.getAttribute(
-                next_node, 'grv-usedalready') != 'yes':
+                    and self.parser.getAttribute(next_node, 'grv-usedalready') != 'yes':
                 outer = " " + self.parser.outerHtml(next_node) + " "
                 replacement_text.append(outer)
                 nodes_to_remove.append(next_node)
@@ -229,6 +227,7 @@ class DocumentCleaner(object):
         return nodes_to_return
 
     def replace_with_para(self, doc, div):
+        # TODO: Cooper: Why isn't doc used here
         self.parser.replaceTag(div, 'p')
 
     def div_to_para(self, doc, dom_type):

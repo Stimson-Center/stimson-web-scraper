@@ -2,9 +2,8 @@
 """
 All unit tests for the scraper Article should be contained in this file.
 """
-import os
-import sys
 import codecs
+import os
 import unittest
 from collections import defaultdict, OrderedDict
 

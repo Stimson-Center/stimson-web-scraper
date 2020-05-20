@@ -460,6 +460,7 @@ class Article(object):
                     # lots of cells span cols and rows so lets deal with that
                     cspan = int(cell.get('colspan', 1))
                     rspan = int(cell.get('rowspan', 1))
+                    # noinspection PyPep8
                     l = 0
                     for k in range(rspan):
                         # Shifts to the first empty cell of this row

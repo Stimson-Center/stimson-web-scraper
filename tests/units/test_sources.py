@@ -23,7 +23,7 @@ def test_sources():
         # set variables
         start_time = time()
         sources = Sources(website['url'], language=website['language'])
-        sources.download()
+        sources.build()
         end_time = time()
         elapsed_time = end_time - start_time
         assert len(sources.article.title)

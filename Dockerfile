@@ -25,6 +25,7 @@ RUN ln -s $(which ${PYTHON}) /usr/local/bin/python
 COPY requirements.txt .
 RUN ${PIP} --no-cache-dir install virtualenv
 RUN ${PIP} --no-cache-dir install -r requirements.txt
+RUN $(PYTHON} download_corpora.py
 
 COPY bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
