@@ -6,6 +6,7 @@ import os
 import re
 
 from tests.conftest import print_test
+from scraper.urls import extract_domain
 
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))
 FIXTURES_DIR = os.path.abspath(os.path.join(TEST_DIR, '../fixtures'))
@@ -76,3 +77,13 @@ def test_prepare_url():
         except AssertionError:
             print('\t\turl: %s + %s is supposed to be %s' % (url, source, real))
             raise
+
+@print_test
+def test_extract_domain():
+    tld, subd = extract_domain("https://www.cnn.com")
+    assert subd == 'www'
+    assert tld == 'cnn'
+
+    tld, subd = extract_domain("https://cnn.com")
+    assert subd == ''
+    assert tld == 'cnn'

@@ -25,6 +25,8 @@ from .output_formatter import OutputFormatter
 from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh)
 from scraper.video_extractor import VideoExtractor
+from scraper.urls import extract_domain
+
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -605,6 +607,9 @@ class Article(object):
             raise Exception("authors input must be list!")
         if authors:
             self.authors = authors[:self.config.MAX_AUTHORS]
+        else:
+            # if unable to determine article's author, use toplevel domain from url for credits
+            self.authors.append(extract_domain(self.url))
 
     def set_summary(self, summary):
         """Summary here refers to a paragraph of text from the

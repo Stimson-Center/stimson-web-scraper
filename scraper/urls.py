@@ -8,7 +8,6 @@ import logging
 import re
 from base64 import b64encode, b64decode
 from urllib.parse import parse_qs, urljoin, urlparse, urlsplit, urlunsplit
-
 from tldextract import tldextract
 
 __title__ = 'scraper'
@@ -185,9 +184,7 @@ def valid_url(url, verbose=False, test=False):
         path_chunks.remove('index')
 
     # extract the tld (top level domain)
-    tld_dat = tldextract.extract(url)
-    subd = tld_dat.subdomain
-    tld = tld_dat.domain.lower()
+    tld, subd = extract_domain(url)
 
     url_slug = path_chunks[-1] if path_chunks else ''
 
@@ -314,3 +311,10 @@ def b64_encode(url):
     if decoded_url != clean_url:
         raise Exception('Error encoding url %s' % url)
     return encoded.decode("utf-8")
+
+
+def extract_domain(url):
+    # extract the tld (top level domain)
+    tld_dat = tldextract.extract(url)
+    subd = tld_dat.subdomain
+    return tld_dat.domain.lower(), subd
