@@ -19,6 +19,7 @@ from hashlib import sha1
 
 import requests
 from bs4 import BeautifulSoup
+from dateutil.parser import parse as date_parser
 
 from . import settings
 
@@ -504,3 +505,13 @@ def fulltext(html, language='en'):
     else:
         text = ''
     return text
+
+
+def parse_date_str(date_str):
+    if date_str:
+        try:
+            return date_parser(date_str)
+        except (ValueError, OverflowError, AttributeError, TypeError):
+            # near all parse failures are due to URL dates without a day
+            # specifier, e.g. /2014/04/
+            return None

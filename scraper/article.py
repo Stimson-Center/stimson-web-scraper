@@ -5,7 +5,6 @@ import copy
 import glob
 import logging
 import os
-from datetime import datetime
 from urllib.parse import urlparse
 
 import requests
@@ -13,20 +12,20 @@ from bs4 import BeautifulSoup
 # https://preslav.me/2019/01/09/dotenv-files-python/
 from fake_useragent import UserAgent
 
+from scraper.urls import extract_domain
+from scraper.video_extractor import VideoExtractor
 from . import image_extractor
 from . import network
 from . import nlp
 from . import settings
 from . import urls
-from .document_cleaner import DocumentCleaner
 from .configuration import Configuration
 from .content_extractor import ContentExtractor
+from .document_cleaner import DocumentCleaner
 from .output_formatter import OutputFormatter
 from .utils import (URLHelper, RawHelper, extend_config,
-                    get_available_language_codes, extract_meta_refresh)
-from scraper.video_extractor import VideoExtractor
-from scraper.urls import extract_domain
-
+                    get_available_language_codes, extract_meta_refresh,
+                    parse_date_str)
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -110,7 +109,7 @@ class Article(object):
         # List of authors who have published the article, via parse()
         self.authors = []
 
-        self.publish_date = ''
+        self.publish_date = None
 
         # Summary generated from the article's body txt
         self.summary = ''
@@ -220,8 +219,7 @@ class Article(object):
                     # if response.content started with "%PDF-"
                     self.set_authors([pdf_file_reader.documentInfo.author])
                     creation_date = pdf_file_reader.documentInfo.getText("/CreationDate").replace("D:", "")
-                    publish_date = datetime.strptime(creation_date[0:8], "%Y%m%d")
-                    self.publish_date = publish_date.strftime("%Y-%m-%d")
+                    self.publish_date = parse_date_str(creation_date[0:8])
                     self.set_text(html.strip())
             if html is None:
                 log.debug('Download failed on URL %s because of %s' %

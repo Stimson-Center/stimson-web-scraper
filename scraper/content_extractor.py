@@ -13,12 +13,11 @@ import re
 from collections import defaultdict
 from urllib.parse import urljoin, urlparse, urlunparse
 
-from dateutil.parser import parse as date_parser
 from tldextract import tldextract
 
 from . import urls
 from .urls import prepare_url
-from .utils import StringReplacement, StringSplitter
+from .utils import StringReplacement, StringSplitter, parse_date_str
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -186,15 +185,6 @@ class ContentExtractor(object):
         2. Pubdate from metadata
         3. Raw regex searches in the HTML + added heuristics
         """
-
-        def parse_date_str(date_str):
-            if date_str:
-                try:
-                    return date_parser(date_str)
-                except (ValueError, OverflowError, AttributeError, TypeError):
-                    # near all parse failures are due to URL dates without a day
-                    # specifier, e.g. /2014/04/
-                    return None
 
         date_match = re.search(urls.STRICT_DATE_REGEX, url)
         if date_match:
