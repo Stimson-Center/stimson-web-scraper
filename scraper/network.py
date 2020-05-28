@@ -6,13 +6,13 @@ must be abstracted in this file.
 
 import logging
 import tempfile
+from http.cookiejar import CookieJar as cj
 
 import PyPDF4
 import pdftotext
 import requests
 from requests_toolbelt.utils import deprecated
 
-from http.cookiejar import CookieJar as cj
 # This site doesn’t like and want scraping. This gives you the same dreaded error 54,
 # connection reset by the peer.
 from scraper.chromium import get_page_source

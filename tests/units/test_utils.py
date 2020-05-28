@@ -15,4 +15,3 @@ def test_languages_api_call():
     assert codes
     languages = get_available_languages()
     assert languages
-

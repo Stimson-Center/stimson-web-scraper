@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 
-import click
 import json
-import sys
 import os
+import sys
+
+import click
 
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))

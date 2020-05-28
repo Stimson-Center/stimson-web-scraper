@@ -5,8 +5,8 @@ All unit tests for the scraper library should be contained in this file.
 import os
 import re
 
-from tests.conftest import print_test
 from scraper.urls import extract_domain
+from tests.conftest import print_test
 
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))
 FIXTURES_DIR = os.path.abspath(os.path.join(TEST_DIR, '../fixtures'))
@@ -77,6 +77,7 @@ def test_prepare_url():
         except AssertionError:
             print('\t\turl: %s + %s is supposed to be %s' % (url, source, real))
             raise
+
 
 @print_test
 def test_extract_domain():

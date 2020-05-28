@@ -242,4 +242,3 @@ class ArticleTestCase(unittest.TestCase):
                     # print(rowStr)
                     f.write(rowStr + '\n')
                 f.close()
-

@@ -7,15 +7,15 @@ Parser objects will only contain operations that manipulate
 or query an lxml or soup dom object generated from an article's html.
 """
 import logging
+import re
+import string
+from copy import deepcopy
+from html import unescape
+
 import lxml.etree
 import lxml.html
 import lxml.html.clean
-import re
-from html import unescape
-import string
-
 from bs4 import UnicodeDammit
-from copy import deepcopy
 
 from . import text
 

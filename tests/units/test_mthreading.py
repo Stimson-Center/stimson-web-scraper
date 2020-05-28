@@ -3,8 +3,8 @@
 All unit tests for the scraper multi threading should be contained in this file.
 """
 
-from scraper import news_pool, Source
 from scraper import Configuration
+from scraper import news_pool, Source
 from tests.conftest import print_test
 
 

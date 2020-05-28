@@ -3,9 +3,9 @@
 All unit tests for the content extractors should be contained in this file.
 """
 
+from scraper import Configuration
 from scraper.content_extractor import ContentExtractor
 from scraper.parser import Parser
-from scraper import Configuration
 
 """Test specific element extraction cases"""
 
