@@ -70,7 +70,7 @@ class Configuration(object):
 
         self.browser_user_agent = 'scraper/%s' % __version__
         self.headers = {}
-        self.request_timeout = 60
+        self.request_timeout = 120
         self.proxies = {}
         self.number_threads = 10
 

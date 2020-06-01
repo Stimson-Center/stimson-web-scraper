@@ -667,3 +667,20 @@ class Article(object):
         """
         if not self.is_parsed:
             raise ArticleException('You must `parse()` an article first!')
+
+
+class ArticleExecutor(Article):
+    def __init__(self, url):
+        config = Configuration()
+        config.memoize_articles = False
+        pdf_defaults = {
+            # "application/pdf": "%PDF-",
+            # "application/x-pdf": "%PDF-",
+            "application/x-bzpdf": "%PDF-",
+            "application/x-gzpdf": "%PDF-"
+        }
+        Article.__init__(self,
+                         url.rstrip(),
+                         request_timeout=config.request_timeout,
+                         ignored_content_types_defaults=pdf_defaults)
+        self.build()
