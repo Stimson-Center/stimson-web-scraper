@@ -25,7 +25,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="stimson-web-scraper",
-    version="0.0.7",
+    version="0.0.8",
     author="Alan S. Cooper",
     author_email="cooper@pobox.com",
     description="website article / adobe pdf file discovery & extraction",
