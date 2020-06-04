@@ -1,4 +1,5 @@
-#!/bin/python3.7
+#!/usr/bin/env python
+
 # -*- coding: utf-8 -*-
 """
 Alan S. Cooper
@@ -25,7 +26,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="stimson-web-scraper",
-    version="0.0.8",
+    version="0.0.9",
     author="Alan S. Cooper",
     author_email="cooper@pobox.com",
     description="website article / adobe pdf file discovery & extraction",
