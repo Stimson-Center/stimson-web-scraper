@@ -3,7 +3,7 @@
 import json
 import os
 from time import time
-
+import datetime
 from futures3 import ThreadPoolExecutor, as_completed
 
 from scraper import ArticleExecutor
@@ -14,7 +14,7 @@ def save_article(article, filename, filedir='/tmp'):
     a = {
         'title': article.title,
         'authors': article.authors,
-        'publish_date': str(article.publish_date),
+        'publish_date': article.publish_date,
         'summary': article.summary,
         'keywords': article.keywords,
         'text': article.text,
@@ -55,13 +55,37 @@ def article_curator(test_driver_file):
     with open(test_driver_file, encoding='utf-8') as f:
         urls = [url for url in f]
 
+    filedir = os.getenv('HOME')
     articles = article_thread_pool(urls)
+    bad_titles = [
+        "",
+        "404 not found",
+        "404",
+        "503 service temporarily unavailable",
+        "not found",
+        "access denied",
+        "server connection terminated"
+    ]
     for article in articles:
         try:
-            encoded = b64_encode(article.url)
-            filename = encoded + '.json'
+            if isinstance(article.publish_date, datetime.datetime):
+                publish_date = article.publish_date.strftime("%Y-%m-%d")
+            else:
+                publish_date = article.publish_date
+            publish_date = publish_date[0:10].strip() if publish_date else ''
+            article.publish_date = publish_date
+            title = article.title.strip() if article.title else ''
+            if article.text.strip() == '' or title.lower() in bad_titles:
+                print(f"Error: {article.url}")
+                continue
+            if publish_date:
+                filename = f'{publish_date} {title}.json'
+            else:
+                filename = f'{title}.json'
+            # encoded = b64_encode(article.url)
+            # filename = encoded + '.json'
             # # filename = article.link_hash + '.json'
-            save_article(article, filename, filedir='/tmp')
+            save_article(article, filename, filedir=filedir)
         except Exception as exc:
             print('%r generated an exception: %s' % (article.url, exc))
 
