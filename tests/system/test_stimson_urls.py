@@ -62,22 +62,23 @@ def article_curator(test_driver_file):
         "404 not found",
         "404",
         "503 service temporarily unavailable",
+        "522/ connection timed out",
         "not found",
         "access denied",
-        "server connection terminated"
+        "server connection terminated",
+        "page not found",
+        "sorry, the page you were looking for was not found",
+        "page not found - the australian-thai chamber of commerce (austcham)"
     ]
     for article in articles:
         try:
-            if isinstance(article.publish_date, datetime.datetime):
-                publish_date = article.publish_date.strftime("%Y-%m-%d")
-            else:
-                publish_date = article.publish_date
-            publish_date = publish_date[0:10].strip() if publish_date else ''
-            article.publish_date = publish_date
-            title = article.title.strip() if article.title else ''
-            if article.text.strip() == '' or title.lower() in bad_titles:
-                print(f"Error: {article.url}")
+            title = article.title if article.title else ''
+            title = title.replace("/", " ").replace("\\", " ").strip()
+            if title == '' or title.lower() in bad_titles:
+                print(f"Error: {title} {article.url}")
                 continue
+            publish_date = article.publish_date[0:10].strip() if article.publish_date else ''
+            article.publish_date = publish_date
             if publish_date:
                 filename = f'{publish_date} {title}.json'
             else:
