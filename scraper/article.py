@@ -5,6 +5,7 @@ import copy
 import glob
 import logging
 import os
+import datetime
 from urllib.parse import urlparse
 
 import requests
@@ -25,7 +26,7 @@ from .document_cleaner import DocumentCleaner
 from .output_formatter import OutputFormatter
 from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh,
-                    parse_date_str)
+                    parse_date_str, cleanup_text)
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -219,7 +220,7 @@ class Article(object):
                     # if response.content started with "%PDF-"
                     self.set_authors([pdf_file_reader.documentInfo.author])
                     creation_date = pdf_file_reader.documentInfo.getText("/CreationDate").replace("D:", "")
-                    self.publish_date = parse_date_str(creation_date[0:8])
+                    self.set_publish_date(parse_date_str(creation_date[0:8]))
                     self.set_text(html.strip())
             if html is None:
                 log.debug('Download failed on URL %s because of %s' %
@@ -290,9 +291,7 @@ class Article(object):
         self.set_meta_data(meta_data)
 
         if not self.publish_date:
-            self.publish_date = self.extractor.get_publishing_date(
-                self.url,
-                self.clean_doc)
+            self.set_publish_date(self.extractor.get_publishing_date(self.url, self.clean_doc))
 
         # Before any computations on the body, clean DOM object
         self.doc = document_cleaner.clean(self.doc)
@@ -433,6 +432,7 @@ class Article(object):
         self.tables = list()
         for tn, table in enumerate(tables):
             # preinit list of lists
+            # noinspection PyUnusedLocal
             try:
                 caption = table.find('caption')
                 table_name = caption.get_text().rstrip()
@@ -464,6 +464,7 @@ class Article(object):
                     l = 0
                     for k in range(rspan):
                         # Shifts to the first empty cell of this row
+                        # noinspection PyUnusedLocal
                         try:
                             while data[i + k][j + l]:
                                 l += 1
@@ -541,12 +542,12 @@ class Article(object):
 
     def set_title(self, input_title):
         if input_title:
-            input_title = input_title.strip()
+            input_title = cleanup_text(input_title.strip())
             self.title = input_title[:self.config.MAX_TITLE]
 
     def set_text(self, text):
         if text:
-            text = text.strip()
+            text = cleanup_text(text.strip())
             text = text.replace("  ", " ")
             text = text[:self.config.MAX_TEXT]
             self.text = text
@@ -613,7 +614,8 @@ class Article(object):
         """Summary here refers to a paragraph of text from the
         title text and body text
         """
-        self.summary = summary[:self.config.MAX_SUMMARY]
+        self.summary = cleanup_text(summary)
+        self.summary = self.summary[:self.config.MAX_SUMMARY]
 
     def set_meta_language(self, meta_lang):
         """Save langauges in their ISO 2-character form
@@ -650,6 +652,12 @@ class Article(object):
         """
         movie_urls = [urls.prepare_url(o.src) for o in movie_objects if o and o.src]
         self.movies = movie_urls
+
+    def set_publish_date(self, publish_date):
+        if isinstance(publish_date, datetime.datetime):
+            self.publish_date = publish_date.strftime("%Y-%m-%d")
+        else:
+            self.publish_date = publish_date
 
     def throw_if_not_downloaded_verbose(self):
         """Parse ArticleDownloadState -> log readable status
