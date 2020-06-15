@@ -95,6 +95,12 @@ def article_curator(test_driver_file):
 
 
 # noinspection PyUnresolvedReferences
+def test_industrial_spaces_urls(fixture_directory):
+    test_driver_file = os.path.join(fixture_directory, "energy_investment_mekong_delta", "industrial_spaces_url.txt")
+    article_curator(test_driver_file)
+
+
+# noinspection PyUnresolvedReferences
 def test_illegal_unreported_and_unregulated_fishing_urls(fixture_directory):
     test_driver_file = os.path.join(fixture_directory, "illegal-unreported-and-unregulated-fishing", "urls.txt")
     article_curator(test_driver_file)
