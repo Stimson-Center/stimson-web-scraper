@@ -317,13 +317,14 @@ print(article.text)
 #### Get all of the URLs within a Website
 
 ```python
-from scraper import Source
+from scraper import Sources
 url = "https://www.cnn.com"
-source = Source(url)
+sources = Sources(url)
 source.build()
 
 source.set_categories()
-print(source.category_urls)
+print(sources.get_articles())
+print(source.get_categories)
 print(source.feeds)
 ```
 
