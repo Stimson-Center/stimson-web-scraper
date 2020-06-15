@@ -320,12 +320,9 @@ print(article.text)
 from scraper import Sources
 url = "https://www.cnn.com"
 sources = Sources(url)
-source.build()
 
-source.set_categories()
 print(sources.get_articles())
-print(source.get_categories)
-print(source.feeds)
+print(sources.get_categories)
 ```
 
 #### Get a Wikipedia Article including embedded tables
