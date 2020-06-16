@@ -7,6 +7,9 @@ USER root
 # Needed for string substitution
 SHELL ["/bin/bash", "-c"]
 
+RUN apt-get -y update
+RUN apt-get -y install build-essential libpoppler-cpp-dev pkg-config python-dev libpoppler-dev
+
 ARG USE_PYTHON_3_NOT_2=True
 ARG _PY_SUFFIX=${USE_PYTHON_3_NOT_2:+3}
 ARG PYTHON=python${_PY_SUFFIX}
@@ -22,22 +25,23 @@ RUN ${PIP} --no-cache-dir install --upgrade pip setuptools
 # Some TF tools expect a "python" binary
 RUN ln -s $(which ${PYTHON}) /usr/local/bin/python
 
-COPY requirements.txt .
-RUN ${PIP} --no-cache-dir install virtualenv
-RUN ${PIP} --no-cache-dir install -r requirements.txt
-RUN $(PYTHON} download_corpora.py
-
 COPY bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 
-#ENV TZ=UTC
-#RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-#RUN apt-get install -y tzdata
+ENV TZ=UTC
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN apt-get install -y tzdata
+
+COPY requirements.txt .
+RUN ${PIP} --no-cache-dir install virtualenv
 
 EXPOSE 4444
 
 WORKDIR /mnt
-USER seluser
+RUN virtualenv venv
+RUN source venv/bin/activate
+RUN ${PIP} --no-cache-dir install -r requirements.txt
+# RUN $(PYTHON} download_corpora.py
 
 # Define default command.
 CMD ["bash"]
