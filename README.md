@@ -116,6 +116,7 @@ For example:
     git clone https://github.com/praktikos/stimson-web-scraper.git
     cd ~/stimson-web-scraper
     pip3 install -r requirements.txt
+    python3 download_corpora.py
 ```
 
 ## Getting started with Web Scraping
