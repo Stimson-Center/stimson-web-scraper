@@ -7,6 +7,8 @@ import logging
 import os
 import datetime
 from urllib.parse import urlparse
+# https://selenium-python.readthedocs.io/api.html
+from selenium.common.exceptions import InvalidArgumentException
 
 import requests
 from bs4 import BeautifulSoup
@@ -172,7 +174,6 @@ class Article(object):
         Don't normally call this method b/c it's good to multithread articles
         on a source (scraper) level.
         """
-
         self.download()
         self.parse()
         if self.config.use_canonical_link and self.canonical_link and self.canonical_link != self.url:
@@ -183,6 +184,7 @@ class Article(object):
         url = self.url.lower()
         if url.find(".wikipedia.org/wiki/") >= 0:
             self.parse_tables(attributes={"class": "wikitable"})
+
 
     def _parse_scheme_file(self, path):
         try:
@@ -197,10 +199,17 @@ class Article(object):
         try:
             html, pdf_file_reader = network.get_html_2XX_only(self.url, self.config)
             return html, pdf_file_reader
-        except requests.exceptions.RequestException as e:
-            self.download_state = ArticleDownloadState.FAILED_RESPONSE
-            self.download_exception_msg = str(e)
-            return None
+        except requests.exceptions.RequestException as ex:
+            return self.failed_response(ex)
+        except InvalidArgumentException as ex:
+            return self.failed_response(ex)
+        except Exception as ex:
+            return self.failed_response(ex)
+
+    def failed_response(self, ex):
+        self.download_state = ArticleDownloadState.FAILED_RESPONSE
+        self.download_exception_msg = str(ex)
+        raise ex
 
     def download(self, input_html=None, title=None, recursion_counter=0):
         """Downloads the link's HTML content, don't use if you are batch async
@@ -690,5 +699,6 @@ class ArticleExecutor(Article):
         Article.__init__(self,
                          url.rstrip(),
                          request_timeout=config.request_timeout,
-                         ignored_content_types_defaults=pdf_defaults)
+                         ignored_content_types_defaults=pdf_defaults
+                         )
         self.build()
