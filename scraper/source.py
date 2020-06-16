@@ -5,6 +5,7 @@ www.cnn.com would be its own source.
 """
 
 import logging
+import json
 from urllib.parse import urljoin, urlsplit, urlunsplit
 
 from tldextract import tldextract
@@ -401,12 +402,14 @@ class Source(object):
     def category_urls(self):
         """Returns a list of category urls
         """
-        return [category.url for category in self.categories]
+        # return [category.url for category in self.categories]
+        articles = self.categories_to_articles()
+        return [{"url": article.url, "title": article.title} for article in articles]
 
     def article_urls(self):
         """Returns a list of article urls
         """
-        return [article.url for article in self.articles]
+        return [{"url": article.url, "title": article.title} for article in self.articles]
 
     def print_summary(self):
         """Prints out a summary of the data in our source instance
@@ -429,4 +432,4 @@ class Source(object):
 
         print('feed_urls:', self.feed_urls())
         print('\r\n')
-        print('category_urls:', self.category_urls())
+        print('category_urls:', json.dumps(self.category_urls()))

@@ -32,3 +32,11 @@ def test_sources():
         article_dict = vars(sources.article)
         print(f'{elapsed_time} seconds, {sources.article.title} urls, at: {website["url"]}')
         # print(f'{sources.article.text} text')
+
+
+# noinspection PyUnresolvedReferences
+def test_sources_articles():
+    sources = Sources("https://opendevelopmentcambodia.net/profiles/special-economic-zones", language="en")
+    articles = sources.get_articles()
+    category_articles = sources.get_categories()
+    pass
