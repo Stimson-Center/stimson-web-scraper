@@ -116,7 +116,6 @@ For example:
     git clone https://github.com/praktikos/stimson-web-scraper.git
     cd ~/stimson-web-scraper
     pip3 install -r requirements.txt
-    python3 download_corpora.py
 ```
 
 ## Getting started with Web Scraping
@@ -344,9 +343,7 @@ print(article.tables)
 	docker --version
 	
     cd ~/stimson-web-scraper
-    docker build -t stimson-web-scraper .
-    docker run -it -v `pwd`:/mnt --entrypoint=/bin/bash  stimson-web-scraper
-    (you are automatically put into: /mnt )
+    ./run_docker.sh
 ```
 
 For more details see:
