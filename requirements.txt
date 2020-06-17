@@ -4,7 +4,6 @@ cssselect>=1.1.0
 fake_useragent>=0.1.11
 feedfinder2>=0.0.4
 feedparser>=5.2.1
-futures3>=1.0.0
 jieba3k>=0.35.1
 lxml>=4.5.1
 nltk>=3.5

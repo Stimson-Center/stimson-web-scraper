@@ -94,12 +94,14 @@ def prepare_url(url, source_url=None):
         else:
             # proper_url = remove_args(url)
             proper_url = url
+
+        # remove trailing slash if any to reduce "duplicate" urls
+        proper_url = proper_url[:-1] if proper_url.endswith('/') else proper_url
+        proper_url = proper_url[:-1] if proper_url.endswith('\n') else proper_url
     except ValueError as e:
         log.critical('url %s failed on err %s' % (url, str(e)))
         proper_url = ''
-
-    # remove trailing slash if any to reduce "duplicate" urls
-    return proper_url[:-1] if proper_url.endswith('/') else proper_url
+    return proper_url
 
 
 def valid_url(url, verbose=False, test=False):

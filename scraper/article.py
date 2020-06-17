@@ -71,7 +71,7 @@ class Article(object):
 
         if source_url == '':
             scheme = urls.get_scheme(url)
-            if scheme is None:
+            if scheme is None or scheme.strip() is '':
                 scheme = 'http'
             source_url = scheme + '://' + urls.get_domain(url)
 

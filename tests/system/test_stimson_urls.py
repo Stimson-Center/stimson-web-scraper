@@ -3,11 +3,8 @@
 import json
 import os
 from time import time
-import datetime
-from futures3 import ThreadPoolExecutor, as_completed
 
-from scraper import ArticleExecutor
-from scraper.urls import b64_encode
+from scraper import Article, news_pool
 
 
 def save_article(article, filename, filedir='/tmp'):
@@ -31,19 +28,9 @@ def save_article(article, filename, filedir='/tmp'):
 
 
 def article_thread_pool(urls):
-    articles = []
-    # https://docs.python.org/3/library/concurrent.futures.html
-    max_worker_threads = 20
-    # We can use a with statement to ensure threads are cleaned up promptly
-    with ThreadPoolExecutor(max_workers=max_worker_threads) as executor:
-        # Start the load operations and mark each future with its URL
-        future_to_article = {executor.submit(ArticleExecutor, url): url for url in urls}
-        for future in as_completed(future_to_article):
-            try:
-                articles.append(future.result())
-            except Exception as exc:
-                # print('%r generated an exception: %s' % (a42_wo_wordorder, exc))
-                print(exc)
+    articles = [Article(url.replace("\n", "")) for url in urls]
+    news_pool.set(articles)
+    news_pool.join()
     return articles
 
 
@@ -52,7 +39,8 @@ def article_curator(test_driver_file):
     # set variables
     start_time = time()
 
-    with open(test_driver_file, encoding='utf-8') as f:
+    # URLPARSE fails on UTF8 string! https://stackoverflow.com/questions/50499273/urlparse-fails-with-simple-url
+    with open(test_driver_file,'r', encoding='ascii', errors='ignore') as f:
         urls = [url for url in f]
 
     filedir = os.getenv('HOME')

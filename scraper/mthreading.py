@@ -127,10 +127,8 @@ class NewsPool(object):
 
         if override_threads is not None:
             num_threads = override_threads
-        elif all([isinstance(n, Source) for n in news_list]):
-            num_threads = threads_per_source * len(news_list)
         else:
-            num_threads = 1
+            num_threads = threads_per_source * len(news_list)
 
         timeout = self.config.thread_timeout_seconds
         self.pool = ThreadPool(num_threads, timeout)
