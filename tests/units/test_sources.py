@@ -26,12 +26,13 @@ def test_sources():
         sources.build()
         end_time = time()
         elapsed_time = end_time - start_time
-        assert len(sources.article.title)
-        # article as a dictionary
-        # https://stackoverflow.com/questions/61517/python-dictionary-from-an-objects-fields
-        article_dict = vars(sources.article)
-        print(f'{elapsed_time} seconds, {sources.article.title} urls, at: {website["url"]}')
-        # print(f'{sources.article.text} text')
+        if sources.article and sources.article.title:
+            assert len(sources.article.title)
+            # https://stackoverflow.com/questions/61517/python-dictionary-from-an-objects-fields
+            print(f'{elapsed_time} seconds, {sources.article.url} urls, at: {website["url"]}')
+        else:
+            # https://stackoverflow.com/questions/61517/python-dictionary-from-an-objects-fields
+            print(f'{elapsed_time} seconds at: {website["url"]}')
 
 
 # noinspection PyUnresolvedReferences

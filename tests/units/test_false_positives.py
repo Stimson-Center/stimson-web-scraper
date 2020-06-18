@@ -5,22 +5,24 @@ All unit tests for the scraper Article should be contained in this file.
 
 from scraper import Article, Configuration
 
-def validate(url):
+
+def validate(url, language):
     config = Configuration()
     config.follow_meta_refresh = True
     # BUG was that website reported language as zh-Hant-TW when it really was en!
     config.use_meta_language = False
-    config.language = 'en'
+    config.language = language
     config.http_success_only = False
     article = Article(url, config=config)
     article.download()
     article.parse()
     assert len(article.text)
     article.nlp()
+    pass
 
 def test_focustaiwan_tw():
     url = "https://focustaiwan.tw/society/201606280011"
-    validate(url)
+    validate(url, 'en')
 
 
 def test_allafrica_com():
@@ -33,4 +35,12 @@ def test_allafrica_com():
     # <h1>Moved Permanently</h1>
     # <p>The document has moved <a href="https://allafrica.com/stories/201602041393.html">here</a>.</p>
     # </body></html>
-    validate(url)
+    validate(url, 'en')
+
+
+def test_chinese_good():
+    url = 'http://www.bbc.co.uk/zhongwen/simp/chinese_news/2012/12/121210_hongkong_politics.shtml'
+    validate(url, 'zh')
+    url = "http://news.sohu.com/20050601/n225789219.shtml"
+    validate(url, 'zh')
+
