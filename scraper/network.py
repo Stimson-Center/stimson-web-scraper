@@ -15,7 +15,6 @@ from requests_toolbelt.utils import deprecated
 
 # This site doesn’t like and want scraping. This gives you the same dreaded error 54,
 # connection reset by the peer.
-from scraper.chromium import get_page_source
 from .configuration import Configuration
 from .mthreading import ThreadPool
 
@@ -47,13 +46,8 @@ def get_request_kwargs(timeout, useragent, proxies, headers):
 def get_html(url, config=None, response=None):
     """HTTP response code agnostic
     """
-    pdf_file_reader = None
-    try:
-        html, pdf_file_reader = get_html_2XX_only(url, config, response)
-        return html, pdf_file_reader
-    except requests.exceptions.RequestException as e:
-        log.debug('get_html() error. %s on URL: %s' % (e, url))
-        return '', pdf_file_reader
+    html, pdf_file_reader = get_html_2XX_only(url, config, response)
+    return html, pdf_file_reader
 
 
 def get_html_2XX_only(url, config=None, response=None):
@@ -70,34 +64,30 @@ def get_html_2XX_only(url, config=None, response=None):
     pdf_file_reader = None
     pdf_prefix = '%PDF-'
 
-    try:
-        if response is not None:
-            return _get_html_from_response(response, config), pdf_file_reader
+    if response is not None:
+        return _get_html_from_response(response, config), pdf_file_reader
 
-        response = requests.get(
-            url=url, **get_request_kwargs(timeout, useragent, proxies, headers))
+    response = requests.get(url=url, **get_request_kwargs(timeout, useragent, proxies, headers))
 
-        html = _get_html_from_response(response, config)
+    html = _get_html_from_response(response, config)
 
-        if config.http_success_only:
-            # fail if HTTP sends a non 2XX response
-            response.raise_for_status()
+    if response.status_code != 200 and config.http_success_only:
+        # fail if HTTP sends a non 2XX response
+        response.raise_for_status()
 
-        if html != pdf_prefix and response.text.startswith(pdf_prefix):
-            html = ""
-            pdf_file = tempfile.TemporaryFile(mode='wb+')
-            pdf_file.write(response.content)
-            pdf_file.flush()
-            pdf_file.seek(0)
-            pagesAsListOfText = pdftotext.PDF(pdf_file)
-            for text in pagesAsListOfText:
-                html += text
-            pdf_file.seek(0)
-            pdf_file_reader = PyPDF4.PdfFileReader(pdf_file)
+    if html.startswith(pdf_prefix):
+        html = ""
+        pdf_file = tempfile.TemporaryFile(mode='wb+')
+        pdf_file.write(response.content)
+        pdf_file.flush()
+        pdf_file.seek(0)
+        pagesAsListOfText = pdftotext.PDF(pdf_file)
+        for text in pagesAsListOfText:
+            html += text
+        pdf_file.seek(0)
+        pdf_file_reader = PyPDF4.PdfFileReader(pdf_file)
 
-        return html, pdf_file_reader
-    except requests.exceptions.RequestException:
-        return get_page_source(url), pdf_file_reader
+    return html, pdf_file_reader
 
 
 def _get_html_from_response(response, config):

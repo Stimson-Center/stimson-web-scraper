@@ -48,7 +48,7 @@ class Worker(Thread):
             # noinspection PyBroadException
             try:
                 func(*args, **kargs)
-            except Exception:
+            except Exception as ex:
                 traceback.print_exc()
 
             self.tasks.task_done()

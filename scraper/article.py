@@ -175,7 +175,8 @@ class Article(object):
         on a source (scraper) level.
         """
         self.download()
-        self.parse()
+        if not self.is_parsed:
+            self.parse()
         if self.config.use_canonical_link and self.canonical_link and self.canonical_link != self.url:
             self.url = self.canonical_link
             # recurse once!
@@ -184,7 +185,6 @@ class Article(object):
         url = self.url.lower()
         if url.find(".wikipedia.org/wiki/") >= 0:
             self.parse_tables(attributes={"class": "wikitable"})
-
 
     def _parse_scheme_file(self, path):
         try:
@@ -231,6 +231,8 @@ class Article(object):
                     creation_date = pdf_file_reader.documentInfo.getText("/CreationDate").replace("D:", "")
                     self.set_publish_date(parse_date_str(creation_date[0:8]))
                     self.set_text(html.strip())
+                    # don't bother parsing HTML later, there is no HTML here, just raw text
+                    self.is_parsed = True
             if html is None:
                 log.debug('Download failed on URL %s because of %s' %
                           (self.url, self.download_exception_msg))

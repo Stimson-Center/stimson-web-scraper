@@ -5,7 +5,7 @@ import os
 from time import time
 
 from scraper import Article, news_pool
-
+from scraper.urls import get_path
 
 def save_article(article, filename, filedir='/tmp'):
     a = {
@@ -41,12 +41,12 @@ def article_curator(test_driver_file):
 
     # URLPARSE fails on UTF8 string! https://stackoverflow.com/questions/50499273/urlparse-fails-with-simple-url
     with open(test_driver_file,'r', encoding='ascii', errors='ignore') as f:
-        urls = [url for url in f]
+        urls = [url.replace('\n', '').strip() for url in f if url.replace('\n', '').strip()]
 
     filedir = os.getenv('HOME')
+    # spin up
     articles = article_thread_pool(urls)
     bad_titles = [
-        "",
         "404 not found",
         "404",
         "503 service temporarily unavailable",
@@ -62,7 +62,10 @@ def article_curator(test_driver_file):
         try:
             title = article.title if article.title else ''
             title = title.replace("/", " ").replace("\\", " ").strip()
-            if title == '' or title.lower() in bad_titles:
+            if title == '':
+                title = get_path(article.url)
+                title = title.replace("/", "-")
+            elif title.lower() in bad_titles:
                 print(f"Error: {title} {article.url}")
                 continue
             publish_date = article.publish_date[0:10].strip() if article.publish_date else ''
