@@ -86,28 +86,6 @@ check to make sure your github key has been added to the ssh-agent list.  Here's
     ssh-add -K ~/.ssh/id_rsa
     ssh-add -L
 ```
-## Install the selenium-webdriver
-
-You must download and install the Selenium Chrome driver component so that website page scraping 
-can work properly. The driver for Chrome is a standalone executable that should be placed on your system
-[PATH]. 
-
-* Download the chrome driver that matches the host operating system of this project
-
-```bash
-    open https://sites.google.com/a/chromium.org/chromedriver/downloads
-```
-* unzip the file
-
-```bash
-   unzip chromedriver_mac64.zip
-```
-* copy the file to a directory or folder in the terminal window's search path
-
-For example:
-```bash
-   cp -p chromedriver /usr/local/bin/
-```
 
 ## get project source code
 
