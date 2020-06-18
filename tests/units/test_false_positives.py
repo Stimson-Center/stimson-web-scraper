@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+"""
+All unit tests for the scraper Article should be contained in this file.
+"""
+
+from scraper import Article, Configuration
+
+def validate(url):
+    config = Configuration()
+    config.follow_meta_refresh = True
+    # BUG was that website reported language as zh-Hant-TW when it really was en!
+    config.use_meta_language = False
+    config.language = 'en'
+    config.http_success_only = False
+    article = Article(url, config=config)
+    article.download()
+    article.parse()
+    assert len(article.text)
+    article.nlp()
+
+def test_focustaiwan_tw():
+    url = "https://focustaiwan.tw/society/201606280011"
+    validate(url)
+
+
+def test_allafrica_com():
+    url = "https://allafrica.com/stories/201602041393.html"
+    # curl http://allafrica.com/stories/201602041393.html
+    # <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+    # <html><head>
+    # <title>301 Moved Permanently</title>
+    # </head><body>
+    # <h1>Moved Permanently</h1>
+    # <p>The document has moved <a href="https://allafrica.com/stories/201602041393.html">here</a>.</p>
+    # </body></html>
+    validate(url)

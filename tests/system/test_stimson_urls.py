@@ -4,8 +4,9 @@ import json
 import os
 from time import time
 
-from scraper import Article, news_pool
+from scraper import Article, Configuration
 from scraper.urls import get_path
+from scraper.mthreading import NewsPool
 
 
 def save_article(article, filename, filedir='/tmp'):
@@ -35,14 +36,15 @@ def save_article(article, filename, filedir='/tmp'):
             pass
 
 
-def article_thread_pool(urls):
-    articles = [Article(url.replace("\n", "")) for url in urls]
+def article_thread_pool(urls, config):
+    articles = [Article(url.replace("\n", ""), config=config) for url in urls]
+    news_pool = NewsPool(config=config)
     news_pool.set(articles)
     news_pool.join()
     return articles
 
 
-def article_curator(test_driver_file):
+def article_curator(test_driver_file, config):
     print("\n")
     # set variables
     start_time = time()
@@ -53,7 +55,7 @@ def article_curator(test_driver_file):
 
     filedir = os.getenv('HOME')
     # spin up
-    articles = article_thread_pool(urls)
+    articles = article_thread_pool(urls, config)
     bad_titles = [
         "404 not found",
         "404",
@@ -95,17 +97,26 @@ def article_curator(test_driver_file):
 
 # noinspection PyUnresolvedReferences
 def test_industrial_spaces_urls(fixture_directory):
+    config = Configuration()
+    config.follow_meta_refresh = True
     test_driver_file = os.path.join(fixture_directory, "energy_investment_mekong_delta", "industrial_spaces_url.txt")
-    article_curator(test_driver_file)
+    article_curator(test_driver_file, config)
 
 
 # noinspection PyUnresolvedReferences
 def test_illegal_unreported_and_unregulated_fishing_urls(fixture_directory):
+    config = Configuration()
+    config.follow_meta_refresh = True
+    config.use_meta_language = False
+    config.language = 'en'
+    config.http_success_only = False
     test_driver_file = os.path.join(fixture_directory, "illegal-unreported-and-unregulated-fishing", "urls.txt")
-    article_curator(test_driver_file)
+    article_curator(test_driver_file, config)
 
 
 # noinspection PyUnresolvedReferences
 def test_energy_investment_mekong_delta_urls(fixture_directory):
+    config = Configuration()
+    config.follow_meta_refresh = True
     test_driver_file = os.path.join(fixture_directory, "energy_investment_mekong_delta", "Thailand.url")
-    article_curator(test_driver_file)
+    article_curator(test_driver_file, config)
