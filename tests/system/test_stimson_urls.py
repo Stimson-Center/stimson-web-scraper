@@ -7,24 +7,32 @@ from time import time
 from scraper import Article, news_pool
 from scraper.urls import get_path
 
+
 def save_article(article, filename, filedir='/tmp'):
-    a = {
-        'title': article.title,
-        'authors': article.authors,
-        'publish_date': article.publish_date,
-        'summary': article.summary,
-        'keywords': article.keywords,
-        'text': article.text,
-        'url': article.url,
-        'tables': article.tables
-    }
-    filepath = os.path.join(filedir, filename)
-    # noinspection PyUnusedLocal
-    try:
-        with open(filepath, "w", encoding='utf-8') as f:
-            f.write(json.dumps(a, indent=4, sort_keys=True))
-    except Exception as ex:
-        pass
+    if article.text.strip() == '':
+        print(f"Error: Empty Article:{article.url}")
+    else:
+        a = {
+            'title': article.title,
+            'authors': article.authors,
+            'publish_date': article.publish_date,
+            'summary': article.summary,
+            'keywords': article.keywords,
+            'text': article.text,
+            'url': article.url,
+            'tables': article.tables,
+            'language': article.meta_lang
+        }
+        try:
+            filepath = os.path.join(filedir, filename)
+            # noinspection PyUnusedLocal
+            with open(filepath, "w", encoding='utf-8') as f:
+                f.write(json.dumps(a, indent=4, sort_keys=True))
+                # f.write(a['title'] + '\n')
+                # f.write(a['text'] + '\n')
+        except OSError as ex:
+            # includes IOError
+            pass
 
 
 def article_thread_pool(urls):
@@ -40,7 +48,7 @@ def article_curator(test_driver_file):
     start_time = time()
 
     # URLPARSE fails on UTF8 string! https://stackoverflow.com/questions/50499273/urlparse-fails-with-simple-url
-    with open(test_driver_file,'r', encoding='ascii', errors='ignore') as f:
+    with open(test_driver_file, 'r', encoding='ascii', errors='ignore') as f:
         urls = [url.replace('\n', '').strip() for url in f if url.replace('\n', '').strip()]
 
     filedir = os.getenv('HOME')
