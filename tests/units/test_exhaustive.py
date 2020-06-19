@@ -35,7 +35,7 @@ def check_url(*args, **kwargs):
     return ExhaustiveFullTextCase.check_url(*args, **kwargs)
 
 
-# @unittest.skipIf('fulltext' not in sys.argv, 'Skipping fulltext tests')
+@unittest.skipIf('fulltext' not in sys.argv, 'Skipping fulltext tests')
 class ExhaustiveFullTextCase(unittest.TestCase):
     @staticmethod
     def check_url(args):
@@ -51,6 +51,7 @@ class ExhaustiveFullTextCase(unittest.TestCase):
             a.parse()
             if a.publish_date is None:
                 pubdate_failed = True
+                print(f"BAD_PUBDATE={url}")
         except Exception:
             print('<< URL: %s parse ERROR >>' % url)
             traceback.print_exc()
