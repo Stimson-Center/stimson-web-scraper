@@ -75,7 +75,7 @@ def get_html_2XX_only(url, config=None, response=None):
         # fail if HTTP sends a non 2XX response
         response.raise_for_status()
 
-    if html.startswith(pdf_prefix):
+    if html.startswith(pdf_prefix) and html != pdf_prefix:
         html = ""
         pdf_file = tempfile.TemporaryFile(mode='wb+')
         pdf_file.write(response.content)
