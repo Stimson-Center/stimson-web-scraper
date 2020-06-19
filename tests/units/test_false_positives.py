@@ -44,3 +44,8 @@ def test_chinese_good():
     url = "http://news.sohu.com/20050601/n225789219.shtml"
     validate(url, 'zh')
 
+
+def test_pubdate():
+    url = "https://www.theglobeandmail.com/news/world/airasia-search/article22224253/"
+    url = "http://www.telegraph.co.uk/news/politics/margaret-thatcher/11313354/Margaret-Thatcher-feared-GCSEs-would-lower-school-standards.html"
+    validate(url, 'en')

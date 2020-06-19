@@ -191,15 +191,15 @@ class ArticleTestCase(unittest.TestCase):
         self.setup_stage('nlp')
         self.article.nlp()
         KEYWORDS = [
+            'smooth',
+            'snow',
+            'forecasters',
+            'weather',
             'thanksgiving',
             'sailing',
-            'smooth',
-            'flight',
-            'good',
-            'weather',
-            'forecasters',
             'winds',
             'travel',
+            'balloons',
             'storm'
         ]
         SUMMARY = mock_resource_with('cnn_summary', 'txt')
