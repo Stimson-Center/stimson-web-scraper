@@ -315,8 +315,7 @@ class Article(object):
             self.top_node = self.extractor.post_cleanup(self.top_node)
             self.clean_top_node = copy.deepcopy(self.top_node)
 
-            text, article_html = output_formatter.get_formatted(
-                self.top_node)
+            text, article_html = output_formatter.get_formatted(self.top_node)
             self.set_article_html(article_html)
             self.set_text(text)
 
@@ -558,9 +557,10 @@ class Article(object):
 
     def set_text(self, text):
         if text:
-            text = cleanup_text(text.strip())
-            text = text.replace("  ", " ")
-            text = text[:self.config.MAX_TEXT]
+            if self.meta_lang == 'en':
+                text = cleanup_text(text.strip())
+                text = text.replace("  ", " ")
+                text = text[:self.config.MAX_TEXT]
             self.text = text
 
     def set_html(self, html):
