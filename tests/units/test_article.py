@@ -99,7 +99,8 @@ class ArticleTestCase(unittest.TestCase):
         self.article.nlp()
 
         text = mock_resource_with('cnn', 'txt')
-        self.assertEqual(text, self.article.text)
+        self.maxDiff=None
+        self.assertEqual(text.strip(), self.article.text)
         self.assertEqual(text, fulltext(self.article.html))
 
         # NOTE: top_img extraction requires an internet connection
@@ -113,7 +114,7 @@ class ArticleTestCase(unittest.TestCase):
         self.assertEqual(LEN_IMGS, len(self.article.imgs))
         self.assertEqual(META_LANG, self.article.meta_lang)
         self.assertEqual(META_SITE_NAME, self.article.meta_site_name)
-        self.assertEqual('2013-11-27 00:00:00', str(self.article.publish_date))
+        self.assertEqual('2013-11-27', str(self.article.publish_date))
 
     @print_test
     def test_meta_type_extraction(self):
@@ -191,16 +192,16 @@ class ArticleTestCase(unittest.TestCase):
         self.setup_stage('nlp')
         self.article.nlp()
         KEYWORDS = [
-            'smooth',
-            'snow',
-            'forecasters',
-            'weather',
-            'thanksgiving',
-            'sailing',
             'winds',
+            'good',
+            'forecasters',
+            'storm',
+            'thanksgiving',
+            'flight',
+            'sailing',
+            'weather',
             'travel',
-            'balloons',
-            'storm'
+            'smooth'
         ]
         SUMMARY = mock_resource_with('cnn_summary', 'txt')
         self.assertEqual(SUMMARY, self.article.summary)

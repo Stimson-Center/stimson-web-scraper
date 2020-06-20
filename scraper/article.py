@@ -7,8 +7,6 @@ import logging
 import os
 import datetime
 from urllib.parse import urlparse
-# https://selenium-python.readthedocs.io/api.html
-from selenium.common.exceptions import InvalidArgumentException
 
 import requests
 from bs4 import BeautifulSoup
@@ -200,8 +198,6 @@ class Article(object):
             html, pdf_file_reader = network.get_html_2XX_only(self.url, self.config)
             return html, pdf_file_reader
         except requests.exceptions.RequestException as ex:
-            return self.failed_response(ex)
-        except InvalidArgumentException as ex:
             return self.failed_response(ex)
         except Exception as ex:
             return self.failed_response(ex)
@@ -558,7 +554,7 @@ class Article(object):
     def set_text(self, text):
         if text:
             if self.meta_lang == 'en':
-                text = cleanup_text(text.strip())
+                # text = cleanup_text(text.strip())
                 text = text.replace("  ", " ")
                 text = text[:self.config.MAX_TEXT]
             self.text = text
