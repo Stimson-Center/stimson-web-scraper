@@ -555,7 +555,7 @@ class Article(object):
     def set_text(self, text):
         if text:
             # print(f"Scraper translate={self.config.translate} GOOGLE_APPLICATION_CREDENTIALS={os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')}")
-            if self.config.translate and os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+            if self.config.translate is True and os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
                 translator = translate_v2.Client()
                 raw_dict = translator.translate(text, target_language='en', format_="text")
                 text = raw_dict['translatedText']
