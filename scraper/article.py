@@ -6,6 +6,7 @@ import glob
 import logging
 import os
 import datetime
+from google.cloud import translate_v2
 from urllib.parse import urlparse
 
 import requests
@@ -553,7 +554,15 @@ class Article(object):
 
     def set_text(self, text):
         if text:
-            if self.meta_lang == 'en':
+            # print(f"Scraper translate={self.config.translate} GOOGLE_APPLICATION_CREDENTIALS={os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')}")
+            if self.config.translate and os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+                translator = translate_v2.Client()
+                raw_dict = translator.translate(text, target_language='en', format_="text")
+                text = raw_dict['translatedText']
+                text = text.replace("  ", " ")
+                text = text[:self.config.MAX_TEXT]
+                self.config._language = 'en'
+            elif self.meta_lang == 'en':
                 # text = cleanup_text(text.strip())
                 text = text.replace("  ", " ")
                 text = text[:self.config.MAX_TEXT]
