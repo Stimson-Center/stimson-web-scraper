@@ -54,3 +54,5 @@ International_Phonetic_Alphabet_chart_for_English_dialects_t4.tsv
 
 git_stats/
 tests/system/geckodriver.log
+
+.GOOGLE_APPLICATION_CREDENTIALS.json

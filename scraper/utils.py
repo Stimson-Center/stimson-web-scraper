@@ -6,6 +6,7 @@ useful throughout this library.
 
 import codecs
 import hashlib
+import importlib
 import logging
 import os
 import pickle
@@ -358,29 +359,23 @@ def get_useragent():
 def get_available_language_codes():
     """Returns a list of available languages and their 2 char input codes
     """
-    stopword_files = os.listdir(os.path.join(settings.STOPWORDS_DIR))
-    two_dig_codes = [f.split('-')[1].split('.')[0] for f in stopword_files]
-    for d in two_dig_codes:
-        assert len(d) == 2
-    two_dig_codes.sort()
+    languages = get_languages()
+    two_dig_codes = [k for k,v in languages.items()]
     return two_dig_codes
 
 
 def get_languages():
     return {
-        'ar': 'Arabic',
         'af': 'Afrikaans',
-        'be': 'Belarusian',
+        'ar': 'Arabic',
         'bg': 'Bulgarian',
         'bn': 'Bengali',
-        'br': 'Portuguese, Brazil',
         'ca': 'Catalan',
         'cs': 'Czech',
         'da': 'Danish',
         'de': 'German',
         'el': 'Greek',
         'en': 'English',
-        'eo': 'Esperanto',
         'es': 'Spanish',
         'et': 'Estonian',
         'eu': 'Basque',
@@ -388,51 +383,48 @@ def get_languages():
         'fi': 'Finnish',
         'fr': 'French',
         'ga': 'Irish',
-        'gl': 'Galician',
         'gu': 'Gujarati',
-        'ha': 'Hausa',
         'he': 'Hebrew',
         'hi': 'Hindi',
         'hr': 'Croatian',
         'hu': 'Hungarian',
         'hy': 'Armenian',
         'id': 'Indonesian',
+        'is': 'Icelandic',
         'it': 'Italian',
         'ja': 'Japanese',
-        'ka': 'Georgian',
+        'kn': 'Kannada',
         'ko': 'Korean',
-        'ku': 'Kurdish',
-        'la': 'Latin',
+        'lb': 'Luxembourgish',
+        'lij': 'Ligurian',
         'lt': 'Lithuanian',
         'lv': 'Latvian',
-        'mk': 'Macedonian',
+        'ml': 'Malayalam',
         'mr': 'Marathi',
-        'ms': 'Malay',
-        'nb': 'Norwegian (Bokmål)',
+        'nb': 'Norwegian Bokmål',
         'nl': 'Dutch',
-        'no': 'Norwegian',
-        'np': 'Nepali',
         'pl': 'Polish',
         'pt': 'Portuguese',
         'ro': 'Romanian',
         'ru': 'Russian',
+        'si': 'Sinhala',
         'sk': 'Slovak',
         'sl': 'Slovenian',
-        'so': 'Somali',
+        'sq': 'Albanian',
         'sr': 'Serbian',
-        'st': 'Sotho, Southern',
         'sv': 'Swedish',
-        'sw': 'Swahili',
         'ta': 'Tamil',
+        'te': 'Telugu',
         'th': 'Thai',
         'tl': 'Tagalog',
         'tr': 'Turkish',
+        'tt': 'Tatar',
         'uk': 'Ukrainian',
         'ur': 'Urdu',
         'vi': 'Vietnamese',
+        'xx': 'Multi-language',
         'yo': 'Yoruba',
-        'zh': 'Chinese',
-        'zu': 'Zulu'
+        'zh': 'Chinese'
     }
 
 
@@ -440,19 +432,7 @@ def get_available_languages():
     """Prints available languages with their full names
     ISO 639-1 Code: https://www.loc.gov/standards/iso639-2/php/code_list.php
     """
-    languages = get_languages()
-
-    codes = get_available_language_codes()
-    for k, v in languages.items():
-        if k not in codes:
-            del languages[k]
-
-    # print('\nYour available languages are:')
-    # print('\ninput code\t\tfull name')
-    # for code in codes:
-    #     print('  %s\t\t\t  %s' % (code, languages[code]))
-    # print()
-    return languages
+    return get_languages()
 
 
 def extend_config(config, config_items):
@@ -518,7 +498,7 @@ def parse_date_str(date_str):
             return None
 
 
-def cleanup_text (text):
+def cleanup_text(text):
     """
     It scrubs the garbled from its stream...
     Or it gets the debugger again.
@@ -535,6 +515,13 @@ def cleanup_text (text):
     try:
         assert type(x).__name__ == 'str'
     except AssertionError:
-        print("not a string?") # , type(line), line)
+        print("not a string?")  # , type(line), line)
 
     return x
+
+
+def get_stopwords(language):
+    language_code = language[0:2]
+    # use spacy language specific STOP WORDS
+    spacy_stopwords = importlib.import_module(f'spacy.lang.{language_code}.stop_words')
+    return spacy_stopwords.STOP_WORDS

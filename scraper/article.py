@@ -32,7 +32,7 @@ from .named_entity_recognition import TextRank4Keyword
 from .output_formatter import OutputFormatter
 from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh,
-                    parse_date_str, cleanup_text)
+                    parse_date_str, cleanup_text, get_stopwords)
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -444,8 +444,7 @@ class Article(object):
             nlp = spacy.load("xx_ent_wiki_sm")
             nlp.add_pipe(nlp.create_pipe('sentencizer'))
         # use spacy language specific STOP WORDS
-        spacy_stopwords = importlib.import_module(f'spacy.lang.{language_code}.stop_words')
-        stopwords = spacy_stopwords.STOP_WORDS
+        stopwords = get_stopwords(language_code)
         # add PyTextRank to the spaCy pipeline
         tr = pytextrank.TextRank()
         nlp.add_pipe(tr.PipelineComponent, name="textrank", last=True)

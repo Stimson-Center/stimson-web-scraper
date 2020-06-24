@@ -21,13 +21,7 @@ log = logging.getLogger(__name__)
 
 PARENT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
-USERAGENTS = os.path.join(PARENT_DIRECTORY, 'resources/misc/useragents.txt')
-
-STOPWORDS_DIR = os.path.join(PARENT_DIRECTORY, 'resources/text')
-
-# NLP stopwords are != regular stopwords for now...
-NLP_STOPWORDS_EN = os.path.join(
-    PARENT_DIRECTORY, 'resources/misc/stopwords-nlp-en.txt')
+USERAGENTS = os.path.join(PARENT_DIRECTORY, 'resources/useragents.txt')
 
 DATA_DIRECTORY = '.newspaper_scraper'
 

@@ -160,10 +160,14 @@ class TextRank4Keyword():
             sentences.append(s)
         return sentences
 
-    def analyze(self, text, candidate_pos=['NOUN', 'PROPN'], window_size=4, lower=False, stopwords=list()):
+    def analyze(self, text, candidate_pos=None, window_size=4, lower=False, stopwords=None):
         """Main function to analyze text"""
 
         # Set stop words
+        if stopwords is None:
+            stopwords = list()
+        if candidate_pos is None:
+            candidate_pos = ['NOUN', 'PROPN']
         self.set_stopwords(stopwords)
 
         # Pare text by spaCy

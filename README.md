@@ -90,10 +90,7 @@ check to make sure your github key has been added to the ssh-agent list.  Here's
 
 ```bash
     cd ~
-    git clone https://github.com/praktikos/stimson-web-scraper.git
-    cd ~/stimson-web-scraper
-    pip3 install -r requirements.txt
-    python3 download_corpora.py
+    git clone https://github.com/Stimson-Center/stimson-web-scraper.git
 ```
 
 ## Getting started with Web Scraping
@@ -102,6 +99,8 @@ check to make sure your github key has been added to the ssh-agent list.  Here's
 
 ```bash
     cd ~/stimson-web-scraper
+    ./start.sh
+    export GOOGLE_APPLICATION_CREDENTIALS=.GOOGLE_APPLICATION_CREDENTIALS.json
     py.test --verbose
 ```
 
@@ -109,6 +108,8 @@ check to make sure your github key has been added to the ssh-agent list.  Here's
 
 ```bash
     cd ~/stimson-web-scraper/scraper
+    ./start.sh
+    export GOOGLE_APPLICATION_CREDENTIALS=.GOOGLE_APPLICATION_CREDENTIALS.json
     ./cli.py -u https://www.yahoo.com -l en
 ```
 
@@ -319,9 +320,20 @@ print(article.tables)
 ```bash
 	brew install docker
 	docker --version
-	
     cd ~/stimson-web-scraper
     ./run_docker.sh
+```
+You will be put into the virtual machine:
+
+(venv) tf-docker /mnt >
+
+
+```bash
+    virtualenv venv
+    source venv/bin/activate
+    export GOOGLE_APPLICATION_CREDENTIALS=.GOOGLE_APPLICATION_CREDENTIALS.json
+    ./start.sh
+    py.test --verbose 
 ```
 
 For more details see:

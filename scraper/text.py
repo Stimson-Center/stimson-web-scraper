@@ -3,11 +3,10 @@
 Stopword extraction and stopword classes.
 """
 
-import os
 import re
 import string
 
-from .utils import FileHelper
+from .utils import get_stopwords
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -64,11 +63,8 @@ class StopWords(object):
     _cached_stop_words = {}
 
     def __init__(self, language='en'):
-        if language not in self._cached_stop_words:
-            path = os.path.join('text', 'stopwords-%s.txt' % language)
-            self._cached_stop_words[language] = \
-                set(FileHelper.loadResourceFile(path).splitlines())
-        self.STOP_WORDS = self._cached_stop_words[language]
+        # use spacy language specific STOP WORDS
+        self.STOP_WORDS = get_stopwords(language)
 
     def remove_punctuation(self, content):
         # code taken form
