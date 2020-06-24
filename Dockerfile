@@ -30,7 +30,7 @@ RUN source venv/bin/activate
 COPY requirements.txt .
 RUN pip3 --no-cache-dir install -r requirements.txt
 COPY .GOOGLE_APPLICATION_CREDENTIALS.json .
-RUN export GOOGLE_APPLICATION_CREDENTIALS=.GOOGLE_APPLICATION_CREDENTIALS.json
+RUN export GOOGLE_APPLICATION_CREDENTIALS=/mnt/.GOOGLE_APPLICATION_CREDENTIALS.json
 
 # Define default command.
 CMD ["bash"]
