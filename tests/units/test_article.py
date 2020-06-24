@@ -192,20 +192,22 @@ class ArticleTestCase(unittest.TestCase):
         self.setup_stage('nlp')
         self.article.nlp()
         KEYWORDS = [
-            'winds',
-            'good',
-            'forecasters',
-            'storm',
-            'thanksgiving',
-            'flight',
-            'sailing',
             'weather',
-            'travel',
-            'smooth'
+            'storm',
+            'New',
+            'balloons',
+            'York',
+            'flight',
+            'Thanksgiving',
+            'roads',
+            'delays',
+            'people',
+            'winds',
+            'parade'
         ]
+        self.assertCountEqual(KEYWORDS, self.article.keywords)
         SUMMARY = mock_resource_with('cnn_summary', 'txt')
         self.assertEqual(SUMMARY, self.article.summary)
-        self.assertCountEqual(KEYWORDS, self.article.keywords)
 
     @print_test
     def test_download_file_success(self):

@@ -2,28 +2,33 @@
 
 
 import copy
+import datetime
 import glob
+import importlib
 import logging
 import os
-import datetime
-from google.cloud import translate_v2
+import re
 from urllib.parse import urlparse
 
+# With lazy-loading
+import pytextrank
 import requests
+import spacy
 from bs4 import BeautifulSoup
 # https://preslav.me/2019/01/09/dotenv-files-python/
 from fake_useragent import UserAgent
+from google.cloud import translate_v2
 
 from scraper.urls import extract_domain
 from scraper.video_extractor import VideoExtractor
 from . import image_extractor
 from . import network
-from . import nlp
 from . import settings
 from . import urls
 from .configuration import Configuration
 from .content_extractor import ContentExtractor
 from .document_cleaner import DocumentCleaner
+from .named_entity_recognition import TextRank4Keyword
 from .output_formatter import OutputFormatter
 from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh,
@@ -408,18 +413,98 @@ class Article(object):
         self.throw_if_not_downloaded_verbose()
         self.throw_if_not_parsed_verbose()
 
-        nlp.load_stopwords(self.config.get_language())
-        text_keyws = list(nlp.keywords(self.text).keys())
-        title_keyws = list(nlp.keywords(self.title).keys())
-        keyws = set(title_keyws)
-        while len(keyws) < self.config.KEYWORD_COUNT and text_keyws:
-            keyws.add(text_keyws.pop(0))
-        keyws = list(keyws)
-        self.set_keywords(keyws)
+        # With Lazy Loading
+        # nlp = MultiLanguage()
+        # nlp = get_lang_class('xx')
 
-        summary_sents = nlp.summarize(title=self.title, text=self.text, max_sents=self.config.MAX_SUMMARY_SENT)
-        summary = '\n'.join(summary_sents)
+        language_code = self.config.get_language()[0:2]
+        # https://spacy.io/usage/models
+        spacy_language_models = {
+            "zh": "zh_core_web_sm",  # Chinese
+            "da": "da_core_news_sm",  # Danish
+            "nl": "nl_core_news_sm",  # Dutch
+            "en": "en_core_web_sm",  # English
+            "fr": "fr_core_news_sm",  # French
+            "de": "de_core_news_sm",  # German
+            "el": "el_core_news_sm",  # Greek
+            "it": "it_core_news_sm",  # Italian
+            "ja": "ja_core_news_sm",  # Japanese
+            "lt": "lt_core_news_sm",  # Lithuanian
+            "nb": "nb_core_news_sm",  # Norwegian Bokmål
+            "pl": "pl_core_news_sm",  # Polish
+            "pt": "pt_core_news_sm",  # Portuguese
+            "ro": "ro_core_news_sm",  # Romanian
+            "es": "es_core_news_sm"  # Spanish
+        }
+        if language_code in spacy_language_models:
+            nlp = spacy.load(spacy_language_models[language_code])
+        else:
+            # https://github.com/huggingface/neuralcoref/issues/117
+            # nlp = spacy.load("xx_ent_wiki_sm", disable = ['ner', 'parser', 'tagger'])
+            nlp = spacy.load("xx_ent_wiki_sm")
+            nlp.add_pipe(nlp.create_pipe('sentencizer'))
+        # use spacy language specific STOP WORDS
+        spacy_stopwords = importlib.import_module(f'spacy.lang.{language_code}.stop_words')
+        stopwords = spacy_stopwords.STOP_WORDS
+        # add PyTextRank to the spaCy pipeline
+        tr = pytextrank.TextRank()
+        nlp.add_pipe(tr.PipelineComponent, name="textrank", last=True)
+        # nlp.add_pipe(nlp.create_pipe('sentencizer'))
+        # *************************************************************
+        # THIS STEP CAN TAKE A MINUTE OR TWO
+        tr4w = TextRank4Keyword(nlp)
+        tr4w.analyze(self.text, candidate_pos=['NOUN', 'PROPN'], window_size=4, lower=False, stopwords=stopwords)
+        keywords = list()
+        for k, v in tr4w.get_keywords().items():
+            keywords.append(k)
+        if len(keywords) == 0:
+            keywords = self.xx_keywords(stopwords)
+        self.set_keywords(keywords)
+        summary = '\n'.join(map(str, tr4w.get_sentences()))
         self.set_summary(summary)
+
+    def xx_keywords(self, stopwords, count=10):
+        """Get the top `count` keywords and their frequency scores ignores blacklisted
+        words in stopwords, counts the number of occurrences of each word, and
+        sorts them in reverse natural order (so descending) by number of
+        occurrences.
+        """
+        text = self.split_words(self.text)
+        # of words before removing blacklist words
+        top_keywords = list()
+        if text:
+            num_words = len(text)
+            text = [x for x in text if x not in stopwords]
+            freq = {}
+            for word in text:
+                if word in freq:
+                    freq[word] += 1
+                else:
+                    freq[word] = 1
+
+            min_size = min(count, len(freq))
+            keywords = sorted(freq.items(),
+                              key=lambda x: (x[1], x[0]),
+                              reverse=True)
+            keywords = keywords[:min_size]
+            index = 1
+            for k, v in keywords:
+                if index > count:
+                    break
+                if not k.isnumeric():
+                    top_keywords.append(k)
+                    index += 1
+
+        return top_keywords
+
+    def split_words(self, text):
+        """Split a string into array of words
+        """
+        try:
+            text = re.sub(r'[^\w ]', '', text)  # strip special chars
+            return [x.strip('.').lower() for x in text.split()]
+        except TypeError:
+            return None
 
     def parse_tables(self, attributes=None):
         if attributes is None:
@@ -630,8 +715,7 @@ class Article(object):
         """Summary here refers to a paragraph of text from the
         title text and body text
         """
-        self.summary = cleanup_text(summary)
-        self.summary = self.summary[:self.config.MAX_SUMMARY]
+        self.summary = summary[:self.config.MAX_SUMMARY]
 
     def set_meta_language(self, meta_lang):
         """Save langauges in their ISO 2-character form

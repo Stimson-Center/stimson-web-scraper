@@ -19,7 +19,7 @@ def validate(url, language, translate):
     article.parse()
     assert len(article.text)
     article.nlp()
-    pass
+
 
 def test_focustaiwan_tw():
     url = "https://focustaiwan.tw/society/201606280011"
@@ -50,3 +50,8 @@ def test_pubdate():
     url = "https://www.theglobeandmail.com/news/world/airasia-search/article22224253/"
     url = "http://www.telegraph.co.uk/news/politics/margaret-thatcher/11313354/Margaret-Thatcher-feared-GCSEs-would-lower-school-standards.html"
     validate(url, 'en', False)
+
+def test_ner():
+    url = "https://www.power-technology.com/projects/dai-nanh/"
+    validate(url, 'en', False)
+    pass
