@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 docker system prune --force
 docker build -t stimson-web-scraper . 
