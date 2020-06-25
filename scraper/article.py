@@ -32,7 +32,7 @@ from .named_entity_recognition import TextRank4Keyword
 from .output_formatter import OutputFormatter
 from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh,
-                    parse_date_str, cleanup_text, get_stopwords)
+                    parse_date_str, get_stopwords)
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -249,7 +249,8 @@ class Article(object):
                 return self.download(input_html, recursion_counter=recursion_counter + 1)
 
         self.set_html(html)
-        self.set_title(title)
+        if title:
+            self.set_title(title)
 
     def parse(self):
         self.throw_if_not_downloaded_verbose()
@@ -633,7 +634,6 @@ class Article(object):
 
     def set_title(self, input_title):
         if input_title:
-            input_title = cleanup_text(input_title.strip())
             self.title = input_title[:self.config.MAX_TITLE]
 
     def set_text(self, text):
@@ -647,7 +647,6 @@ class Article(object):
                 text = text[:self.config.MAX_TEXT]
                 self.config._language = 'en'
             elif self.meta_lang == 'en':
-                # text = cleanup_text(text.strip())
                 text = text.replace("  ", " ")
                 text = text[:self.config.MAX_TEXT]
             self.text = text
