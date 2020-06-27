@@ -328,7 +328,7 @@ def memoize_articles(source, articles):
         valid_urls = list(memo.keys()) + list(cur_articles.keys())
 
         memo_text = '\r\n'.join(
-            [href.strip() for href in (valid_urls)])
+            [href.strip() for href in valid_urls])
     # Our first run with memoization, save every url as valid
     else:
         memo_text = '\r\n'.join(
