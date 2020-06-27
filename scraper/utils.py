@@ -6,7 +6,6 @@ useful throughout this library.
 
 import codecs
 import hashlib
-import importlib
 import logging
 import os
 import pickle
@@ -34,6 +33,8 @@ __maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
+
+TABSSPACE = re.compile(r'[\s\t]+')
 
 
 class FileHelper(object):
@@ -142,6 +143,7 @@ def timelimit(timeout):
                     self.start()
 
                 def run(self):
+                    # noinspection PyBroadException
                     try:
                         self.result = function(*args, **kw)
                     except:
@@ -360,7 +362,7 @@ def get_available_language_codes():
     """Returns a list of available languages and their 2 char input codes
     """
     languages = get_languages()
-    two_dig_codes = [k for k,v in languages.items()]
+    two_dig_codes = [k for k, v in languages.items()]
     return two_dig_codes
 
 
@@ -520,8 +522,20 @@ def cleanup_text(text):
     return x
 
 
-def get_stopwords(language):
-    language_code = language[0:2]
-    # use spacy language specific STOP WORDS
-    spacy_stopwords = importlib.import_module(f'spacy.lang.{language_code}.stop_words')
-    return spacy_stopwords.STOP_WORDS
+def innerTrim(value):
+    if isinstance(value, str):
+        # remove tab and white space
+        value = re.sub(TABSSPACE, ' ', value)
+        value = ''.join(value.splitlines())
+        return value.strip()
+    return ''
+
+
+def split_words(text):
+    """Split a string into array of words
+    """
+    try:
+        text = re.sub(r'[^\w ]', '', text)  # strip special chars
+        return [x.strip('.').lower() for x in text.split()]
+    except TypeError:
+        return None

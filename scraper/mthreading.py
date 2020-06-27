@@ -45,7 +45,7 @@ class Worker(Thread):
             except queue.Empty:
                 # Extra thread allocated, no job, exit gracefully
                 break
-            # noinspection PyBroadException
+            # noinspection PyBroadException,PyUnusedLocal
             try:
                 func(*args, **kargs)
             except Exception as ex:

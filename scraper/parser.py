@@ -16,8 +16,7 @@ import lxml.etree
 import lxml.html
 import lxml.html.clean
 from bs4 import UnicodeDammit
-
-from . import text
+from .utils import innerTrim
 
 log = logging.getLogger(__name__)
 
@@ -61,6 +60,7 @@ class Parser(object):
         html = cls.get_unicode_html(html)
         # Enclosed in a `try` to prevent bringing the entire library
         # down due to one article (out of potentially many in a `Source`)
+        # noinspection PyBroadException,PyUnusedLocal
         try:
             # lxml does not play well with <? ?> encoding tags
             if html.startswith('<?'):
@@ -213,7 +213,7 @@ class Parser(object):
     @classmethod
     def getText(cls, node):
         txts = [i for i in node.itertext()]
-        return text.innerTrim(' '.join(txts).strip())
+        return innerTrim(' '.join(txts).strip())
 
     @classmethod
     def previousSiblings(cls, node):

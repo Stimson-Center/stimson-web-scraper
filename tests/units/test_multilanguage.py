@@ -96,3 +96,33 @@ def test_thai_pdf_extract():
     assert len(article.text) > len(article.summary)
     assert article.text
     assert article.url
+
+
+def test_hindi_news():
+    url = "https://www.indiatv.in/maharashtra/maharashtra-coronavirus-latest-update-news-721708"
+    article = Article(url=url, language='hi')
+    article.download()
+    article.parse()
+    article.nlp()
+    assert len(article.keywords)
+    assert len(article.authors)
+    # assert article.publish_date
+    assert article.summary
+    assert article.text
+    assert len(article.summary) <= len(article.text)
+    assert article.url
+
+
+def test_arabic_news():
+    url = "https://www.bbc.com/arabic/live/53203730"
+    article = Article(url=url, language='ar')
+    article.download()
+    article.parse()
+    article.nlp()
+    assert len(article.keywords)
+    assert len(article.authors)
+    # assert article.publish_date
+    assert article.summary
+    assert article.text
+    # assert len(article.summary) <= len(article.text)
+    assert article.url

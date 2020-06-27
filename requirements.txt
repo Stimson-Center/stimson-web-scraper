@@ -11,6 +11,7 @@ numpy>=1.19.0
 pandas>=1.0.5
 pdftotext>=2.1.4
 Pillow>=7.1.2
+pyarabic>=0.6.8
 python-dotenv>=0.13.0
 pytest>=5.4.3
 pytextrank>=2.0.2
@@ -23,7 +24,3 @@ requests_toolbelt>=0.9.1
 spacy>=2.3.0
 tldextract>=2.2.2
 tinysegmenter==0.4
-
-
-
-

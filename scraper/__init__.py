@@ -6,7 +6,7 @@ Wherever smart people work, doors are unlocked. -- Steve Wozniak
 # Set default logging handler to avoid "No handler found" warnings.
 import logging
 
-from .article import Article, ArticleException, ArticleExecutor
+from .article import Article, ArticleException
 from .configuration import Configuration
 from .mthreading import NewsPool
 from .source import Source

@@ -6,7 +6,6 @@ import datetime
 import glob
 import logging
 import os
-import re
 from urllib.parse import urlparse
 
 # With lazy-loading
@@ -29,9 +28,10 @@ from .content_extractor import ContentExtractor
 from .document_cleaner import DocumentCleaner
 from .named_entity_recognition import TextRank4Keyword
 from .output_formatter import OutputFormatter
+from .text import get_stopwords
 from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh,
-                    parse_date_str, get_stopwords)
+                    parse_date_str, split_words)
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -468,11 +468,11 @@ class Article(object):
         sorts them in reverse natural order (so descending) by number of
         occurrences.
         """
-        text = self.split_words(self.text)
+        text = split_words(self.text)
         # of words before removing blacklist words
         top_keywords = list()
         if text:
-            num_words = len(text)
+            # num_words = len(text)
             text = [x for x in text if x not in stopwords]
             freq = {}
             for word in text:
@@ -496,15 +496,6 @@ class Article(object):
 
         return top_keywords
 
-    def split_words(self, text):
-        """Split a string into array of words
-        """
-        try:
-            text = re.sub(r'[^\w ]', '', text)  # strip special chars
-            return [x.strip('.').lower() for x in text.split()]
-        except TypeError:
-            return None
-
     def parse_tables(self, attributes=None):
         if attributes is None:
             attributes = {"class": "wikitable"}
@@ -523,7 +514,7 @@ class Article(object):
         self.tables = list()
         for tn, table in enumerate(tables):
             # preinit list of lists
-            # noinspection PyUnusedLocal
+            # noinspection PyUnusedLocal,PyBroadException
             try:
                 caption = table.find('caption')
                 table_name = caption.get_text().rstrip()
@@ -555,7 +546,7 @@ class Article(object):
                     l = 0
                     for k in range(rspan):
                         # Shifts to the first empty cell of this row
-                        # noinspection PyUnusedLocal
+                        # noinspection PyUnusedLocal,PyBroadException
                         try:
                             while data[i + k][j + l]:
                                 l += 1
@@ -773,21 +764,3 @@ class Article(object):
         """
         if not self.is_parsed:
             raise ArticleException('You must `parse()` an article first!')
-
-
-class ArticleExecutor(Article):
-    def __init__(self, url):
-        config = Configuration()
-        config.memoize_articles = False
-        pdf_defaults = {
-            # "application/pdf": "%PDF-",
-            # "application/x-pdf": "%PDF-",
-            "application/x-bzpdf": "%PDF-",
-            "application/x-gzpdf": "%PDF-"
-        }
-        Article.__init__(self,
-                         url.rstrip(),
-                         request_timeout=config.request_timeout,
-                         ignored_content_types_defaults=pdf_defaults
-                         )
-        self.build()

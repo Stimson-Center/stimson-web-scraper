@@ -6,7 +6,7 @@ Output formatting to text via lxml xpath nodes abstracted in this file.
 import logging
 from html import unescape
 
-from .text import innerTrim
+from .utils import innerTrim
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -28,10 +28,10 @@ class OutputFormatter(object):
         self.stopwords_class = config.stopwords_class
 
     def update_language(self, meta_lang):
-        '''Required to be called before the extraction process in some
+        """Required to be called before the extraction process in some
         cases because the stopwords_class has to set incase the lang
         is not latin based
-        '''
+        """
         if meta_lang:
             self.language = meta_lang
             self.stopwords_class = \
@@ -60,7 +60,7 @@ class OutputFormatter(object):
         self.remove_trailing_media_div()
         text = self.convert_to_text()
         # print(self.parser.nodeToString(self.get_top_node()))
-        return (text, html)
+        return text, html
 
     def convert_to_text(self):
         txts = []

@@ -119,6 +119,7 @@ class Source(object):
             articles[:] = [a for a in articles if a.is_valid_body()]
         return articles
 
+    # noinspection PyUnusedLocal
     @utils.cache_disk(seconds=(86400 * 1), cache_folder=ANCHOR_DIRECTORY)
     def _get_category_urls(self, domain):
         """The domain param is **necessary**, see .utils.cache_disk for reasons.

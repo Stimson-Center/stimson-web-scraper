@@ -3,10 +3,10 @@
 Stopword extraction and stopword classes.
 """
 
-import re
-import string
 
-from .utils import get_stopwords
+import string
+import importlib
+import pyarabic.araby as araby
 
 __title__ = 'scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -15,16 +15,12 @@ __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 __maintainer__ = "The Stimson Center"
 __maintainer_email = "cooper@pobox.com"
 
-TABSSPACE = re.compile(r'[\s\t]+')
 
-
-def innerTrim(value):
-    if isinstance(value, str):
-        # remove tab and white space
-        value = re.sub(TABSSPACE, ' ', value)
-        value = ''.join(value.splitlines())
-        return value.strip()
-    return ''
+def get_stopwords(language):
+    language_code = language[0:2]
+    # use spacy language specific STOP WORDS
+    spacy_stopwords = importlib.import_module(f'spacy.lang.{language_code}.stop_words')
+    return spacy_stopwords.STOP_WORDS
 
 
 class WordStats(object):
@@ -78,7 +74,11 @@ class StopWords(object):
         return stripped_input
 
     def candidate_words(self, stripped_input):
-        return stripped_input.split(' ')
+        words = stripped_input.split(' ')
+        for word in words:
+            if not word:
+                words.remove('')
+        return words
 
     def get_stopword_count(self, content):
         if not content:
@@ -103,6 +103,7 @@ class StopWordsChinese(StopWords):
     """Chinese segmentation
     """
 
+    # noinspection PyUnusedLocal
     def __init__(self, language='zh'):
         super(StopWordsChinese, self).__init__(language='zh')
 
@@ -117,6 +118,7 @@ class StopWordsArabic(StopWords):
     """Arabic segmentation
     """
 
+    # noinspection PyUnusedLocal
     def __init__(self, language='ar'):
         # force ar languahe code
         super(StopWordsArabic, self).__init__(language='ar')
@@ -125,11 +127,8 @@ class StopWordsArabic(StopWords):
         return content
 
     def candidate_words(self, stripped_input):
-        import nltk
-        s = nltk.stem.isri.ISRIStemmer()
-        words = []
-        for word in nltk.tokenize.wordpunct_tokenize(stripped_input):
-            words.append(s.stem(word))
+        # https://github.com/linuxscout/pyarabic/blob/master/tests/test_araby.py
+        words = araby.tokenize(stripped_input)
         return words
 
 
@@ -137,6 +136,7 @@ class StopWordsKorean(StopWords):
     """Korean segmentation
     """
 
+    # noinspection PyUnusedLocal
     def __init__(self, language='ko'):
         super(StopWordsKorean, self).__init__(language='ko')
 
@@ -164,6 +164,7 @@ class StopWordsHindi(StopWords):
     """Hindi segmentation
     """
 
+    # noinspection PyUnusedLocal
     def __init__(self, language='hi'):
         super(StopWordsHindi, self).__init__(language='hi')
 
@@ -177,8 +178,9 @@ class StopWordsHindi(StopWords):
         c = 0
         for w in candidate_words:
             c += 1
-            for stop_word in self.STOP_WORDS:
-                overlapping_stopwords.append(stop_word)
+            for s in self.STOP_WORDS:
+                if w.endswith(s):
+                    overlapping_stopwords.append(w)
 
         ws.set_word_count(c)
         ws.set_stopword_count(len(overlapping_stopwords))
