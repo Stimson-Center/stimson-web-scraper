@@ -644,17 +644,15 @@ class ContentExtractor(object):
 
             if not domain and not path:
                 if self.config.verbose:
-                    print('elim category url %s for no domain and path'
-                          % p_url)
+                    log.debug('elim category url %s for no domain and path' % p_url)
                 continue
             if path and path.startswith('#'):
                 if self.config.verbose:
-                    print('elim category url %s path starts with #' % p_url)
+                    log.debug('elim category url %s path starts with #' % p_url)
                 continue
             if scheme and (scheme != 'http' and scheme != 'https'):
                 if self.config.verbose:
-                    print(('elim category url %s for bad scheme, '
-                           'not http nor https' % p_url))
+                    log.debug(('elim category url %s for bad scheme, not http nor https' % p_url))
                 continue
 
             if domain:
@@ -665,8 +663,7 @@ class ContentExtractor(object):
                 for part in child_subdomain_parts:
                     if part == domain_tld.domain:
                         if self.config.verbose:
-                            print(('subdomain contains at %s and %s' %
-                                   (str(part), str(domain_tld.domain))))
+                            log.debug(('subdomain contains at %s and %s' % (str(part), str(domain_tld.domain))))
                         subdomain_contains = True
                         break
 
@@ -675,13 +672,11 @@ class ContentExtractor(object):
                 if not subdomain_contains and \
                         (child_tld.domain != domain_tld.domain):
                     if self.config.verbose:
-                        print(('elim category url %s for domain '
-                               'mismatch' % p_url))
+                        log.debug(('elim category url %s for domain mismatch' % p_url))
                         continue
                 elif child_tld.subdomain in ['m', 'i']:
                     if self.config.verbose:
-                        print(('elim category url %s for mobile '
-                               'subdomain' % p_url))
+                        log.debug(('elim category url %s for mobile subdomain' % p_url))
                     continue
                 else:
                     valid_categories.append(scheme + '://' + domain)
@@ -698,9 +693,8 @@ class ContentExtractor(object):
                     valid_categories.append(domain + path)
                 else:
                     if self.config.verbose:
-                        print(('elim category url %s for >1 path chunks '
-                               'or size path chunks' % p_url))
-        stopwords = [
+                        log.debug(('elim category url %s for >1 path chunks or size path chunks' % p_url))
+        ignore_category_urls = [
             'about', 'help', 'privacy', 'legal', 'feedback', 'sitemap',
             'profile', 'account', 'mobile', 'sitemap', 'facebook', 'myspace',
             'twitter', 'linkedin', 'bebo', 'friendster', 'stumbleupon',
@@ -712,22 +706,20 @@ class ContentExtractor(object):
             'tickets', 'coupons', 'forum', 'board', 'archive', 'browse',
             'howto', 'how to', 'faq', 'terms', 'charts', 'services',
             'contact', 'plus', 'admin', 'login', 'signup', 'register',
-            'developer', 'proxy']
-
-        _valid_categories = []
+            'developer', 'proxy'
+        ]
 
         # TODO Stop spamming urlparse and tldextract calls...
-
+        _valid_categories = []
         for p_url in valid_categories:
             path = urls.get_path(p_url)
             subdomain = tldextract.extract(p_url).subdomain
             conjunction = path + ' ' + subdomain
             bad = False
-            for badword in stopwords:
-                if badword.lower() in conjunction.lower():
+            for ignore_category_url in ignore_category_urls:
+                if ignore_category_url.lower() in conjunction.lower():
                     if self.config.verbose:
-                        print(('elim category url %s for subdomain '
-                               'contain stopword!' % p_url))
+                        log.debug(('elim category url %s for subdomain contains stopword!' % p_url))
                     bad = True
                     break
             if not bad:
@@ -784,8 +776,7 @@ class ContentExtractor(object):
 
         for node in nodes_to_check:
             text_node = self.parser.getText(node)
-            word_stats = self.stopwords_class(language=self.language). \
-                get_stopword_count(text_node)
+            word_stats = self.stopwords_class(language=self.language).get_stopword_count(text_node)
             high_link_density = self.is_highlink_density(node)
             if word_stats.get_stopword_count() > 2 and not high_link_density:
                 nodes_with_text.append(node)
