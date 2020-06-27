@@ -1,11 +1,10 @@
-import re
 import json
-import unicodedata
-from collections import OrderedDict, Counter
-from pprint import pprint
+from collections import OrderedDict
+
 import numpy as np
 from spacy.lang.en.stop_words import STOP_WORDS
-import en_core_web_sm
+
+
 # import requests
 # from bs4 import BeautifulSoup
 #
@@ -57,7 +56,7 @@ def pretty_print(obj, indent=False):
 # https://gist.github.com/BrambleXu/3d47bbdbd1ee4e6fc695b0ddb88cbf99
 # https://spacy.io/usage/linguistic-features
 # https://spacy.io/api/doc
-class TextRank4Keyword():
+class TextRank4Keyword:
     """Extract keywords from text"""
 
     def __init__(self, nlp):
