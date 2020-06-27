@@ -304,7 +304,7 @@ def is_abs_url(url):
         r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
     c_regex = re.compile(regex)
-    return (c_regex.search(url) is not None)
+    return c_regex.search(url) is not None
 
 
 def b64_encode(url):
