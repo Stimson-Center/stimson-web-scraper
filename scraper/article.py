@@ -4,7 +4,6 @@
 import copy
 import datetime
 import glob
-import importlib
 import logging
 import os
 import re
@@ -642,6 +641,7 @@ class Article(object):
             if self.config.translate is True and os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
                 translator = translate_v2.Client()
                 raw_dict = translator.translate(text, target_language='en', format_="text")
+                # noinspection PyTypeChecker
                 text = raw_dict['translatedText']
                 text = text.replace("  ", " ")
                 text = text[:self.config.MAX_TEXT]
