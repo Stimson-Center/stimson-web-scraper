@@ -459,7 +459,7 @@ class Article(object):
         if len(keywords) == 0:
             keywords = self.xx_keywords(stopwords)
         self.set_keywords(keywords)
-        summary = '\n'.join(map(str, tr4w.get_sentences()))
+        summary = ''.join(map(str, tr4w.get_sentences()))
         self.set_summary(summary)
 
     def xx_keywords(self, stopwords, count=10):

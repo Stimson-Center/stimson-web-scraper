@@ -19,11 +19,12 @@ def validate(url, language, translate):
     article.parse()
     assert len(article.text)
     article.nlp()
+    return article
 
 
 def test_focustaiwan_tw():
     url = "https://focustaiwan.tw/society/201606280011"
-    validate(url, 'en', False)
+    article = validate(url, 'en', False)
 
 
 def test_allafrica_com():
@@ -36,28 +37,28 @@ def test_allafrica_com():
     # <h1>Moved Permanently</h1>
     # <p>The document has moved <a href="https://allafrica.com/stories/201602041393.html">here</a>.</p>
     # </body></html>
-    validate(url, 'en', False)
+    article = validate(url, 'en', False)
 
 
 def test_chinese_good():
     url = 'http://www.bbc.co.uk/zhongwen/simp/chinese_news/2012/12/121210_hongkong_politics.shtml'
     validate(url, 'zh', False)
     url = "http://news.sohu.com/20050601/n225789219.shtml"
-    validate(url, 'zh', True)
+    article = validate(url, 'zh', True)
 
 
 def test_pubdate():
     url = "https://www.theglobeandmail.com/news/world/airasia-search/article22224253/"
     url = "http://www.telegraph.co.uk/news/politics/margaret-thatcher/11313354/Margaret-Thatcher-feared-GCSEs-would-lower-school-standards.html"
-    validate(url, 'en', False)
+    article = validate(url, 'en', False)
 
 
 def test_ner():
     url = "https://www.power-technology.com/projects/dai-nanh/"
-    validate(url, 'en', False)
+    article = validate(url, 'en', False)
 
 
 def test_cnn():
     url = "https://bleacherreport.com/articles/2897910-bubba-wallace-says-hes-wore-the-hell-out-after-nascar-noose-investigation?utm_source=cnn.com&utm_medium=referral&utm_campaign=editorial"
-    validate(url, 'en', False)
+    article = validate(url, 'en', False)
     pass
