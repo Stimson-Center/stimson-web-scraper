@@ -51,7 +51,13 @@ def test_pubdate():
     url = "http://www.telegraph.co.uk/news/politics/margaret-thatcher/11313354/Margaret-Thatcher-feared-GCSEs-would-lower-school-standards.html"
     validate(url, 'en', False)
 
+
 def test_ner():
     url = "https://www.power-technology.com/projects/dai-nanh/"
+    validate(url, 'en', False)
+
+
+def test_cnn():
+    url = "https://bleacherreport.com/articles/2897910-bubba-wallace-says-hes-wore-the-hell-out-after-nascar-noose-investigation?utm_source=cnn.com&utm_medium=referral&utm_campaign=editorial"
     validate(url, 'en', False)
     pass
