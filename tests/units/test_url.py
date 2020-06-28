@@ -5,7 +5,7 @@ All unit tests for the scraper library should be contained in this file.
 import os
 import re
 
-from scraper.urls import extract_domain
+from scraper.urls import extract_domain, is_url
 from tests.conftest import print_test
 
 TEST_DIR = os.path.abspath(os.path.dirname(__file__))
@@ -88,3 +88,10 @@ def test_extract_domain():
     tld, subd = extract_domain("https://cnn.com")
     assert subd == ''
     assert tld == 'cnn'
+
+
+def test_url_validation_regex():
+    result = is_url("http://www.example.com")
+    assert result
+    result = is_url("example.com")
+    assert not result

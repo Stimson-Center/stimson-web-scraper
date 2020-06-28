@@ -698,7 +698,8 @@ class Article(object):
             self.authors = authors[:self.config.MAX_AUTHORS]
         else:
             # if unable to determine article's author, use toplevel domain from url for credits
-            self.authors.append(extract_domain(self.url))
+            domain, subdomain = extract_domain(self.url)
+            self.authors.append(domain)
 
     def set_summary(self, summary):
         """Summary here refers to a paragraph of text from the

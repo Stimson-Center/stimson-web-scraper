@@ -16,7 +16,7 @@ from urllib.parse import urljoin, urlparse, urlunparse
 from tldextract import tldextract
 
 from . import urls
-from .urls import prepare_url
+from .urls import prepare_url, is_url
 from .utils import StringReplacement, StringSplitter, parse_date_str
 
 __title__ = 'scraper'
@@ -93,6 +93,12 @@ class ContentExtractor(object):
                 result.append(item.title())
             return result
 
+        def author_is_url(element_unicode_results):
+            for element_unicode_result in element_unicode_results:
+                if is_url(element_unicode_result.__str__()):
+                    element_unicode_results.remove(element_unicode_result)
+            return element_unicode_results
+
         def parse_byline(search_str):
             """
             Takes a candidate line of html or text and
@@ -147,14 +153,17 @@ class ContentExtractor(object):
         for attr in ATTRS:
             for val in VALS:
                 # found = doc.xpath('//*[@%s="%s"]' % (attr, val))
-                found = self.parser.getElementsByTag(doc, attr=attr, value=val)
-                matches.extend(found)
+                elements = self.parser.getElementsByTag(doc, attr=attr, value=val)
+                for element in elements:
+                    if element not in matches:
+                        matches.append(element)
 
         TAGS = ['meta', 'div', 'iframe', 'a', 'span', 'section']
         for match in matches:
             content = ''
             if match.tag in TAGS:
                 mm = match.xpath('@content')
+                mm = author_is_url(mm)
                 if not mm:
                     mm = str(match.text_content()).split()
                 if len(mm) > 0:
