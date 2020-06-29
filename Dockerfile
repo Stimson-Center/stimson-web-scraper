@@ -22,13 +22,14 @@ ENV TZ=UTC
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get install -y tzdata
 
-RUN pip3 --no-cache-dir install virtualenv
+# https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
+RUN python -m venv /mnt/.venv
 
 WORKDIR /mnt
-RUN virtualenv venv
 RUN source venv/bin/activate
 COPY requirements.txt .
-RUN pip3 --no-cache-dir install -r requirements.txt
+COPY .env .
+RUN . /mnt/.venv/bin/activate && pip3 --no-cache-dir install -r requirements.txt
 COPY .GOOGLE_APPLICATION_CREDENTIALS.json .
 RUN export GOOGLE_APPLICATION_CREDENTIALS=/mnt/.GOOGLE_APPLICATION_CREDENTIALS.json
 
