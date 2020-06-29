@@ -452,7 +452,7 @@ class Article(object):
         # *************************************************************
         # THIS STEP CAN TAKE A MINUTE OR TWO
         tr4w = TextRank4Keyword(nlp)
-        tr4w.analyze(self.text, candidate_pos=['NOUN', 'PROPN'], window_size=4, lower=False, stopwords=stopwords)
+        tr4w.analyze(self.text.lower(), candidate_pos=['NOUN', 'PROPN'], window_size=4, lower=False, stopwords=stopwords)
         keywords = list()
         for k, v in tr4w.get_keywords().items():
             keywords.append(k)
@@ -692,14 +692,14 @@ class Article(object):
     def set_authors(self, authors):
         """Authors are in ["firstName lastName", "firstName lastName"] format
         """
-        if not isinstance(authors, list):
-            raise Exception("authors input must be list!")
-        if authors:
-            self.authors = authors[:self.config.MAX_AUTHORS]
-        else:
+        for author in authors:
+            if author and author not in self.authors and len(self.authors) < self.config.MAX_AUTHORS:
+                self.authors.append(author)
+        if not self.authors:
             # if unable to determine article's author, use toplevel domain from url for credits
             domain, subdomain = extract_domain(self.url)
             self.authors.append(domain)
+        # self.authors = self.authors[:self.config.MAX_AUTHORS]
 
     def set_summary(self, summary):
         """Summary here refers to a paragraph of text from the
