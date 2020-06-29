@@ -107,9 +107,11 @@ class ContentExtractor(object):
             ['Lucas Ou-Yang', 'Alex Smith']
             """
             # Remove HTML boilerplate
+            # RE: literally "<", none of <, once or more, literally ">"
             search_str = re.sub('<[^<]+?>', '', search_str)
 
             # Remove original By statement
+            # RE: any of ((one of "bB", one of "yY", one of ":\s"), (one of "fF", literally "rom", one of ":\s"))
             search_str = re.sub(r'[bB][yY][:\s]|[fF]rom[:\s]', '', search_str)
 
             search_str = search_str.strip()
@@ -117,6 +119,7 @@ class ContentExtractor(object):
             # Chunk the line by non alphanumeric tokens (few name exceptions)
             # >>> re.split("[^\w\'\-\.]", "Tyler G. Jones, Lucas Ou, Dean O'Brian and Ronald")
             # ['Tyler', 'G.', 'Jones', '', 'Lucas', 'Ou', '', 'Dean', "O'Brian", 'and', 'Ronald']
+            # RE: any character except: word characters (a-z, A-Z, 0-9, _), '\'', '\-', '.'
             name_tokens = re.split(r'[^\w\'\-.]', search_str)
             name_tokens = [s.strip() for s in name_tokens]
 
