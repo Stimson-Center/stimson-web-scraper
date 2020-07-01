@@ -50,8 +50,12 @@ def article_curator(test_driver_file, config):
     start_time = time()
 
     # URLPARSE fails on UTF8 string! https://stackoverflow.com/questions/50499273/urlparse-fails-with-simple-url
+    urls = list()
     with open(test_driver_file, 'r', encoding='ascii', errors='ignore') as f:
-        urls = [url.replace('\n', '').strip() for url in f if url.replace('\n', '').strip()]
+        for line in f:
+            parts = line.split(',')
+            config.set_language(parts[0])
+            urls.append(parts[1].replace('\n', '').strip())
 
     filedir = os.getenv('HOME')
     # spin up
@@ -99,7 +103,7 @@ def article_curator(test_driver_file, config):
 def test_industrial_spaces_urls(fixture_directory):
     config = Configuration()
     config.follow_meta_refresh = True
-    test_driver_file = os.path.join(fixture_directory, "energy_investment_mekong_delta", "industrial_spaces_url.txt")
+    test_driver_file = os.path.join(fixture_directory, "url", "industrial-spaces-urls.csv")
     article_curator(test_driver_file, config)
 
 
@@ -110,7 +114,7 @@ def test_illegal_unreported_and_unregulated_fishing_urls(fixture_directory):
     config.use_meta_language = False
     config.language = 'en'
     config.http_success_only = False
-    test_driver_file = os.path.join(fixture_directory, "illegal-unreported-and-unregulated-fishing", "urls.txt")
+    test_driver_file = os.path.join(fixture_directory, "url", "illegal-unreported-and-unregulated-fishing-urls.csv")
     article_curator(test_driver_file, config)
 
 
@@ -118,5 +122,5 @@ def test_illegal_unreported_and_unregulated_fishing_urls(fixture_directory):
 def test_energy_investment_mekong_delta_urls(fixture_directory):
     config = Configuration()
     config.follow_meta_refresh = True
-    test_driver_file = os.path.join(fixture_directory, "energy_investment_mekong_delta", "Thailand.url")
+    test_driver_file = os.path.join(fixture_directory, "url", "energy-investment-mekong-delta-Thailand-urls.csv")
     article_curator(test_driver_file, config)

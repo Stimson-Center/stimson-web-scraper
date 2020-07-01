@@ -12,6 +12,7 @@ import logging
 import re
 from collections import defaultdict
 from urllib.parse import urljoin, urlparse, urlunparse
+from bs4 import BeautifulSoup
 
 from tldextract import tldextract
 
@@ -778,8 +779,10 @@ class ContentExtractor(object):
                 tags.append(tag)
         return set(tags)
 
-    def calculate_best_node(self, doc):
+    def calculate_best_node(self, doc, html):
         nodes_to_check = self.nodes_to_check(doc)
+        if not nodes_to_check:
+            nodes_to_check = self.nodes_to_check_soap(html)
         starting_boost = float(1.0)
         cnt = 0
         i = 0
@@ -798,7 +801,9 @@ class ContentExtractor(object):
         negative_scoring = 0
         bottom_negativescore_nodes = float(nodes_number) * 0.25
 
-        for node in nodes_with_text:
+        for i, node in enumerate(nodes_with_text):
+            if i == 0:
+                continue
             boost_score = float(0)
             # boost
             if self.is_boostable(node):
@@ -1012,8 +1017,29 @@ class ContentExtractor(object):
         """
         nodes_to_check = []
         for tag in ['p', 'pre', 'td']:
-            items = self.parser.getElementsByTag(doc, tag=tag)
-            nodes_to_check += items
+            nodes = self.parser.getElementsByTag(doc, tag=tag)
+            for node in nodes:
+                if node.text:
+                    nodes_to_check.append(node)
+        return nodes_to_check
+
+    def nodes_to_check_soap(self, html):
+        """Returns a list of nodes we want to search
+        on like paragraphs and tables
+        """
+        # soup = BeautifulSoup(html, 'lxml')
+        soup = BeautifulSoup(html, 'html.parser')
+        VALID_TAGS = ['p', 'pre', 'td']
+        fake_parent_node = self.parser.createElement(tag='body', text="")
+        nodes_to_check = [fake_parent_node]
+        for tag in VALID_TAGS:
+            for match in soup.find_all(tag):
+                if match.name not in VALID_TAGS:
+                    match.replaceWith(match.renderContents())
+                node = self.parser.createElement(tag=tag, text=match.text)
+                if node.text:
+                    fake_parent_node.append(node)
+                    nodes_to_check.append(node)
         return nodes_to_check
 
     def is_table_and_no_para_exist(self, e):

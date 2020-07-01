@@ -74,3 +74,4 @@ def test_pdf_duplicate_keywords_ignore_case():
     url = "https://oceanpanel.org/sites/default/files/2020-02/HLP%20Blue%20Paper%20on%20IUU%20Fishing%20and%20Associated%20Drivers.pdf"
     article = validate(url, 'en', False)
     pass
+

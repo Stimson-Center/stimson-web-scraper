@@ -309,7 +309,7 @@ class Article(object):
         # Before any computations on the body, clean DOM object
         self.doc = document_cleaner.clean(self.doc)
 
-        self.top_node = self.extractor.calculate_best_node(self.doc)
+        self.top_node = self.extractor.calculate_best_node(self.doc, self.html)
         if self.top_node is not None:
             video_extractor = VideoExtractor(self.config, self.top_node)
             self.set_movies(video_extractor.get_videos())
@@ -448,7 +448,6 @@ class Article(object):
         # add PyTextRank to the spaCy pipeline
         tr = pytextrank.TextRank()
         nlp.add_pipe(tr.PipelineComponent, name="textrank", last=True)
-        # nlp.add_pipe(nlp.create_pipe('sentencizer'))
         # *************************************************************
         # THIS STEP CAN TAKE A MINUTE OR TWO
         tr4w = TextRank4Keyword(nlp)
@@ -501,7 +500,7 @@ class Article(object):
             attributes = {"class": "wikitable"}
         ua = UserAgent()
         response = requests.get(self.url, headers={'User-Agent': ua.random})
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = BeautifulSoup(response.text, 'html.parser')
         tables = soup.findAll("table", attributes)
 
         # # show tables

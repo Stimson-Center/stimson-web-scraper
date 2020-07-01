@@ -192,18 +192,18 @@ class ArticleTestCase(unittest.TestCase):
         self.setup_stage('nlp')
         self.article.nlp()
         KEYWORDS = [
-            'weather',
             'storm',
-            'New',
-            'balloons',
-            'York',
+            'weather',
+            'new',
+            'york',
             'flight',
-            'Thanksgiving',
+            'balloons',
             'roads',
             'delays',
+            'thanksgiving',
             'people',
-            'winds',
-            'parade'
+            'cnn',
+            'snow'
         ]
         self.assertCountEqual(KEYWORDS, self.article.keywords)
         SUMMARY = mock_resource_with('cnn_summary', 'txt')
