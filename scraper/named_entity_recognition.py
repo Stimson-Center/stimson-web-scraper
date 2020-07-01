@@ -1,8 +1,10 @@
 import json
+import re
 from collections import OrderedDict
 
 import numpy as np
 from spacy.lang.en.stop_words import STOP_WORDS
+from spacy.matcher import Matcher
 
 
 def pretty_print(obj, indent=False):
@@ -24,20 +26,28 @@ class TextRank4Keyword:
 
     def __init__(self, nlp):
         self.nlp = nlp
+        # initialize matcher with a vocab
+        self.matcher = Matcher(nlp.vocab)
         self.d = 0.85  # damping coefficient, usually is .85
         self.min_diff = 1e-5  # convergence threshold
         self.steps = 10  # iteration steps
         self.node_weight = None  # save keywords and its weight
         self.doc = None
+        self.stopwords = STOP_WORDS
 
     def set_stopwords(self, stopwords):
-        """Set stop words"""
-        for word in STOP_WORDS.union(set(stopwords)):
+        """
+        Set stop words
+        """
+        self.stopwords = self.stopwords.union(set(stopwords))
+        for word in self.stopwords:
             lexeme = self.nlp.vocab[word]
             lexeme.is_stop = True
 
     def sentence_segment(self, candidate_pos, lower):
-        """Store those words only in cadidate_pos"""
+        """
+        Store those words only in cadidate_pos
+        """
         sentences = []
         for sent in self.doc.sents:
             selected_words = []
@@ -52,7 +62,9 @@ class TextRank4Keyword:
         return sentences
 
     def get_vocab(self, sentences):
-        """Get all tokens"""
+        """
+        Get all tokens
+        """
         vocab = OrderedDict()
         i = 0
         for sentence in sentences:
@@ -63,7 +75,9 @@ class TextRank4Keyword:
         return vocab
 
     def get_token_pairs(self, window_size, sentences):
-        """Build token_pairs from windows in sentences"""
+        """
+        Build token_pairs from windows in sentences
+        """
         token_pairs = list()
         for sentence in sentences:
             for i, word in enumerate(sentence):
@@ -75,11 +89,14 @@ class TextRank4Keyword:
                         token_pairs.append(pair)
         return token_pairs
 
-    def symmetrize(self, a):
+    @staticmethod
+    def symmetrize(a):
         return a + a.T - np.diag(a.diagonal())
 
     def get_matrix(self, vocab, token_pairs):
-        """Get normalized matrix"""
+        """
+        Get normalized matrix
+        """
         # Build matrix
         vocab_size = len(vocab)
         g = np.zeros((vocab_size, vocab_size), dtype='float')
@@ -97,7 +114,9 @@ class TextRank4Keyword:
         return g_norm
 
     def get_keywords(self, number=10):
-        """Print top number keywords"""
+        """
+        Print top number keywords
+        """
         node_weight = OrderedDict(sorted(self.node_weight.items(), key=lambda t: t[1], reverse=True))
         keywords = dict()
         for i, (k, v) in enumerate(node_weight.items()):
@@ -108,6 +127,7 @@ class TextRank4Keyword:
 
     def get_phrases(self, number=10):
         phrases = list()
+        # noinspection PyProtectedMember
         for i, p in enumerate(self.doc._.phrases):
             if i >= number:
                 break
@@ -122,8 +142,58 @@ class TextRank4Keyword:
             sentences.append(s)
         return sentences
 
+    def get_persons(self):
+        # https://omkarpathak.in/2018/12/18/writing-your-own-resume-parser/#rule-based-matching
+        # First name and Last name are always Proper Nouns
+        pattern = [{'POS': 'PROPN'}, {'POS': 'PROPN'}]
+        self.matcher.add('NAME', None, pattern)
+        matches = self.matcher(self.doc)
+        persons = list()
+        for match_id, start, end in matches:
+            span = self.doc[start:end]
+            persons.append(span.text)
+        return persons
+
+    def get_education(self):
+        # https://omkarpathak.in/2018/12/18/writing-your-own-resume-parser/#rule-based-matching
+        # Education Degrees
+        # noinspection PyPep8Naming
+        EDUCATION = [
+            'BE', 'B.E.', 'B.E',
+            'BS', 'B.S.', 'B.S',
+            'BA', 'B.A', 'B.A',
+            'ME', 'M.E.', 'M.E',
+            'MS', 'M.S.', 'M.S'
+                          'BTECH', 'B.TECH',
+            'M.TECH', 'MTECH',
+            'PhD', 'Ph.D.', 'Ph.D', 'DPhil',
+            'SSC', 'HSC', 'CBSE', 'ICSE', 'X', 'XII'
+        ]
+        # Sentence Tokenizer
+        nlp_text = [sent.string.strip() for sent in self.doc.sents]
+        edu = dict()
+        # Extract education degree
+        for index, text in enumerate(nlp_text):
+            for tex in text.split():
+                # Replace all special symbols
+                tex = re.sub(r'[?|$|.|!|,]', r'', tex)
+                if tex.upper() in EDUCATION and tex not in self.stopwords:
+                    edu[tex] = text + nlp_text[index + 1]
+
+        # Extract year
+        education = []
+        for key in edu.keys():
+            year = re.search(re.compile(r'(((20|19)(\d{2})))'), edu[key])
+            if year:
+                education.append((key, ''.join(year[0])))
+            else:
+                education.append(key)
+        return education
+
     def analyze(self, text, candidate_pos=None, window_size=4, lower=False, stopwords=None):
-        """Main function to analyze text"""
+        """
+        Main function to analyze text
+        """
 
         # Set stop words
         if stopwords is None:
