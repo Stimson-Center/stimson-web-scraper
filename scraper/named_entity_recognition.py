@@ -145,14 +145,16 @@ class TextRank4Keyword:
     def get_persons(self):
         # https://omkarpathak.in/2018/12/18/writing-your-own-resume-parser/#rule-based-matching
         # First name and Last name are always Proper Nouns
-        pattern = [{'POS': 'PROPN'}, {'POS': 'PROPN'}]
-        self.matcher.add('NAME', None, pattern)
-        matches = self.matcher(self.doc)
-        persons = list()
-        for match_id, start, end in matches:
-            span = self.doc[start:end]
-            persons.append(span.text)
-        return persons
+        # pattern = [{'POS': 'PROPN'}, {'POS': 'PROPN'}]
+        # self.matcher.add('NAME', None, pattern)
+        # matches = self.matcher(self.doc)
+        # persons = list()
+        # for match_id, start, end in matches:
+        #     span = self.doc[start:end]
+        #     persons.append(span.text)
+        # return persons
+        return [ent.text for ent in self.doc.ents if ent.label_ == 'PERSON']
+
 
     def get_education(self):
         # https://omkarpathak.in/2018/12/18/writing-your-own-resume-parser/#rule-based-matching

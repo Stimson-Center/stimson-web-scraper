@@ -30,7 +30,7 @@ def test_methods():
     # use spacy language specific STOP WORDS
     stopwords = get_stopwords("en")
     tr4w = TextRank4Keyword(nlp)
-    text = "Alan Cooper\nB.A.\nemail:\tcooper@pobox.com\nmobile:+1555.555.5555"
+    text = "Alan Cooper\nTemple University\nB.A.\nemail:\tcooper@pobox.com\nmobile:+1555.555.5555"
     tr4w.analyze(text, candidate_pos=['NOUN', 'PROPN'], window_size=4, lower=False, stopwords=stopwords)
     education = tr4w.get_education()
     assert education == ["BA"]
