@@ -22,7 +22,8 @@ def save_article(article, filename, filedir='/tmp'):
             'text': article.text,
             'url': article.url,
             'tables': article.tables,
-            'language': article.meta_lang
+            'language': article.meta_lang,
+            'html': article.html
         }
         try:
             filepath = os.path.join(filedir, filename)

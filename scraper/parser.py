@@ -169,7 +169,9 @@ class Parser(object):
                 continue
             # create a text node for tail
             if n.tail:
-                t = cls.create_element(tag='text', text=n.tail, tail=None)
+                # a string containing only newlines, tabs and spaces is useless
+                text = n.tail if n.tail.split() else None
+                t = cls.create_element(tag='text', text=text, tail=None)
                 root.insert(idx + 1, t)
         return list(root)
 
@@ -253,8 +255,8 @@ class Parser(object):
     def get_attribute(cls, node, attr=None):
         if attr:
             attr = node.attrib.get(attr, None)
-        if attr:
-            attr = unescape(attr)
+            if attr:
+                attr = unescape(attr)
         return attr
 
     @classmethod
