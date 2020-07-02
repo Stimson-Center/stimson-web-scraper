@@ -248,7 +248,7 @@ class Source(object):
             # http://stackoverflow.com/a/24893800
             return None
 
-        elements = self.config.get_parser().getElementsByTag(doc, tag='title')
+        elements = self.config.get_parser().get_elements_by_tag(doc, tag='title')
         feed.title = next((element.text for element in elements if element.text), self.brand)
         return feed
 

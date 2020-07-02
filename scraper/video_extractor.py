@@ -45,19 +45,19 @@ class VideoExtractor(object):
     def get_embed_code(self, node):
         return "".join([
             line.strip()
-            for line in self.parser.nodeToString(node).splitlines()])
+            for line in self.parser.node_to_string(node).splitlines()])
 
     def get_embed_type(self, node):
-        return self.parser.getTag(node)
+        return self.parser.get_tag(node)
 
     def get_width(self, node):
-        return self.parser.getAttribute(node, 'width')
+        return self.parser.get_attribute(node, 'width')
 
     def get_height(self, node):
-        return self.parser.getAttribute(node, 'height')
+        return self.parser.get_attribute(node, 'height')
 
     def get_src(self, node):
-        return self.parser.getAttribute(node, 'src')
+        return self.parser.get_attribute(node, 'src')
 
     # noinspection PyMethodMayBeStatic
     def get_provider(self, src):
@@ -92,9 +92,9 @@ class VideoExtractor(object):
         # embed node may have an object node as parent
         # in this case we want to retrieve the object node
         # instead of the embed
-        parent = self.parser.getParent(node)
+        parent = self.parser.get_parent(node)
         if parent is not None:
-            parent_tag = self.parser.getTag(parent)
+            parent_tag = self.parser.get_tag(parent)
             if parent_tag == 'object':
                 return self.get_object_tag(node)
         return self.get_video(node)
@@ -103,18 +103,18 @@ class VideoExtractor(object):
         # test if object tag has en embed child
         # in this case we want to remove the embed from
         # the candidate list to avoid parsing it twice
-        child_embed_tag = self.parser.getElementsByTag(node, 'embed')
+        child_embed_tag = self.parser.get_elements_by_tag(node, 'embed')
         if child_embed_tag and child_embed_tag[0] in self.candidates:
             self.candidates.remove(child_embed_tag[0])
 
         # get the object source
         # if we don't have a src node don't coninue
-        src_node = self.parser.getElementsByTag(
+        src_node = self.parser.get_elements_by_tag(
             node, tag="param", attr="name", value="movie")
         if not src_node:
             return None
 
-        src = self.parser.getAttribute(src_node[0], "value")
+        src = self.parser.get_attribute(src_node[0], "value")
 
         # check provider
         provider = self.get_provider(src)
@@ -127,12 +127,12 @@ class VideoExtractor(object):
         return video
 
     def get_videos(self):
-        self.candidates = self.parser.getElementsByTags(
+        self.candidates = self.parser.get_elements_by_tags(
             self.top_node, VIDEOS_TAGS)
         # loop all candidates
         # and check if src attribute belongs to a video provider
         for candidate in self.candidates:
-            tag = self.parser.getTag(candidate)
+            tag = self.parser.get_tag(candidate)
             attr = "get_%s_tag" % tag
             if hasattr(self, attr):
                 movie = getattr(self, attr)(candidate)

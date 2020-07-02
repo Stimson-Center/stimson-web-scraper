@@ -9,17 +9,25 @@ or query an lxml or soup dom object generated from an article's html.
 import logging
 import re
 import string
+
 from copy import deepcopy
 from html import unescape
 
 import lxml.etree
 import lxml.html
 import lxml.html.clean
-from bs4 import UnicodeDammit
+from bs4 import BeautifulSoup, UnicodeDammit, NavigableString
+
 from .utils import innerTrim
 
 log = logging.getLogger(__name__)
 
+allow_tags = [
+    'a', 'span', 'p', 'br', 'strong', 'b',
+    'em', 'i', 'tt', 'code', 'pre', 'blockquote', 'img', 'h1',
+    'h2', 'h3', 'h4', 'h5', 'h6',
+    'ul', 'ol', 'li', 'dl', 'dt', 'dd'
+]
 
 class Parser(object):
 
@@ -73,26 +81,38 @@ class Parser(object):
 
     @classmethod
     def clean_article_html(cls, node):
+        global allow_tags
         article_cleaner = lxml.html.clean.Cleaner()
         article_cleaner.javascript = True
         article_cleaner.style = True
-        article_cleaner.allow_tags = [
-            'a', 'span', 'p', 'br', 'strong', 'b',
-            'em', 'i', 'tt', 'code', 'pre', 'blockquote', 'img', 'h1',
-            'h2', 'h3', 'h4', 'h5', 'h6',
-            'ul', 'ol', 'li', 'dl', 'dt', 'dd']
+        article_cleaner.allow_tags = allow_tags
         article_cleaner.remove_unknown_tags = False
         return article_cleaner.clean_html(node)
 
     @classmethod
-    def nodeToString(cls, node):
+    def strip_tags(cls, html, allow_tags):
+        soup = BeautifulSoup(html)
+        for tag in soup.findAll(True):
+            if tag.name not in allow_tags:
+                s = ""
+                for c in tag.contents:
+                    if not isinstance(c, NavigableString):
+                        c = cls.strip_tags(str(c), allow_tags)
+                    s += str(c)
+                tag.replaceWith(s)
+        return soup
+        pass
+
+
+    @classmethod
+    def node_to_string(cls, node):
         """`decode` is needed at the end because `etree.tostring`
         returns a python bytestring
         """
         return lxml.etree.tostring(node, method='html').decode()
 
     @classmethod
-    def replaceTag(cls, node, tag):
+    def replace_tag(cls, node, tag):
         node.tag = tag
 
     @classmethod
@@ -108,7 +128,7 @@ class Parser(object):
         return None
 
     @classmethod
-    def getElementsByTag(
+    def get_elements_by_tag(
             cls, node, tag=None, attr=None, value=None, childs=False, use_regex=False) -> list:
         NS = None
         # selector = tag or '*'
@@ -128,15 +148,15 @@ class Parser(object):
         return elems
 
     @classmethod
-    def appendChild(cls, node, child):
+    def append_child(cls, node, child):
         node.append(child)
 
     @classmethod
-    def childNodes(cls, node):
+    def child_nodes(cls, node):
         return list(node)
 
     @classmethod
-    def childNodesWithText(cls, node):
+    def child_nodes_with_text(cls, node):
         root = node
         # create the first text node
         # if we have some text in the node
@@ -154,27 +174,27 @@ class Parser(object):
                 continue
             # create a text node for tail
             if n.tail:
-                t = cls.createElement(tag='text', text=n.tail, tail=None)
+                t = cls.create_element(tag='text', text=n.tail, tail=None)
                 root.insert(idx + 1, t)
         return list(root)
 
     @classmethod
-    def textToPara(cls, text):
+    def text_to_para(cls, text):
         return cls.fromstring(text)
 
     @classmethod
-    def getChildren(cls, node):
+    def get_children(cls, node):
         return node.getchildren()
 
     @classmethod
-    def getElementsByTags(cls, node, tags):
+    def get_elements_by_tags(cls, node, tags):
         selector = 'descendant::*[%s]' % (
             ' or '.join('self::%s' % tag for tag in tags))
         elems = node.xpath(selector)
         return elems
 
     @classmethod
-    def createElement(cls, tag='p', text=None, tail=None):
+    def create_element(cls, tag='p', text=None, tail=None):
         t = lxml.html.HtmlElement()
         t.tag = tag
         t.text = text
@@ -182,11 +202,11 @@ class Parser(object):
         return t
 
     @classmethod
-    def getComments(cls, node):
+    def get_comments(cls, node):
         return node.xpath('//comment()')
 
     @classmethod
-    def getParent(cls, node):
+    def get_parent(cls, node):
         return node.getparent()
 
     @classmethod
@@ -207,35 +227,35 @@ class Parser(object):
             parent.remove(node)
 
     @classmethod
-    def getTag(cls, node):
+    def get_tag(cls, node):
         return node.tag
 
     @classmethod
-    def getText(cls, node):
+    def get_text(cls, node):
         txts = [i for i in node.itertext()]
         return innerTrim(' '.join(txts).strip())
 
     @classmethod
-    def previousSiblings(cls, node):
+    def previous_siblings(cls, node):
         """
             returns preceding siblings in reverse order (nearest sibling is first)
         """
         return [n for n in node.itersiblings(preceding=True)]
 
     @classmethod
-    def previousSibling(cls, node):
+    def previous_sibling(cls, node):
         return node.getprevious()
 
     @classmethod
-    def nextSibling(cls, node):
+    def next_sibling(cls, node):
         return node.getnext()
 
     @classmethod
-    def isTextNode(cls, node):
+    def is_text_node(cls, node):
         return True if node.tag == 'text' else False
 
     @classmethod
-    def getAttribute(cls, node, attr=None):
+    def get_attribute(cls, node, attr=None):
         if attr:
             attr = node.attrib.get(attr, None)
         if attr:
@@ -243,21 +263,21 @@ class Parser(object):
         return attr
 
     @classmethod
-    def delAttribute(cls, node, attr=None):
+    def delete_attribute(cls, node, attr=None):
         if attr:
             _attr = node.attrib.get(attr, None)
             if _attr:
                 del node.attrib[attr]
 
     @classmethod
-    def setAttribute(cls, node, attr=None, value=None):
+    def set_attribute(cls, node, attr=None, value=None):
         if attr and value:
             node.set(attr, value)
 
     @classmethod
-    def outerHtml(cls, node):
+    def outer_html(cls, node):
         e0 = node
         if e0.tail:
             e0 = deepcopy(e0)
             e0.tail = None
-        return cls.nodeToString(e0)
+        return cls.node_to_string(e0)

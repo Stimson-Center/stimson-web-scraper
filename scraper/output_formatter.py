@@ -59,14 +59,14 @@ class OutputFormatter(object):
         self.remove_empty_tags()
         self.remove_trailing_media_div()
         text = self.convert_to_text()
-        # print(self.parser.nodeToString(self.get_top_node()))
+        # print(self.parser.node_to_string(self.get_top_node()))
         return text, html
 
     def convert_to_text(self):
         txts = []
         for node in list(self.get_top_node()):
             try:
-                txt = self.parser.getText(node)
+                txt = self.parser.get_text(node)
             except ValueError as err:  # lxml error
                 log.info('%s ignoring lxml node error: %s', __title__, err)
                 txt = None
@@ -80,18 +80,18 @@ class OutputFormatter(object):
 
     def convert_to_html(self):
         cleaned_node = self.parser.clean_article_html(self.get_top_node())
-        return self.parser.nodeToString(cleaned_node)
+        return self.parser.node_to_string(cleaned_node)
 
     def add_newline_to_br(self):
-        for e in self.parser.getElementsByTag(self.top_node, tag='br'):
+        for e in self.parser.get_elements_by_tag(self.top_node, tag='br'):
             e.text = r'\n'
 
     def add_newline_to_li(self):
-        for e in self.parser.getElementsByTag(self.top_node, tag='ul'):
-            li_list = self.parser.getElementsByTag(e, tag='li')
+        for e in self.parser.get_elements_by_tag(self.top_node, tag='ul'):
+            li_list = self.parser.get_elements_by_tag(e, tag='li')
             for li in li_list[:-1]:
-                li.text = self.parser.getText(li) + r'\n'
-                for c in self.parser.getChildren(li):
+                li.text = self.parser.get_text(li) + r'\n'
+                for c in self.parser.get_children(li):
                     self.parser.remove(c)
 
     def links_to_text(self):
@@ -107,7 +107,7 @@ class OutputFormatter(object):
         gravity_items = self.parser.css_select(
             self.top_node, "*[gravityScore]")
         for item in gravity_items:
-            score = self.parser.getAttribute(item, 'gravityScore')
+            score = self.parser.get_attribute(item, 'gravityScore')
             score = float(score) if score else 0
             if score < 1:
                 item.getparent().remove(item)
@@ -126,19 +126,19 @@ class OutputFormatter(object):
         """It's common in top_node to exit tags that are filled with data
         within properties but not within the tags themselves, delete them
         """
-        all_nodes = self.parser.getElementsByTags(
+        all_nodes = self.parser.get_elements_by_tags(
             self.get_top_node(), ['*'])
         all_nodes.reverse()
         for el in all_nodes:
-            tag = self.parser.getTag(el)
-            text = self.parser.getText(el)
+            tag = self.parser.get_tag(el)
+            text = self.parser.get_text(el)
             if (tag != 'br' or text != '\\r') \
                     and not text \
-                    and len(self.parser.getElementsByTag(
+                    and len(self.parser.get_elements_by_tag(
                 el, tag='object')) == 0 \
-                    and len(self.parser.getElementsByTag(
+                    and len(self.parser.get_elements_by_tag(
                 el, tag='embed')) == 0 \
-                    and len(self.parser.getElementsByTag(
+                    and len(self.parser.get_elements_by_tag(
                 el, tag='img')) == 0 \
                     and tag not in {'img', }:
                 self.parser.remove(el)
@@ -156,7 +156,7 @@ class OutputFormatter(object):
             """Computes depth of an lxml element via BFS, this would be
             in parser if it were used anywhere else besides this method
             """
-            children = self.parser.getChildren(node)
+            children = self.parser.get_children(node)
             if not children:
                 return depth
             max_depth = 0
@@ -166,13 +166,13 @@ class OutputFormatter(object):
                     max_depth = e_depth
             return max_depth
 
-        top_level_nodes = self.parser.getChildren(self.get_top_node())
+        top_level_nodes = self.parser.get_children(self.get_top_node())
         if len(top_level_nodes) < 3:
             return
 
         last_node = top_level_nodes[-1]
 
-        last_node_class = self.parser.getAttribute(last_node, 'class')
+        last_node_class = self.parser.get_attribute(last_node, 'class')
         if last_node_class in NON_MEDIA_CLASSES:
             return
 
