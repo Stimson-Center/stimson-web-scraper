@@ -165,7 +165,7 @@ class Source(object):
         common_feed_urls_as_categories = [c for c in common_feed_urls_as_categories if c.html]
 
         for _ in common_feed_urls_as_categories:
-            doc = self.config.get_parser().fromstring(_.html)
+            doc = self.config.get_parser().from_string(_.html)
             _.doc = doc
 
         common_feed_urls_as_categories = [c for c in common_feed_urls_as_categories if
@@ -225,7 +225,7 @@ class Source(object):
         children links, also sets description
         """
         # TODO: This is a terrible idea, ill try to fix it when i'm more rested
-        self.doc = self.config.get_parser().fromstring(self.html)
+        self.doc = self.config.get_parser().from_string(self.html)
         if self.doc is None:
             log.warning('Source %s parse error.' % self.url)
             return
@@ -237,13 +237,13 @@ class Source(object):
         log.debug('We are extracting from %d categories' %
                   len(self.categories))
         for category in self.categories:
-            doc = self.config.get_parser().fromstring(category.html)
+            doc = self.config.get_parser().from_string(category.html)
             category.doc = doc
 
         self.categories = [c for c in self.categories if c.doc is not None]
 
     def _map_title_to_feed(self, feed):
-        doc = self.config.get_parser().fromstring(feed.rss)
+        doc = self.config.get_parser().from_string(feed.rss)
         if doc is None:
             # http://stackoverflow.com/a/24893800
             return None

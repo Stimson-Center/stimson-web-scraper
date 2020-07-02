@@ -98,7 +98,7 @@ class OutputFormatter(object):
         """Cleans up and converts any nodes that should be considered
         text into text.
         """
-        self.parser.stripTags(self.get_top_node(), 'a')
+        self.parser.strip_tags(self.get_top_node(), 'a')
 
     def remove_negativescores_nodes(self):
         """If there are elements inside our top node that have a
@@ -119,7 +119,7 @@ class OutputFormatter(object):
         With whatever text is inside them.
         code : http://lxml.de/api/lxml.etree-module.html#strip_tags
         """
-        self.parser.stripTags(
+        self.parser.strip_tags(
             self.get_top_node(), 'b', 'strong', 'i', 'br', 'sup')
 
     def remove_empty_tags(self):

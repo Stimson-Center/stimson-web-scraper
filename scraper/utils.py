@@ -478,7 +478,7 @@ def fulltext(html, language='en'):
     document_cleaner = DocumentCleaner(config)
     output_formatter = OutputFormatter(config)
 
-    doc = config.get_parser().fromstring(html)
+    doc = config.get_parser().from_string(html)
     doc = document_cleaner.clean(doc)
 
     top_node = extractor.calculate_best_node(doc, html)

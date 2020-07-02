@@ -64,20 +64,16 @@ class Parser(object):
         return html
 
     @classmethod
-    def fromstring(cls, html):
+    def from_string(cls, html):
         html = cls.get_unicode_html(html)
         # Enclosed in a `try` to prevent bringing the entire library
         # down due to one article (out of potentially many in a `Source`)
         # noinspection PyBroadException,PyUnusedLocal
-        try:
-            # lxml does not play well with <? ?> encoding tags
-            if html.startswith('<?'):
-                html = re.sub(r'^<\?.*?\?>', '', html, flags=re.DOTALL)
-            cls.doc = lxml.html.fromstring(html)
-            return cls.doc
-        except Exception as ex:
-            log.warning('fromstring() returned an invalid string: %s...', html[:20])
-            return
+        # lxml does not play well with <? ?> encoding tags
+        if html.startswith('<?'):
+            html = re.sub(r'^<\?.*?\?>', '', html, flags=re.DOTALL)
+        cls.doc = lxml.html.fromstring(html)
+        return cls.doc
 
     @classmethod
     def clean_article_html(cls, node):
@@ -89,20 +85,19 @@ class Parser(object):
         article_cleaner.remove_unknown_tags = False
         return article_cleaner.clean_html(node)
 
-    @classmethod
-    def strip_tags(cls, html, allow_tags):
-        soup = BeautifulSoup(html)
-        for tag in soup.findAll(True):
-            if tag.name not in allow_tags:
-                s = ""
-                for c in tag.contents:
-                    if not isinstance(c, NavigableString):
-                        c = cls.strip_tags(str(c), allow_tags)
-                    s += str(c)
-                tag.replaceWith(s)
-        return soup
-        pass
-
+    # @classmethod
+    # def soup_strip_tags(cls, html, allow_tags):
+    #     soup = BeautifulSoup(html)
+    #     for tag in soup.findAll(True):
+    #         if tag.name not in allow_tags:
+    #             s = ""
+    #             for c in tag.contents:
+    #                 if not isinstance(c, NavigableString):
+    #                     c = cls.strip_tags(str(c), allow_tags)
+    #                 s += str(c)
+    #             tag.replaceWith(s)
+    #     return soup
+    #     pass
 
     @classmethod
     def node_to_string(cls, node):
@@ -116,11 +111,11 @@ class Parser(object):
         node.tag = tag
 
     @classmethod
-    def stripTags(cls, node, *tags):
+    def strip_tags(cls, node, *tags):
         lxml.etree.strip_tags(node, *tags)
 
     @classmethod
-    def getElementById(cls, node, idd):
+    def get_element_by_id(cls, node, idd):
         selector = '//*[@id="%s"]' % idd
         elems = node.xpath(selector)
         if elems:
@@ -180,7 +175,7 @@ class Parser(object):
 
     @classmethod
     def text_to_para(cls, text):
-        return cls.fromstring(text)
+        return cls.from_string(text)
 
     @classmethod
     def get_children(cls, node):

@@ -637,7 +637,7 @@ class ContentExtractor(object):
             return doc_or_html or []
         # If the doc_or_html is html, parse it into a root
         if isinstance(doc_or_html, str):
-            doc = self.parser.fromstring(doc_or_html)
+            doc = self.parser.from_string(doc_or_html)
         else:
             doc = doc_or_html
         return self._get_urls(doc, titles)

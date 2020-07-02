@@ -19,7 +19,7 @@ def setUp():
 
 def _get_title(html):
     extractor, parser = setUp()
-    doc = parser.fromstring(html)
+    doc = parser.from_string(html)
     return extractor.get_title(doc)
 
 
@@ -46,7 +46,7 @@ def test_get_title_quotes():
 
 def _get_canonical_link(article_url, html):
     extractor, parser = setUp()
-    doc = parser.fromstring(html)
+    doc = parser.from_string(html)
     return extractor.get_canonical_link(article_url, doc)
 
 
@@ -89,25 +89,25 @@ def test_get_top_image_from_meta():
     html_rel_img_src2 = html_empty_all + '<link rel="image_src" href="https://example.com/meta_link_image2.jpg" />'
     html_rel_icon = html_empty_all + '<link rel="icon" href="https://example.com/meta_link_rel_icon.ico" />'
 
-    doc = parser.fromstring(html)
+    doc = parser.from_string(html)
     assert extractor.get_meta_img_url('http://www.example.com/article?foo=bar',
                                       doc) == 'https://example.com/meta_img_filename.jpg'
 
-    doc = parser.fromstring(html_empty_og_content)
+    doc = parser.from_string(html_empty_og_content)
     assert extractor.get_meta_img_url('http://www.example.com/article?foo=bar',
                                       doc) == 'https://example.com/meta_another_img_filename.jpg'
 
-    doc = parser.fromstring(html_empty_all)
+    doc = parser.from_string(html_empty_all)
     assert extractor.get_meta_img_url('http://www.example.com/article?foo=bar', doc) == ''
 
-    doc = parser.fromstring(html_rel_img_src)
+    doc = parser.from_string(html_rel_img_src)
     assert extractor.get_meta_img_url('http://www.example.com/article?foo=bar',
                                       doc) == 'https://example.com/meta_link_image.jpg'
 
-    doc = parser.fromstring(html_rel_img_src2)
+    doc = parser.from_string(html_rel_img_src2)
     assert extractor.get_meta_img_url('http://www.example.com/article?foo=bar',
                                       doc) == 'https://example.com/meta_link_image2.jpg'
 
-    doc = parser.fromstring(html_rel_icon)
+    doc = parser.from_string(html_rel_icon)
     assert extractor.get_meta_img_url('http://www.example.com/article?foo=bar',
                                       doc) == 'https://example.com/meta_link_rel_icon.ico'
