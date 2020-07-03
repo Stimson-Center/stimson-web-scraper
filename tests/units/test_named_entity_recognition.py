@@ -41,9 +41,16 @@ def test_methods():
 
 def test_power_projects_english():
     url = "https://www.power-technology.com/projects/dai-nanh/"
-    validate(url, 'en', False)
+    article = validate(url, 'en', False)
 
 def test_chinese():
     url = "http://news.sohu.com/20050601/n225789219.shtml"
     article = validate(url, 'zh', False)
     assert article
+
+def test_alphanum_keywords():
+    url = "http://bangkokpost.com/world/1249738/casting-a-wider-net"
+    article = validate(url, 'en', False)
+    for keyword in article.keywords:
+        assert keyword.isalnum()
+

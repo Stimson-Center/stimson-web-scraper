@@ -120,9 +120,10 @@ class TextRank4Keyword:
         node_weight = OrderedDict(sorted(self.node_weight.items(), key=lambda t: t[1], reverse=True))
         keywords = dict()
         for i, (k, v) in enumerate(node_weight.items()):
-            keywords[k] = v
-            if i > number:
-                break
+            if k.isalnum():
+                keywords[k] = v
+                if i > number:
+                    break
         return keywords
 
     def get_phrases(self, number=10):
