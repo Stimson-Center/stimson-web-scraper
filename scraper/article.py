@@ -6,6 +6,7 @@ import datetime
 import glob
 import logging
 import os
+import datetime
 from urllib.parse import urlparse
 
 # With lazy-loading
@@ -41,7 +42,7 @@ __maintainer__ = "The Stimson Center"
 __maintainer_email = "cooper@pobox.com"
 
 log = logging.getLogger(__name__)
-
+date_format = "%Y-%m-%d"
 
 class ArticleDownloadState(object):
     NOT_STARTED = 0
@@ -115,7 +116,9 @@ class Article(object):
         # List of authors who have published the article, via parse()
         self.authors = []
 
-        self.publish_date = None
+
+        current_date = datetime.date.today()
+        self.publish_date = current_date.strftime(date_format)
 
         # Summary generated from the article's body txt
         self.summary = ''
@@ -303,8 +306,7 @@ class Article(object):
         meta_data = self.extractor.get_meta_data(self.clean_doc)
         self.set_meta_data(meta_data)
 
-        if not self.publish_date:
-            self.set_publish_date(self.extractor.get_publishing_date(self.url, self.clean_doc))
+        self.set_publish_date(self.extractor.get_publishing_date(self.url, self.clean_doc))
 
         # Before any computations on the body, clean DOM object
         self.doc = document_cleaner.clean(self.doc)
@@ -744,8 +746,8 @@ class Article(object):
 
     def set_publish_date(self, publish_date):
         if isinstance(publish_date, datetime.datetime):
-            self.publish_date = publish_date.strftime("%Y-%m-%d")
-        else:
+            self.publish_date = publish_date.strftime(date_format)
+        elif publish_date:
             self.publish_date = publish_date
 
     def throw_if_not_downloaded_verbose(self):
