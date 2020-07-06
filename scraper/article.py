@@ -116,7 +116,6 @@ class Article(object):
         # List of authors who have published the article, via parse()
         self.authors = []
 
-
         current_date = datetime.date.today()
         self.publish_date = current_date.strftime(date_format)
 
@@ -462,6 +461,13 @@ class Article(object):
         self.set_keywords(keywords)
         summary = ''.join(map(str, tr4w.get_sentences()))
         self.set_summary(summary)
+        # try to get date from raw text if not found in html
+        current_date = datetime.date.today()
+        if self.publish_date == current_date:
+            dates = tr4w.get_dates()
+            if dates:
+                # even if there are multiple dates returned, usually the first date is best to use
+                self.set_publish_date(dates[0])
 
     def xx_keywords(self, stopwords, count=10):
         """Get the top `count` keywords and their frequency scores ignores blacklisted

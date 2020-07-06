@@ -75,8 +75,3 @@ def test_pdf_duplicate_keywords_ignore_case():
     article = validate(url, 'en', False)
     pass
 
-
-def test_null_date():
-    url = "https://www.seashepherd.org.au/news-and-commentary/news/three-illegal-fishing-trawlers-arrested-following-night-raid-by-sea-shepherd-and-gabonese-authorities.html"
-    article = validate(url, 'en', False)
-    pass
