@@ -1,7 +1,8 @@
 import json
 import re
 from collections import OrderedDict
-
+from date_extractor import extract_dates, extract_date, isDefinitelyNotDate
+import dateparser
 import numpy as np
 from spacy.lang.en.stop_words import STOP_WORDS
 from spacy.matcher import Matcher
@@ -143,6 +144,21 @@ class TextRank4Keyword:
             sentences.append(s)
         return sentences
 
+    def get_dates(self):
+        # https://spacy.io/usage/linguistic-features#101
+        ents = [ent for ent in self.doc.ents if ent.label_ == 'DATE']
+        for ent in self.doc.ents:
+            if ent.label_ == "01/04/1937":
+                pass
+        dates = list()
+        for ent in ents:
+            date = dateparser.parse(ent.text)
+            dates.append(date)
+        if not dates:
+            extracted_dates = extract_dates(self.doc.text)
+            dates += extracted_dates
+        return dates
+
     def get_persons(self):
         # https://omkarpathak.in/2018/12/18/writing-your-own-resume-parser/#rule-based-matching
         # First name and Last name are always Proper Nouns
@@ -220,7 +236,7 @@ class TextRank4Keyword:
         # Get normalized matrix
         g = self.get_matrix(vocab, token_pairs)
 
-        # Initionlization for weight(pagerank value)
+        # Initialization for weight(pagerank value)
         pr = np.array([1] * len(vocab))
 
         # Iteration
