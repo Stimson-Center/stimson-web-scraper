@@ -19,11 +19,11 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 
-def get_cors(app):
+def get_cors(app, port=5000):
     # https://github.com/corydolphin/flask-cors/issues/201
     cors = CORS(app,
                 resources={r"/*": {"origins": "*"}},
-                origins=f"http://127.0.0.1:{5000}",
+                origins=f"http://127.0.0.1:{port}",
                 allow_headers=[
                     "Content-Type", "Authorization",
                     "Access-Control-Allow-Origin",
