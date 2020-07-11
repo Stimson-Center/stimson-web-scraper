@@ -1,12 +1,28 @@
-import json
-import pytest
-import time
+import logging
 import os
+import time
+
+import pytest
+from flask import Flask
+from flask_restful import Api
+
+from scraper.restful.endpoints import create_routes, get_cors
+
 
 # noinspection PyProtectedMember
 @pytest.fixture
 def fixture_directory():
     return os.path.join(os.path.dirname(__file__), "fixtures")
+
+
+@pytest.fixture(scope='function')
+def app():
+    app = Flask("test")
+    api = Api(app)
+    create_routes(api)
+    app.logger.setLevel(logging.DEBUG)
+    cors = get_cors(app)
+    return app
 
 
 def mock_resource_with(filename, resource_type):
