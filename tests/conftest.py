@@ -6,7 +6,7 @@ import pytest
 from flask import Flask
 from flask_restful import Api
 
-from scraper.restful.endpoints import create_routes, get_cors
+from scraper.restful.endpoints import create_routes, set_cors
 
 
 # noinspection PyProtectedMember
@@ -21,7 +21,7 @@ def app():
     api = Api(app)
     create_routes(api)
     app.logger.setLevel(logging.DEBUG)
-    cors = get_cors(app, port=5000)
+    cors = set_cors(app, port=5000)
     return app
 
 
