@@ -21,13 +21,18 @@ log.setLevel(logging.ERROR)
 
 def set_cors(app):
     # https://github.com/corydolphin/flask-cors/issues/201
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers
     cors = CORS(app,
                 resources={r"/*": {"origins": "*"}},
                 # origins=f"http://127.0.0.1:{port}",
                 allow_headers=[
-                    "Content-Type", "Authorization",
+                    "Access-Control-Allow-Credentials",
+                    "Access-Control-Allow-Headers",
+                    "Access-Control-Allow-Methods",
                     "Access-Control-Allow-Origin",
-                    "Access-Control-Allow-Credentials"],
+                    "Authorization",
+                    "Content-Type",
+                ],
                 supports_credentials=True
                 )
     return cors

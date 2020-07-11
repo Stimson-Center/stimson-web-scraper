@@ -21,7 +21,7 @@ def app():
     api = Api(app)
     create_routes(api)
     app.logger.setLevel(logging.DEBUG)
-    cors = set_cors(app, port=5000)
+    cors = set_cors(app)
     return app
 
 
