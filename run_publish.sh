@@ -9,6 +9,7 @@ then
     exit 1
 fi
 
+pip3 install twine wheel
 python3 -m pip install --user --upgrade setuptools wheel twine
 [[ -d build ]] && rm -rf build
 [[ -d dist ]] && rm -rf dist

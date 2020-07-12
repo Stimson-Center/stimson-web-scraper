@@ -99,9 +99,8 @@ check to make sure your github key has been added to the ssh-agent list.  Here's
 
 ```bash
     cd ~/stimson-web-scraper
-    ./start.sh
     export GOOGLE_APPLICATION_CREDENTIALS=.GOOGLE_APPLICATION_CREDENTIALS.json
-    py.test --verbose
+    ./run_tests.sh
 ```
 
 ### Execute as an Python3 executable
