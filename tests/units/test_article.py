@@ -200,9 +200,9 @@ class ArticleTestCase(unittest.TestCase):
             'balloons',
             'roads',
             'delays',
-            'thanksgiving',
+            'parade',
             'people',
-            'cnn',
+            'winds',
             'snow'
         ]
         self.assertCountEqual(KEYWORDS, self.article.keywords)

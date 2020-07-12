@@ -2,7 +2,6 @@
 
 
 import copy
-import datetime
 import glob
 import logging
 import os
@@ -631,7 +630,19 @@ class Article(object):
 
     def set_title(self, input_title):
         if input_title:
-            self.title = input_title[:self.config.MAX_TITLE]
+            # print(f"Scraper translate={self.config.translate} GOOGLE_APPLICATION_CREDENTIALS={os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')}")
+            if self.config.translate is True and os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+                translator = translate_v2.Client()
+                raw_dict = translator.translate(input_title, target_language='en', format_="text")
+                # noinspection PyTypeChecker
+                input_title = raw_dict['translatedText']
+                input_title = input_title.replace("  ", " ")
+                input_title = input_title[:self.config.MAX_TEXT]
+                self.config._language = 'en'
+            elif self.meta_lang == 'en':
+                input_title = input_title.replace("  ", " ")
+                input_title = input_title[:self.config.MAX_TEXT]
+            self.title = input_title
 
     def set_text(self, text):
         if text:
