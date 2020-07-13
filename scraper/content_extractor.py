@@ -229,6 +229,9 @@ class ContentExtractor(object):
              'content': 'datetime'},
             {'attribute': 'name', 'value': 'publish_date',
              'content': 'content'},
+            # https://www.bangkokpost.com/world/711600/myawaddy-industrial-zone-set-for-2017-opening
+            {'attribute': 'name', 'value': 'cXenseParse:recs:publishtime',
+             'content': 'content'},
         ]
         for known_meta_tag in PUBLISH_DATE_TAGS:
             meta_tags = self.parser.get_elements_by_tag(

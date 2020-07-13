@@ -3,7 +3,7 @@
 All unit tests for the scraper Article should be contained in this file.
 """
 
-from scraper import Article, Configuration
+from scraper import Article, Configuration, fulltext
 
 
 def validate(url, language, translate):
@@ -75,3 +75,9 @@ def test_pdf_duplicate_keywords_ignore_case():
     article = validate(url, 'en', False)
     pass
 
+
+def test_missing_date():
+    url = "https://www.bangkokpost.com/world/711600/myawaddy-industrial-zone-set-for-2017-opening"
+    article = validate(url, 'en', False)
+    full_text = fulltext(article.html)
+    pass
