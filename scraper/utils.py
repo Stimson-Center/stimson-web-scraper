@@ -8,7 +8,6 @@ import codecs
 import hashlib
 import logging
 import os
-import pickle
 import random
 import re
 import string
@@ -16,7 +15,6 @@ import sys
 import threading
 import time
 import unicodedata
-from hashlib import sha1
 
 import requests
 from bs4 import BeautifulSoup
@@ -224,38 +222,6 @@ def to_valid_filename(s):
     """
     valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
     return ''.join(c for c in s if c in valid_chars)
-
-
-def cache_disk(seconds=(86400 * 5), cache_folder="/tmp"):
-    """Caching extracting category locations & rss feeds for 5 days
-    """
-
-    def do_cache(function):
-        def inner_function(*args, **kwargs):
-            """Calculate a cache key based on the decorated method signature
-            args[1] indicates the domain of the inputs, we hash on domain!
-            """
-            key = sha1((str(args[1]) +
-                        str(kwargs)).encode('utf-8')).hexdigest()
-            filepath = os.path.join(cache_folder, key)
-
-            # verify that the cached object exists and is less than
-            # X seconds old
-            if os.path.exists(filepath):
-                modified = os.path.getmtime(filepath)
-                age_seconds = time.time() - modified
-                if age_seconds < seconds:
-                    return pickle.load(open(filepath, "rb"))
-
-            # call the decorated function...
-            result = function(*args, **kwargs)
-            # ... and save the cached object for next time
-            pickle.dump(result, open(filepath, "wb"))
-            return result
-
-        return inner_function
-
-    return do_cache
 
 
 def print_duration(method):

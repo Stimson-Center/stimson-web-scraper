@@ -83,11 +83,6 @@ class Configuration(object):
         # If Article's url does not match canonical_link after building, regenerate Article with canonical_link instead
         self.use_canonical_link = True
 
-        # Set this to False if you want to recompute the categories
-        # *every* time you build a `Source` object
-        # TODO: Actually make this work
-        # self.use_cached_categories = True
-
     def get_language(self):
         return self._language
 
