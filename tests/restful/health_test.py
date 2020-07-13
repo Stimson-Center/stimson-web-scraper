@@ -13,10 +13,11 @@ def test_app(app):
 
 
 @pytest.mark.options(debug=True)
-def test_hello(client):
+def test_health(client):
     response = client.get("/")
     assert 200 == response.status_code
     assert '200 OK' == response.status
     assert 'utf-8' == response.charset
     data = json.loads(response.data)
-    assert data['hello'] == 'world'
+    assert 0 < data['cpu_in_use'] < 100
+    assert 0 < data['memory_in_use'] < 100
