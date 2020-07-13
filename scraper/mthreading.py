@@ -76,24 +76,24 @@ class NewsPool(object):
     def __init__(self, config=None):
         """
         Abstraction of a threadpool. A newspool can accept any number of
-        source OR article objects together in a list. It allocates one
-        thread to every source and then joins.
+        article objects together in a list. It allocates one
+        thread to every Article and then joins.
 
         We allocate one thread per source to avoid rate limiting.
-        5 sources = 5 threads, one per source.
+        5 articles = 5 threads, one per articles.
 
-        >>> from scraper import news_pool, Source
+        >>> from scraper import news_pool, Article
 
-        >>> cnn_paper = Source('http://cnn.com')
-        >>> tc_paper = Source('http://techcrunch.com')
-        >>> espn_paper = Source('http://espn.com')
+        >>> cnn_paper = Article('http://cnn.com')
+        >>> tc_paper = Article('http://techcrunch.com')
+        >>> espn_paper = Article('http://espn.com')
 
         >>> papers = [cnn_paper, tc_paper, espn_paper]
         >>> news_pool.set(papers)
         >>> news_pool.join()
 
         # All of your papers should have their articles html all populated now.
-        >>> cnn_paper.articles[50].html
+        >>> cnn_paper.text
         u'<html>blahblah ... '
         """
         self.pool = None
@@ -122,8 +122,6 @@ class NewsPool(object):
         If both of the above conditions are not true, default to 1 thread.
         """
         from .article import Article
-        from .source import Source
-        from .sources import Sources
 
         if override_threads is not None:
             num_threads = override_threads
@@ -134,9 +132,7 @@ class NewsPool(object):
         self.pool = ThreadPool(num_threads, timeout)
 
         for news_object in news_list:
-            if isinstance(news_object, Article) or \
-                    isinstance(news_object, Source) or \
-                    isinstance(news_object, Sources):
+            if isinstance(news_object, Article):
                 self.pool.add_task(news_object.build)
             else:
                 raise NewsPoolException('Unsupported Class instance type')

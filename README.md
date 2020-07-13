@@ -291,17 +291,6 @@ article.build()
 print(article.text)
 ```
 
-#### Get all of the URLs within a Website
-
-```python
-from scraper import Sources
-url = "https://www.cnn.com"
-sources = Sources(url)
-
-print(sources.get_articles())
-print(sources.get_categories)
-```
-
 #### Get a Wikipedia Article including embedded tables
 
 ```python
@@ -329,7 +318,7 @@ You will be put into the virtual machine:
 
 ```bash
     virtualenv venv
-    source venv/bin/activate
+    source .venv/bin/activate
     export GOOGLE_APPLICATION_CREDENTIALS=.GOOGLE_APPLICATION_CREDENTIALS.json
     ./start.sh
     py.test --verbose 

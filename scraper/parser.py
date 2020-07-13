@@ -9,14 +9,13 @@ or query an lxml or soup dom object generated from an article's html.
 import logging
 import re
 import string
-
 from copy import deepcopy
 from html import unescape
 
 import lxml.etree
 import lxml.html
 import lxml.html.clean
-from bs4 import BeautifulSoup, UnicodeDammit, NavigableString
+from bs4 import UnicodeDammit
 
 from .utils import innerTrim
 

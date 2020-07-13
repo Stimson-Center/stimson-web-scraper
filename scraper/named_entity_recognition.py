@@ -1,9 +1,10 @@
 import json
 import re
 from collections import OrderedDict
-from date_extractor import extract_dates, extract_date, isDefinitelyNotDate
+
 import dateparser
 import numpy as np
+from date_extractor import extract_dates
 from spacy.lang.en.stop_words import STOP_WORDS
 from spacy.matcher import Matcher
 
