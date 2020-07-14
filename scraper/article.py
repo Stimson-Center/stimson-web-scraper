@@ -173,6 +173,8 @@ class Article(object):
 
         self.tables = []
 
+        self.progress = 0
+
     def build(self):
         """Build a lone article from a URL independent of the source (scraper).
         Don't normally call this method b/c it's good to multithread articles
