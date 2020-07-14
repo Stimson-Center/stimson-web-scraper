@@ -4,6 +4,8 @@ import json
 
 import pytest
 
+from scraper.article import NLPED
+
 def validate(response):
     assert 200 == response.status_code
     assert '200 OK' == response.status
@@ -41,12 +43,11 @@ def test_article_yahoo(client):
     response1 = client.get("/article?url=https://www.yahoo.com&language=en&translate=false")
     response1_data = validate(response1)
     assert len(response1_data) == 15  # returned 15 results on 2020/07/13!
-    progress = response1_data['progress']
-    while progress < 100:
-        response2 = client.get("/article/" + str(response1_data['thread_id']))
+    payload = response1_data
+    while NLPED not in payload['workflow']:
+        response2 = client.post("/article", json=payload)
         response2_data = validate(response2)
         assert len(response2_data) == 15  # returned 15 results on 2020/07/13!
-        progress = response2_data['progress']
-        pass
-    assert len(response2_data['text'])
+        payload = response2_data
+    assert len(payload['text'])
 

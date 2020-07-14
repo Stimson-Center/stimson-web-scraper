@@ -8,7 +8,7 @@ import unittest
 from collections import defaultdict, OrderedDict
 
 from scraper import Article, fulltext, ArticleException
-from scraper.article import ArticleDownloadState
+from scraper.article import DOWNLOADED
 from scraper.configuration import Configuration
 from tests.conftest import print_test, mock_resource_with
 
@@ -50,7 +50,7 @@ class ArticleTestCase(unittest.TestCase):
         self.setup_stage('download')
         html = mock_resource_with('cnn_article', 'html')
         self.article.download(html)
-        self.assertEqual(self.article.download_state, ArticleDownloadState.SUCCESS)
+        self.assertTrue(DOWNLOADED in self.article.workflow)
         self.assertEqual(self.article.download_exception_msg, None)
         self.assertEqual(75406, len(self.article.html))
 
@@ -174,7 +174,7 @@ class ArticleTestCase(unittest.TestCase):
 
     @print_test
     def test_pre_download_nlp(self):
-        """Test running NLP algos before even downloading the article
+        """Test running NLPED algos before even downloading the article
         """
         self.setup_stage('initial')
         new_article = Article(self.article.url)
@@ -182,7 +182,7 @@ class ArticleTestCase(unittest.TestCase):
 
     @print_test
     def test_pre_parse_nlp(self):
-        """Test running NLP algos before parsing the article
+        """Test running NLPED algos before parsing the article
         """
         self.setup_stage('parse')
         self.assertRaises(ArticleException, self.article.nlp)
@@ -214,7 +214,7 @@ class ArticleTestCase(unittest.TestCase):
         url = "file://" + os.path.join(HTML_FN, "cnn_article.html")
         article = Article(url=url)
         article.download()
-        self.assertEqual(article.download_state, ArticleDownloadState.SUCCESS)
+        self.assertTrue(DOWNLOADED in article.workflow)
         self.assertEqual(article.download_exception_msg, None)
         self.assertEqual(75406, len(article.html))
 
@@ -222,17 +222,19 @@ class ArticleTestCase(unittest.TestCase):
     def test_download_file_failure(self):
         url = "file://" + os.path.join(HTML_FN, "does_not_exist.html")
         article = Article(url=url)
-        article.download()
-        self.assertEqual(0, len(article.html))
-        self.assertEqual(article.download_state, ArticleDownloadState.FAILED_RESPONSE)
-        self.assertEqual(article.download_exception_msg, "No such file or directory")
+        try:
+            article.download()
+        except ArticleException as ex:
+            self.assertEqual(0, len(article.html))
+            self.assertTrue(DOWNLOADED not in article.workflow)
+            self.assertEqual(article.download_exception_msg, "No such file or directory")
 
     @print_test
     def test_wikipedia_tables(self):
         url = "https://en.wikipedia.org/wiki/International_Phonetic_Alphabet_chart_for_English_dialects"
         article = Article(url=url)
         article.build()
-        self.assertEqual(article.download_state, ArticleDownloadState.SUCCESS)
+        self.assertTrue(DOWNLOADED in article.workflow)
         self.assertEqual(article.download_exception_msg, None)
         # write data out to tab seperated format
         page = os.path.split(url)[1]

@@ -1,3 +1,4 @@
+from .article_process import ArticleProcess
 from .article_pool import ArticlePool
 from .article_progress import ArticleProgress
 from .countries import Countries

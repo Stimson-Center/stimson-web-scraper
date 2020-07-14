@@ -19,24 +19,7 @@ class ArticleProgress(Resource):
         # print("Values=" + json.dumps(request.values))
         # print("Form=" + json.dumps(request.form))
         article = exporting_threads[thread_id].article
-        response = {
-            "authors": article.authors,
-            "images:": list(article.images),
-            "keywords": article.keywords,
-            "movies": article.movies,
-            "progress": exporting_threads[thread_id].progress,
-            "publish_date": article.publish_date,
-            "summary": article.summary,
-            "text": article.text,
-            "title": article.title,
-            "topimage": article.top_image,
-            "url": article.url,
-            "tables": article.tables,
-            "language": article.meta_lang,
-            "html": article.html,
-            "thread_id": thread_id
-        }
-        return response, 200, {'Content-Type': 'application/json'}
+        article.get_json()
 
     @staticmethod
     def delete(thread_id):

@@ -2,10 +2,10 @@
 
 
 import copy
+import datetime
 import glob
 import logging
 import os
-import datetime
 from urllib.parse import urlparse
 
 # With lazy-loading
@@ -43,6 +43,12 @@ __maintainer_email = "cooper@pobox.com"
 log = logging.getLogger(__name__)
 date_format = "%Y-%m-%d"
 
+INIT = "INIT"
+DOWNLOADED = "DOWNLOADED"
+PARSED = "PARSED"
+NLPED = "NLPED"
+TRANSLATED = "TRANSLATED"
+
 class ArticleDownloadState(object):
     NOT_STARTED = 0
     FAILED_RESPONSE = 1
@@ -61,6 +67,7 @@ class Article(object):
         """The **kwargs argument may be filled with config values, which
         is added into the config object
         """
+        global INIT
         if isinstance(title, Configuration) or \
                 isinstance(source_url, Configuration):
             raise ArticleException(
@@ -128,8 +135,6 @@ class Article(object):
         self.article_html = ''
 
         # Keep state for downloads and parsing
-        self.is_parsed = False
-        self.download_state = ArticleDownloadState.NOT_STARTED
         self.download_exception_msg = None
 
         # Meta description field in the HTML source
@@ -173,7 +178,12 @@ class Article(object):
 
         self.tables = []
 
-        self.progress = 0
+        self.workflow = []
+        self.translate = False
+        self.process = 0
+        self.thread_id = 0
+        self.set_workflow(INIT)
+
 
     def build(self):
         """Build a lone article from a URL independent of the source (scraper).
@@ -181,7 +191,7 @@ class Article(object):
         on a source (scraper) level.
         """
         self.download()
-        if not self.is_parsed:
+        if not PARSED in self.workflow:
             self.parse()
         if self.config.use_canonical_link and self.canonical_link and self.canonical_link != self.url:
             self.url = self.canonical_link
@@ -197,7 +207,6 @@ class Article(object):
             with open(path, "r") as fin:
                 return fin.read()
         except OSError as e:
-            self.download_state = ArticleDownloadState.FAILED_RESPONSE
             self.download_exception_msg = e.strerror
             return None
 
@@ -211,7 +220,6 @@ class Article(object):
             return self.failed_response(ex)
 
     def failed_response(self, ex):
-        self.download_state = ArticleDownloadState.FAILED_RESPONSE
         self.download_exception_msg = str(ex)
         raise ex
 
@@ -222,6 +230,7 @@ class Article(object):
         recursion_counter (currently 1) stops refreshes that are potentially
         infinite
         """
+        global DOWNLOADED
         pdf_file_reader = None
         if input_html is None:
             parsed_url = urlparse(self.url)
@@ -236,11 +245,9 @@ class Article(object):
                     self.set_publish_date(parse_date_str(creation_date[0:8]))
                     self.set_text(html.strip())
                     # don't bother parsing HTML later, there is no HTML here, just raw text
-                    self.is_parsed = True
+                    self.set_workflow(PARSED)
             if html is None:
-                log.debug('Download failed on URL %s because of %s' %
-                          (self.url, self.download_exception_msg))
-                return
+                raise ArticleException(self.download_exception_msg)
         else:
             html = input_html
 
@@ -251,10 +258,11 @@ class Article(object):
                 return self.download(input_html, recursion_counter=recursion_counter + 1)
 
         self.set_html(html)
-        if title:
-            self.set_title(title)
+        self.set_title(title)
+        self.set_workflow(DOWNLOADED)
 
     def parse(self):
+        global PARSED
         self.throw_if_not_downloaded_verbose()
 
         self.doc = self.config.get_parser().from_string(self.html)
@@ -324,9 +332,8 @@ class Article(object):
             self.set_text(text)
 
         self.fetch_images()
-
-        self.is_parsed = True
         self.release_resources()
+        self.set_workflow(PARSED)
 
     def fetch_images(self):
         if self.clean_doc is not None:
@@ -363,7 +370,7 @@ class Article(object):
         """If the article's body text is long enough to meet
         standard article requirements, keep the article
         """
-        if not self.is_parsed:
+        if not PARSED in self.workflow:
             raise ArticleException('must parse article before checking \
                                     if it\'s body is valid!')
         meta_type = self.extractor.get_meta_type(self.clean_doc)
@@ -412,6 +419,7 @@ class Article(object):
     def nlp(self):
         """Keyword extraction wrapper
         """
+        global NLPED
         self.throw_if_not_downloaded_verbose()
         self.throw_if_not_parsed_verbose()
 
@@ -453,7 +461,8 @@ class Article(object):
         # *************************************************************
         # THIS STEP CAN TAKE A MINUTE OR TWO
         tr4w = TextRank4Keyword(nlp)
-        tr4w.analyze(self.text.lower(), candidate_pos=['NOUN', 'PROPN'], window_size=4, lower=False, stopwords=stopwords)
+        tr4w.analyze(self.text.lower(), candidate_pos=['NOUN', 'PROPN'], window_size=4, lower=False,
+                     stopwords=stopwords)
         keywords = list()
         for k, v in tr4w.get_keywords().items():
             keywords.append(k)
@@ -469,6 +478,7 @@ class Article(object):
             if dates:
                 # even if there are multiple dates returned, usually the first date is best to use
                 self.set_publish_date(dates[0])
+        self.set_workflow(NLPED)
 
     def xx_keywords(self, stopwords, count=10):
         """Get the top `count` keywords and their frequency scores ignores blacklisted
@@ -669,7 +679,7 @@ class Article(object):
             if isinstance(html, bytes):
                 html = self.config.get_parser().get_unicode_html(html)
             self.html = html
-            self.download_state = ArticleDownloadState.SUCCESS
+            self.set_workflow(DOWNLOADED)
 
     def set_article_html(self, article_html):
         """Sets the HTML of just the article's `top_node`
@@ -769,19 +779,57 @@ class Article(object):
         elif publish_date:
             self.publish_date = publish_date
 
+    def set_workflow(self, step):
+        if step not in self.workflow:
+            self.workflow.append(step)
+
     def throw_if_not_downloaded_verbose(self):
         """Parse ArticleDownloadState -> log readable status
         -> maybe throw ArticleException
         """
-        if self.download_state == ArticleDownloadState.NOT_STARTED:
+        if DOWNLOADED not in self.workflow:
             raise ArticleException('You must `download()` an article first!')
-        elif self.download_state == ArticleDownloadState.FAILED_RESPONSE:
-            raise ArticleException('Article `download()` failed with %s on URL %s' %
-                                   (self.download_exception_msg, self.url))
 
     def throw_if_not_parsed_verbose(self):
-        """Parse `is_parsed` status -> log readable status
+        """Parse `PARSED` status -> log readable status
         -> maybe throw ArticleException
         """
-        if not self.is_parsed:
+        if PARSED not in self.workflow:
             raise ArticleException('You must `parse()` an article first!')
+
+    def get_json(self):
+        return {
+            "authors": self.authors,
+            "config": self.config.get_json(),
+            "html": self.html,
+            "images:": list(self.images),
+            "keywords": self.keywords,
+            "language": self.config._language,
+            "movies": self.movies,
+            "publish_date": self.publish_date,
+            "summary": self.summary,
+            "tables": self.tables,
+            "text": self.text,
+            "title": self.title,
+            "topimage": self.top_image,
+            "url": self.url,
+            "workflow": self.workflow
+        }
+
+    def set_json(self, article_json):
+        self.authors = article_json["authors"]
+        self.config.set_language(article_json["config"]['language'])
+        self.config.set_translate(article_json["config"]['translate'])
+        self.html = article_json["html"]
+        self.images = article_json["images:"]
+        self.keywords = article_json["keywords"]
+        self.meta_lang = article_json["language"]
+        self.movies = article_json["movies"]
+        self.publish_date = article_json["publish_date"]
+        self.summary = article_json["summary"]
+        self.tables = article_json["tables"]
+        self.text = article_json["text"]
+        self.title = article_json["title"]
+        self.top_image = article_json["topimage"]
+        self.url = article_json["url"]
+        self.workflow = article_json["workflow"]

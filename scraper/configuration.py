@@ -104,6 +104,18 @@ class Configuration(object):
         self._language = language.lower()
         self.stopwords_class = self.get_stopwords_class(language)
 
+    def get_translate(self):
+        return self.translate
+
+    def set_translate(self, translate):
+        self.translate = translate
+
+    def get_json(self):
+        return {
+            "language": self.get_language(),
+            "translate": self.translate
+        }
+
     language = property(get_language, set_language,
                         del_language, "language prop")
 
