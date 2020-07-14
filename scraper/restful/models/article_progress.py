@@ -40,5 +40,6 @@ class ArticleProgress(Resource):
 
     @staticmethod
     def delete(thread_id):
-        exporting_threads.pop(thread_id)
+        if thread_id in exporting_threads:
+            exporting_threads.pop(thread_id)
         return {}, 200, {'Content-Type': 'application/json'}
