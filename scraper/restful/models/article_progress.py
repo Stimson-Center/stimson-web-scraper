@@ -33,7 +33,8 @@ class ArticleProgress(Resource):
             "url": article.url,
             "tables": article.tables,
             "language": article.meta_lang,
-            "html": article.html
+            "html": article.html,
+            "thread_id": thread_id
         }
         return response, 200, {'Content-Type': 'application/json'}
 

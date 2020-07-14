@@ -33,7 +33,24 @@ class ArticlePool(Resource):
         thread_id = random.randint(0, 10000)
         exporting_threads[thread_id] = ExportingThread(url, language=language, translate=translate)
         exporting_threads[thread_id].start()
-        result = {"thread_id": thread_id}
-        return result, 200, {'Content-Type': 'application/json'}
+        article = exporting_threads[thread_id].article
+        response = {
+            "authors": article.authors,
+            "images:": list(article.images),
+            "keywords": article.keywords,
+            "movies": article.movies,
+            "progress": exporting_threads[thread_id].progress,
+            "publish_date": article.publish_date,
+            "summary": article.summary,
+            "text": article.text,
+            "title": article.title,
+            "topimage": article.top_image,
+            "url": article.url,
+            "tables": article.tables,
+            "language": article.meta_lang,
+            "html": article.html,
+            "thread_id": thread_id
+        }
+        return response, 200, {'Content-Type': 'application/json'}
 
 
