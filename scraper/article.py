@@ -49,6 +49,7 @@ PARSED = "PARSED"
 NLPED = "NLPED"
 TRANSLATED = "TRANSLATED"
 
+
 class ArticleDownloadState(object):
     NOT_STARTED = 0
     FAILED_RESPONSE = 1
@@ -183,7 +184,6 @@ class Article(object):
         self.process = 0
         self.thread_id = 0
         self.set_workflow(INIT)
-
 
     def build(self):
         """Build a lone article from a URL independent of the source (scraper).

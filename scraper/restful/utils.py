@@ -1,5 +1,5 @@
-import string
 import math
+import string
 
 
 def valid_filename(filename):

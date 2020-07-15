@@ -173,7 +173,6 @@ class TextRank4Keyword:
         # return persons
         return [ent.text for ent in self.doc.ents if ent.label_ == 'PERSON']
 
-
     def get_education(self):
         # https://omkarpathak.in/2018/12/18/writing-your-own-resume-parser/#rule-based-matching
         # Education Degrees

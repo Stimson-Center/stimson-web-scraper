@@ -12,9 +12,8 @@ import logging
 import re
 from collections import defaultdict
 from urllib.parse import urljoin, urlparse, urlunparse
-from bs4 import BeautifulSoup
 
-from tldextract import tldextract
+from bs4 import BeautifulSoup
 
 from . import urls
 from .urls import prepare_url, is_url

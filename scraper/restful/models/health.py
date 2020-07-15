@@ -1,6 +1,8 @@
-import psutil
 import shutil
+
+import psutil
 from flask_restful import Resource
+
 
 class Health(Resource):
     @staticmethod

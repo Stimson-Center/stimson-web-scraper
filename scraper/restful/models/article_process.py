@@ -1,14 +1,13 @@
 # https://preslav.me/2019/01/09/dotenv-files-python/
-import json
 from flask import request
 from flask_restful import Resource
 
 # https://preslav.me/2019/01/09/dotenv-files-python/
 # noinspection PyPackageRequirements
 from scraper import Article
+from scraper.article import DOWNLOADED, PARSED, NLPED
 # noinspection PyPackageRequirements
 from scraper.configuration import Configuration
-from scraper.article import INIT, DOWNLOADED, PARSED, NLPED
 
 __title__ = 'stimson-web-scraper'
 __author__ = 'Alan S. Cooper'

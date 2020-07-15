@@ -37,6 +37,7 @@ def set_cors(app):
                 )
     return cors
 
+
 # @app.before_request
 # def authorize_token():
 #     pass
@@ -62,8 +63,6 @@ class GetToken(Resource):
 def create_routes(api):
     api.add_resource(Health, '/')
     api.add_resource(ArticleProcess, '/article')
-    # api.add_resource(ArticlePool, '/article')
-    # api.add_resource(ArticleProgress, '/article/<int:thread_id>')
     api.add_resource(Countries, '/countries')
     api.add_resource(FileTypes, '/filetypes')
     api.add_resource(Languages, '/languages')

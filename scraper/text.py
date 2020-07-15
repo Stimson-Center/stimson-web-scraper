@@ -3,9 +3,9 @@
 Stopword extraction and stopword classes.
 """
 
-
-import string
 import importlib
+import string
+
 import pyarabic.araby as araby
 
 __title__ = 'scraper'

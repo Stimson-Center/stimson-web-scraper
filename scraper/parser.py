@@ -28,6 +28,7 @@ allow_tags = [
     'ul', 'ol', 'li', 'dl', 'dt', 'dd'
 ]
 
+
 class Parser(object):
 
     @classmethod
