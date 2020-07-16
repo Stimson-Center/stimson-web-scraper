@@ -821,7 +821,7 @@ class Article(object):
         self.config.set_language(article_json["config"]['language'])
         self.config.set_translate(article_json["config"]['translate'])
         self.html = article_json["html"]
-        self.images = article_json["images"]
+        self.images = article_json["images"] if 'images' in article_json else []
         self.keywords = article_json["keywords"]
         self.meta_lang = article_json["language"]
         self.movies = article_json["movies"]
