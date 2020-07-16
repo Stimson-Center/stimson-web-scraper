@@ -66,5 +66,6 @@ def create_routes(api):
     api.add_resource(Countries, '/countries')
     api.add_resource(FileTypes, '/filetypes')
     api.add_resource(Languages, '/languages')
+    api.add_resource(PDF, '/pdf')
     api.add_resource(Search, '/search')
     api.add_resource(Share, '/share')
