@@ -1,7 +1,7 @@
 import os
 import re
 import json
-import tempfile
+from io import BytesIO
 from flask import request, send_file
 from flask_restful import Resource
 from fpdf import FPDF
@@ -119,18 +119,4 @@ class PDF(Resource):
         pdf.write_section('URL', article.url)
         # get the pdf as an array of bytes
         buffer = pdf.output(dest='S')
-        # send the pdf with name .pdf
-        # filename = f"{article.publish_date}_{article.title}.{article.config._language}.pdf"
-        # https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
-        # https://gist.github.com/Miserlou/fcf0e9410364d98a853cb7ff42efd35a
-        fp = tempfile.NamedTemporaryFile()
-        fp.write(buffer)
-        fp.flush()
-        fp.seek(0)
-        return send_file(
-            filename_or_fp=fp,
-            attachment_filename=fp.name,
-            as_attachment=False,
-            mimetype='application/octet-stream'
-        )
-
+        return send_file(BytesIO(buffer), mimetype='application/pdf')
