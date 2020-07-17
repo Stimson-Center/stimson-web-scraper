@@ -4,7 +4,6 @@ import json
 
 import pytest
 
-
 # https://pypi.org/project/pytest-flask/
 
 @pytest.mark.options(debug=False)
@@ -22,3 +21,4 @@ def test_health(client):
     assert 0 < data['cpu_in_use'] < 100
     assert 0 < data['memory_in_use'] < 100
     assert 0 < data['diskspace_in_use'] < 100
+    assert data['version']

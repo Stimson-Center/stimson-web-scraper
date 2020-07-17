@@ -9,6 +9,7 @@ https://packaging.python.org/tutorials/packaging-projects/
 import os
 import sys
 import setuptools
+from scraper import __version__
 
 
 if sys.argv[-1] == "publish":
@@ -26,7 +27,7 @@ with open("README.md", "r") as f:
 
 setuptools.setup(
     name="stimson-web-scraper",
-    version="0.0.46",
+    version=__version__,
     author="Alan S. Cooper",
     author_email="cooper@pobox.com",
     description="website article / adobe pdf file discovery & extraction",
