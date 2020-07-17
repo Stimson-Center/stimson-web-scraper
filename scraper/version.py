@@ -10,5 +10,5 @@ __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 __maintainer__ = "The Stimson Center"
 __maintainer_email = "cooper@pobox.com"
 
-version_info = (0, 0, 49)
+version_info = (0, 0, 50)
 __version__ = ".".join(map(str, version_info))

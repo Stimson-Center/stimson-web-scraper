@@ -1,20 +1,12 @@
 import os
 import re
 import json
-import io
 import tempfile
 from flask import request, send_file
 from flask_restful import Resource
 from fpdf import FPDF
 from fpdf.ttfonts import TTFontFile
 from scraper.restful.models import ArticleProcess
-
-# https://preslav.me/2019/01/09/dotenv-files-python/
-# noinspection PyPackageRequirements
-from scraper import Article
-from scraper.article import DOWNLOADED, PARSED, NLPED
-# noinspection PyPackageRequirements
-from scraper.configuration import Configuration
 
 __title__ = 'stimson-web-scraper'
 __author__ = 'Alan S. Cooper'
@@ -137,8 +129,8 @@ class PDF(Resource):
         fp.seek(0)
         return send_file(
             filename_or_fp=fp,
-            # attachment_filename=fo.name,
-            # as_attachment=True,
-            mimetype='application/octet-stream'
+            attachment_filename=fp.name,
+            as_attachment=True,
+            mimetype='application/pdf'
         )
 
