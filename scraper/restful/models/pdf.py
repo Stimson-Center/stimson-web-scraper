@@ -130,7 +130,7 @@ class PDF(Resource):
         return send_file(
             filename_or_fp=fp,
             attachment_filename=fp.name,
-            as_attachment=True,
-            mimetype='application/pdf'
+            as_attachment=False,
+            mimetype='application/octet-stream'
         )
 
