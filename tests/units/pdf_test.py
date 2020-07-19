@@ -36,23 +36,3 @@ def test_article_pdf_fetching():
     assert len(article.text) > len(article.summary)
     assert article.text
     assert article.url
-
-
-@pytest.mark.options(debug=True)
-def test_article_to_pdf(fixture_directory, client):
-    import os
-    import json
-    test_driver_file = os.path.join(fixture_directory,
-                                    "json",
-                                    "2015-09-29 Myawaddy industrial zone set for 2017 opening.en.json")
-    with open(test_driver_file) as f:
-        payload = json.load(f)
-        language = payload['language']
-        response = client.post("/pdf", json=payload)
-        assert 200 == response.status_code
-        assert '200 OK' == response.status
-        assert 'utf-8' == response.charset
-        assert response.data
-        output = f"/tmp/{payload['publish_date']}_{payload['title']}.{language}.pdf"
-        with open(output, 'wb') as f:
-            f.write(response.data)

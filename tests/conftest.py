@@ -6,8 +6,6 @@ import pytest
 from flask import Flask
 from flask_restful import Api
 
-from scraper.restful.endpoints import create_routes, set_cors
-
 
 # noinspection PyProtectedMember
 @pytest.fixture
@@ -18,10 +16,7 @@ def fixture_directory():
 @pytest.fixture(scope='function')
 def app():
     app = Flask("test")
-    api = Api(app)
-    create_routes(api)
     app.logger.setLevel(logging.DEBUG)
-    cors = set_cors(app)
     return app
 
 
