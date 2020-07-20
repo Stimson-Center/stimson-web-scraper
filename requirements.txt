@@ -12,7 +12,7 @@ lxml>=4.5.2
 numpy>=1.19.0
 pandas>=1.0.5
 pdftotext>=2.1.4
-Pillow>=7.2.0
+Pillow==6.2.2
 psutil>=5.7.2
 pyarabic>=0.6.8
 python-dotenv>=0.14.0
