@@ -99,7 +99,6 @@ check to make sure your github key has been added to the ssh-agent list.  Here's
 
 ```bash
     cd ~/stimson-web-scraper
-    export GOOGLE_APPLICATION_CREDENTIALS=.GOOGLE_APPLICATION_CREDENTIALS.json
     ./run_tests.sh
 ```
 
@@ -108,7 +107,6 @@ check to make sure your github key has been added to the ssh-agent list.  Here's
 ```bash
     cd ~/stimson-web-scraper/scraper
     ./start.sh
-    export GOOGLE_APPLICATION_CREDENTIALS=.GOOGLE_APPLICATION_CREDENTIALS.json
     ./cli.py -u https://www.yahoo.com -l en
 ```
 
@@ -306,27 +304,24 @@ print(article.tables)
 ## Optionally Setting up a Docker environment
         
 ```bash
-	brew install docker
-	docker --version
+    brew install docker
+    docker --version
     cd ~/stimson-web-scraper
     ./run_docker.sh
 ```
 You will be put into the virtual machine:
 
-(venv) tf-docker /mnt >
+(venv) tf-docker /app >
 
 
 ```bash
-    virtualenv venv
-    source .venv/bin/activate
-    export GOOGLE_APPLICATION_CREDENTIALS=.GOOGLE_APPLICATION_CREDENTIALS.json
-    ./start.sh
-    py.test --verbose 
+    cd ~/stimson-web-scraper
+    ./run_tests.sh
 ```
 
 For more details see:
 
-[Docker Tutorial](https://github.com/praktikos/stimson-web-scraper/blob/master/DOCKER.md)
+[Docker Tutorial](https://github.com/Stimson-Center/stimson-web-scraper/blob/master/DOCKER.md)
 
 
 # Contributing
