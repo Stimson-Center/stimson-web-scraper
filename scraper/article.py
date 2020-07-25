@@ -185,44 +185,7 @@ class Article(object):
         self.thread_id = 0
         self.set_workflow(INIT)
 
-    def build(self):
-        """Build a lone article from a URL independent of the source (scraper).
-        Don't normally call this method b/c it's good to multithread articles
-        on a source (scraper) level.
-        """
-        self.download()
-        if not PARSED in self.workflow:
-            self.parse()
-        if self.config.use_canonical_link and self.canonical_link and self.canonical_link != self.url:
-            self.url = self.canonical_link
-            # recurse once!
-            self.build()
-        self.nlp()
-        url = self.url.lower()
-        if url.find(".wikipedia.org/wiki/") >= 0:
-            self.parse_tables(attributes={"class": "wikitable"})
-
-    def _parse_scheme_file(self, path):
-        try:
-            with open(path, "r") as fin:
-                return fin.read()
-        except OSError as e:
-            self.download_exception_msg = e.strerror
-            return None
-
-    def _parse_scheme_http(self):
-        try:
-            html, pdf_file_reader = network.get_html_2XX_only(self.url, self.config)
-            return html, pdf_file_reader
-        except requests.exceptions.RequestException as ex:
-            return self.failed_response(ex)
-        except Exception as ex:
-            return self.failed_response(ex)
-
-    def failed_response(self, ex):
-        self.download_exception_msg = str(ex)
-        raise ex
-
+    # PUBLIC API
     def download(self, input_html=None, title=None, recursion_counter=0):
         """Downloads the link's HTML content, don't use if you are batch async
         downloading articles
@@ -261,6 +224,7 @@ class Article(object):
         self.set_title(title)
         self.set_workflow(DOWNLOADED)
 
+    # PUBLIC API
     def parse(self):
         global PARSED
         self.throw_if_not_downloaded_verbose()
@@ -335,87 +299,7 @@ class Article(object):
         self.release_resources()
         self.set_workflow(PARSED)
 
-    def fetch_images(self):
-        if self.clean_doc is not None:
-            meta_img_url = self.extractor.get_meta_img_url(
-                self.url, self.clean_doc)
-            self.set_meta_img(meta_img_url)
-
-            imgs = self.extractor.get_img_urls(self.url, self.clean_doc)
-            if self.meta_img:
-                imgs.add(self.meta_img)
-            self.set_imgs(imgs)
-
-        if self.clean_top_node is not None and not self.has_top_image():
-            first_img = self.extractor.get_first_img_url(
-                self.url, self.clean_top_node)
-            if self.config.fetch_images:
-                self.set_top_img(first_img)
-            else:
-                self.set_top_img_no_check(first_img)
-
-        if not self.has_top_image() and self.config.fetch_images:
-            self.set_reddit_top_img()
-
-    def has_top_image(self):
-        return self.top_img is not None and self.top_img != ''
-
-    def is_valid_url(self):
-        """Performs a check on the url of this link to determine if article
-        is a real news article or not
-        """
-        return urls.valid_url(self.url)
-
-    def is_valid_body(self):
-        """If the article's body text is long enough to meet
-        standard article requirements, keep the article
-        """
-        if not PARSED in self.workflow:
-            raise ArticleException('must parse article before checking \
-                                    if it\'s body is valid!')
-        meta_type = self.extractor.get_meta_type(self.clean_doc)
-        wordcount = self.text.split(' ')
-        sentcount = self.text.split('.')
-
-        if (meta_type == 'article' and len(wordcount) >
-                self.config.MIN_WORD_COUNT):
-            log.debug('%s verified for article and wc' % self.url)
-            return True
-
-        if not self.is_media_news() and not self.text:
-            log.debug('%s caught for no media no text' % self.url)
-            return False
-
-        if self.title is None or len(self.title.split(' ')) < 2:
-            log.debug('%s caught for bad title' % self.url)
-            return False
-
-        if len(wordcount) < self.config.MIN_WORD_COUNT:
-            log.debug('%s caught for word cnt' % self.url)
-            return False
-
-        if len(sentcount) < self.config.MIN_SENT_COUNT:
-            log.debug('%s caught for sent cnt' % self.url)
-            return False
-
-        if self.html is None or self.html == '':
-            log.debug('%s caught for no html' % self.url)
-            return False
-
-        log.debug('%s verified for default true' % self.url)
-        return True
-
-    def is_media_news(self):
-        """If the article is related heavily to media:
-        gallery, video, big pictures, etc
-        """
-        safe_urls = ['/video', '/slide', '/gallery', '/powerpoint',
-                     '/fashion', '/glamour', '/cloth']
-        for s in safe_urls:
-            if s in self.url:
-                return True
-        return False
-
+    # PUBLIC API
     def nlp(self):
         """Keyword extraction wrapper
         """
@@ -479,6 +363,84 @@ class Article(object):
                 # even if there are multiple dates returned, usually the first date is best to use
                 self.set_publish_date(dates[0])
         self.set_workflow(NLPED)
+
+    # PUBLIC API
+    def translation(self, target_language='en'):
+        global TRANSLATED
+        self.throw_if_not_downloaded_verbose()
+        self.throw_if_not_parsed_verbose()
+        if not os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
+            raise ArticleException("GOOGLE_APPLICATION_CREDENTIALS not found")
+        if self.config.get_language == "en":
+            raise ArticleException("Article Configuration language is already 'en'")
+        # print(f"Scraper translate={self.config.translate} GOOGLE_APPLICATION_CREDENTIALS={os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')}")
+        translator = translate_v2.Client()
+        raw_dict = translator.translate(self.title, target_language=target_language, format_="text")
+        # noinspection PyTypeChecker
+        self.config._language = 'en'
+        self.set_title(raw_dict['translatedText'])
+        raw_dict = translator.translate(self.summary, target_language=target_language, format_="text")
+        self.set_summary(raw_dict['translatedText'])
+        raw_dict = translator.translate(self.text, target_language=target_language, format_="text")
+        self.set_text(raw_dict['translatedText'])
+        self.set_workflow(TRANSLATED)
+
+    # PUBLIC API
+    def get_json(self):
+        return {
+            "authors": self.authors,
+            "config": self.config.get_json(),
+            "html": self.html,
+            "images:": list(self.images),
+            "keywords": self.keywords,
+            "language": self.config._language,
+            "movies": self.movies,
+            "publish_date": self.publish_date,
+            "summary": self.summary,
+            "tables": self.tables,
+            "text": self.text,
+            "title": self.title,
+            "topimage": self.top_image,
+            "url": self.url,
+            "workflow": self.workflow
+        }
+
+    # PUBLIC API
+    def set_json(self, article_json):
+        self.authors = article_json["authors"]
+        self.config.set_language(article_json["config"]['language'])
+        self.config.set_translate(article_json["config"]['translate'])
+        self.html = article_json["html"]
+        self.images = article_json["images"] if 'images' in article_json else []
+        self.keywords = article_json["keywords"]
+        self.meta_lang = article_json["language"]
+        self.movies = article_json["movies"]
+        self.publish_date = article_json["publish_date"]
+        self.summary = article_json["summary"]
+        self.tables = article_json["tables"]
+        self.text = article_json["text"]
+        self.title = article_json["title"]
+        self.top_image = article_json["topimage"]
+        self.url = article_json["url"]
+        self.workflow = article_json["workflow"]
+
+    def build(self):
+        """Build a lone article from a URL independent of the source (scraper).
+        Don't normally call this method b/c it's good to multithread articles
+        on a source (scraper) level.
+        """
+        self.download()
+        if not PARSED in self.workflow:
+            self.parse()
+        if self.config.use_canonical_link and self.canonical_link and self.canonical_link != self.url:
+            self.url = self.canonical_link
+            # recurse once!
+            self.build()
+        self.nlp()
+        self.translation()
+        url = self.url.lower()
+        if url.find(".wikipedia.org/wiki/") >= 0:
+            self.parse_tables(attributes={"class": "wikitable"})
 
     def xx_keywords(self, stopwords, count=10):
         """Get the top `count` keywords and their frequency scores ignores blacklisted
@@ -584,6 +546,108 @@ class Article(object):
                 data.append(row_data)
             self.tables.append({'name': table_name, 'rows': data})
 
+    def _parse_scheme_file(self, path):
+        try:
+            with open(path, "r") as fin:
+                return fin.read()
+        except OSError as e:
+            self.download_exception_msg = e.strerror
+            return None
+
+    def _parse_scheme_http(self):
+        try:
+            html, pdf_file_reader = network.get_html_2XX_only(self.url, self.config)
+            return html, pdf_file_reader
+        except requests.exceptions.RequestException as ex:
+            return self.failed_response(ex)
+        except Exception as ex:
+            return self.failed_response(ex)
+
+    def failed_response(self, ex):
+        self.download_exception_msg = str(ex)
+        raise ex
+
+    def fetch_images(self):
+        if self.clean_doc is not None:
+            meta_img_url = self.extractor.get_meta_img_url(
+                self.url, self.clean_doc)
+            self.set_meta_img(meta_img_url)
+
+            imgs = self.extractor.get_img_urls(self.url, self.clean_doc)
+            if self.meta_img:
+                imgs.add(self.meta_img)
+            self.set_imgs(imgs)
+
+        if self.clean_top_node is not None and not self.has_top_image():
+            first_img = self.extractor.get_first_img_url(
+                self.url, self.clean_top_node)
+            if self.config.fetch_images:
+                self.set_top_img(first_img)
+            else:
+                self.set_top_img_no_check(first_img)
+
+        if not self.has_top_image() and self.config.fetch_images:
+            self.set_reddit_top_img()
+
+    def has_top_image(self):
+        return self.top_img is not None and self.top_img != ''
+
+    def is_valid_url(self):
+        """Performs a check on the url of this link to determine if article
+        is a real news article or not
+        """
+        return urls.valid_url(self.url)
+
+    def is_valid_body(self):
+        """If the article's body text is long enough to meet
+        standard article requirements, keep the article
+        """
+        if not PARSED in self.workflow:
+            raise ArticleException('must parse article before checking \
+                                    if it\'s body is valid!')
+        meta_type = self.extractor.get_meta_type(self.clean_doc)
+        wordcount = self.text.split(' ')
+        sentcount = self.text.split('.')
+
+        if (meta_type == 'article' and len(wordcount) >
+                self.config.MIN_WORD_COUNT):
+            log.debug('%s verified for article and wc' % self.url)
+            return True
+
+        if not self.is_media_news() and not self.text:
+            log.debug('%s caught for no media no text' % self.url)
+            return False
+
+        if self.title is None or len(self.title.split(' ')) < 2:
+            log.debug('%s caught for bad title' % self.url)
+            return False
+
+        if len(wordcount) < self.config.MIN_WORD_COUNT:
+            log.debug('%s caught for word cnt' % self.url)
+            return False
+
+        if len(sentcount) < self.config.MIN_SENT_COUNT:
+            log.debug('%s caught for sent cnt' % self.url)
+            return False
+
+        if self.html is None or self.html == '':
+            log.debug('%s caught for no html' % self.url)
+            return False
+
+        log.debug('%s verified for default true' % self.url)
+        return True
+
+    def is_media_news(self):
+        """If the article is related heavily to media:
+        gallery, video, big pictures, etc
+        """
+        safe_urls = ['/video', '/slide', '/gallery', '/powerpoint',
+                     '/fashion', '/glamour', '/cloth']
+        for s in safe_urls:
+            if s in self.url:
+                return True
+        return False
+
     def get_parse_candidate(self):
         """A parse candidate is a wrapper object holding a link hash of this
         article and a final_url of the article
@@ -642,35 +706,26 @@ class Article(object):
 
     def set_title(self, input_title):
         if input_title:
-            # print(f"Scraper translate={self.config.translate} GOOGLE_APPLICATION_CREDENTIALS={os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')}")
-            if self.config.translate is True and os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
-                translator = translate_v2.Client()
-                raw_dict = translator.translate(input_title, target_language='en', format_="text")
-                # noinspection PyTypeChecker
-                input_title = raw_dict['translatedText']
+            if self.meta_lang == 'en':
                 input_title = input_title.replace("  ", " ")
-                input_title = input_title[:self.config.MAX_TEXT]
-                self.config._language = 'en'
-            elif self.meta_lang == 'en':
-                input_title = input_title.replace("  ", " ")
-                input_title = input_title[:self.config.MAX_TEXT]
+            input_title = input_title[:self.config.MAX_TEXT]
             self.title = input_title
 
-    def set_text(self, text):
-        if text:
-            # print(f"Scraper translate={self.config.translate} GOOGLE_APPLICATION_CREDENTIALS={os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')}")
-            if self.config.translate is True and os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
-                translator = translate_v2.Client()
-                raw_dict = translator.translate(text, target_language='en', format_="text")
-                # noinspection PyTypeChecker
-                text = raw_dict['translatedText']
-                text = text.replace("  ", " ")
-                text = text[:self.config.MAX_TEXT]
-                self.config._language = 'en'
-            elif self.meta_lang == 'en':
-                text = text.replace("  ", " ")
-                text = text[:self.config.MAX_TEXT]
-            self.text = text
+    def set_summary(self, input_summary):
+        """Summary here refers to a paragraph of text from the
+        title text and body text
+        """
+        if input_summary:
+            if self.meta_lang == 'en':
+                input_summary = input_summary.replace("  ", " ")
+            self.summary = input_summary[:self.config.MAX_SUMMARY]
+
+    def set_text(self, input_text):
+        if input_text:
+            if self.meta_lang == 'en':
+                input_text = input_text.replace("  ", " ")
+            input_text = input_text[:self.config.MAX_TEXT]
+            self.text = input_text
 
     def set_html(self, html):
         """Encode HTML before setting it
@@ -731,12 +786,6 @@ class Article(object):
             self.authors.append(domain)
         # self.authors = self.authors[:self.config.MAX_AUTHORS]
 
-    def set_summary(self, summary):
-        """Summary here refers to a paragraph of text from the
-        title text and body text
-        """
-        self.summary = summary[:self.config.MAX_SUMMARY]
-
     def set_meta_language(self, meta_lang):
         """Save langauges in their ISO 2-character form
         """
@@ -796,40 +845,3 @@ class Article(object):
         """
         if PARSED not in self.workflow:
             raise ArticleException('You must `parse()` an article first!')
-
-    def get_json(self):
-        return {
-            "authors": self.authors,
-            "config": self.config.get_json(),
-            "html": self.html,
-            "images:": list(self.images),
-            "keywords": self.keywords,
-            "language": self.config._language,
-            "movies": self.movies,
-            "publish_date": self.publish_date,
-            "summary": self.summary,
-            "tables": self.tables,
-            "text": self.text,
-            "title": self.title,
-            "topimage": self.top_image,
-            "url": self.url,
-            "workflow": self.workflow
-        }
-
-    def set_json(self, article_json):
-        self.authors = article_json["authors"]
-        self.config.set_language(article_json["config"]['language'])
-        self.config.set_translate(article_json["config"]['translate'])
-        self.html = article_json["html"]
-        self.images = article_json["images"] if 'images' in article_json else []
-        self.keywords = article_json["keywords"]
-        self.meta_lang = article_json["language"]
-        self.movies = article_json["movies"]
-        self.publish_date = article_json["publish_date"]
-        self.summary = article_json["summary"]
-        self.tables = article_json["tables"]
-        self.text = article_json["text"]
-        self.title = article_json["title"]
-        self.top_image = article_json["topimage"]
-        self.url = article_json["url"]
-        self.workflow = article_json["workflow"]

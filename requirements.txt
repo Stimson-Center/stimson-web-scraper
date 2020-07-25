@@ -9,7 +9,7 @@ fpdf2>=2.0.5
 google-cloud-translate>=2.0.1
 jieba3k>=0.35.1
 lxml>=4.5.2
-numpy>=1.19.0
+numpy>=1.19.1
 pandas>=1.0.5
 pdftotext>=2.1.4
 Pillow==6.2.2

@@ -39,7 +39,8 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
-venv
+venv/
+.venv/
 
 # secrets
 .env
