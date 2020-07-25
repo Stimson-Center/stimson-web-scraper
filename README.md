@@ -315,7 +315,6 @@ You will be put into the virtual machine:
 
 
 ```bash
-    cd ~/stimson-web-scraper
     ./run_tests.sh
 ```
 
