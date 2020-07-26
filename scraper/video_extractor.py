@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-__title__ = 'scraper'
+__title__ = 'stimson-web-scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'

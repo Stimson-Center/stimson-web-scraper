@@ -19,7 +19,7 @@ from . import urls
 from .urls import prepare_url, is_url
 from .utils import StringReplacement, StringSplitter, parse_date_str
 
-__title__ = 'scraper'
+__title__ = 'stimson-web-scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
