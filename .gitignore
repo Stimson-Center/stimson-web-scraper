@@ -58,3 +58,4 @@ tests/system/geckodriver.log
 
 .GOOGLE_APPLICATION_CREDENTIALS.json
 tests/fixtures/pdf/2015-09-29 Myawaddy industrial zone set for 2017 opening.en.pdf
+whitelist.py

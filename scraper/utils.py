@@ -8,11 +8,8 @@ import codecs
 import hashlib
 import logging
 import os
-import random
 import re
-import string
 import time
-import unicodedata
 
 from bs4 import BeautifulSoup
 from dateutil.parser import parse as date_parser
@@ -30,23 +27,6 @@ log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
 TABSSPACE = re.compile(r'[\s\t]+')
-
-
-class FileHelper(object):
-    @staticmethod
-    def loadResourceFile(filename):
-        if not os.path.isabs(filename):
-            dirpath = os.path.abspath(os.path.dirname(__file__))
-            path = os.path.join(dirpath, 'resources', filename)
-        else:
-            path = filename
-        try:
-            f = codecs.open(path, 'r', 'utf-8')
-            content = f.read()
-            f.close()
-            return content
-        except IOError:
-            raise IOError("Couldn't open file %s" % path)
 
 
 class ParsingCandidate(object):
@@ -128,29 +108,6 @@ def domain_to_filename(domain):
     filename += ".txt"
     return filename
 
-
-def filename_to_domain(filename):
-    """[:-4] for the .txt at end
-    """
-    return filename.replace('-', '/')[:-4]
-
-
-def is_ascii(word):
-    """True if a word is only ascii chars
-    """
-
-    def onlyascii(char):
-        if ord(char) > 127:
-            return ''
-        else:
-            return char
-
-    for c in word:
-        if not onlyascii(c):
-            return False
-    return True
-
-
 def extract_meta_refresh(html):
     """ Parses html for a tag like:
     <meta http-equiv="refresh" content="0;URL='http://sfbay.craigslist.org/eby/cto/5617800926.html'" />
@@ -172,41 +129,6 @@ def extract_meta_refresh(html):
             # <meta http-equiv="refresh" content="0;URL='http://sfbay.craigslist.org/eby/cto/5617800926.html'" />
             if url_part.lower().startswith("url="):
                 return url_part[4:].replace('"', '').replace("'", '')
-
-
-def to_valid_filename(s):
-    """Converts arbitrary string (for us domain name)
-    into a valid file name for caching
-    """
-    valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
-    return ''.join(c for c in s if c in valid_chars)
-
-
-def chunks(l, n):
-    """Yield n successive chunks from l
-    """
-    newn = int(len(l) / n)
-    for i in range(0, n - 1):
-        yield l[i * newn:i * newn + newn]
-    yield l[n * newn - newn:]
-
-
-def purge(fn, pattern):
-    """Delete files in a dir matching pattern
-    """
-    for f in os.listdir(fn):
-        if re.search(pattern, f):
-            os.remove(os.path.join(fn, f))
-
-
-def clear_memo_cache(source):
-    """Clears the memoization cache for this specific news domain
-    """
-    d_pth = os.path.join(settings.MEMO_DIR, domain_to_filename(source.domain))
-    if os.path.exists(d_pth):
-        os.remove(d_pth)
-    else:
-        print('memo file for', source.domain, 'has already been deleted!')
 
 
 def memoize_articles(source, articles):
@@ -259,16 +181,7 @@ def memoize_articles(source, articles):
     return list(cur_articles.values())
 
 
-def get_useragent():
-    """Returns a random useragent in saved file
-    """
-    with open(settings.USERAGENTS, 'r') as f:
-        agents = f.readlines()
-        agent = random.choice(agents)
-        return agent.strip()
-
-
-def get_available_language_codes():
+def get_language_codes():
     """Returns a list of available languages and their 2 char input codes
     """
     languages = get_languages()
@@ -340,13 +253,6 @@ def get_languages():
     }
 
 
-def get_available_languages():
-    """Prints available languages with their full names
-    ISO 639-1 Code: https://www.loc.gov/standards/iso639-2/php/code_list.php
-    """
-    return get_languages()
-
-
 def extend_config(config, config_items):
     """
     We are handling config value setting like this for a cleaner api.
@@ -396,28 +302,6 @@ def parse_date_str(date_str):
             # near all parse failures are due to URL dates without a day
             # specifier, e.g. /2014/04/
             return None
-
-
-def cleanup_text(text):
-    """
-    It scrubs the garbled from its stream...
-    Or it gets the debugger again.
-    """
-    x = " ".join(map(lambda s: s.strip(), text.split("\n"))).strip()
-
-    x = x.replace('“', '"').replace('”', '"')
-    x = x.replace("‘", "'").replace("’", "'").replace("`", "'")
-    x = x.replace('…', '...').replace('–', '-')
-
-    x = str(unicodedata.normalize('NFKD', x).encode('ascii', 'ignore').decode('ascii'))
-
-    # some content returns text in bytes rather than as a str ?
-    try:
-        assert type(x).__name__ == 'str'
-    except AssertionError:
-        print("not a string?")  # , type(line), line)
-
-    return x
 
 
 def innerTrim(value):

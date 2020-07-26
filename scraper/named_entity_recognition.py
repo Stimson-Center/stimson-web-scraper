@@ -9,17 +9,6 @@ from spacy.lang.en.stop_words import STOP_WORDS
 from spacy.matcher import Matcher
 
 
-def pretty_print(obj, indent=False):
-    """
-    pretty print a JSON object
-    """
-
-    if indent:
-        return json.dumps(obj, sort_keys=True, indent=2, separators=(',', ': '))
-    else:
-        return json.dumps(obj, sort_keys=True)
-
-
 # https://gist.github.com/BrambleXu/3d47bbdbd1ee4e6fc695b0ddb88cbf99
 # https://spacy.io/usage/linguistic-features
 # https://spacy.io/api/doc

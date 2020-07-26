@@ -30,7 +30,7 @@ from .named_entity_recognition import TextRank4Keyword
 from .output_formatter import OutputFormatter
 from .text import get_stopwords
 from .utils import (URLHelper, RawHelper, extend_config,
-                    get_available_language_codes, extract_meta_refresh,
+                    get_language_codes, extract_meta_refresh,
                     parse_date_str, split_words)
 
 __title__ = 'stimson-web-scraper'
@@ -574,51 +574,6 @@ class Article(object):
     def has_top_image(self):
         return self.top_img is not None and self.top_img != ''
 
-    def is_valid_url(self):
-        """Performs a check on the url of this link to determine if article
-        is a real news article or not
-        """
-        return urls.valid_url(self.url)
-
-    def is_valid_body(self):
-        """If the article's body text is long enough to meet
-        standard article requirements, keep the article
-        """
-        if not PARSED in self.workflow:
-            raise ArticleException('must parse article before checking \
-                                    if it\'s body is valid!')
-        meta_type = self.extractor.get_meta_type(self.clean_doc)
-        wordcount = self.text.split(' ')
-        sentcount = self.text.split('.')
-
-        if (meta_type == 'article' and len(wordcount) >
-                self.config.MIN_WORD_COUNT):
-            log.debug('%s verified for article and wc' % self.url)
-            return True
-
-        if not self.is_media_news() and not self.text:
-            log.debug('%s caught for no media no text' % self.url)
-            return False
-
-        if self.title is None or len(self.title.split(' ')) < 2:
-            log.debug('%s caught for bad title' % self.url)
-            return False
-
-        if len(wordcount) < self.config.MIN_WORD_COUNT:
-            log.debug('%s caught for word cnt' % self.url)
-            return False
-
-        if len(sentcount) < self.config.MIN_SENT_COUNT:
-            log.debug('%s caught for sent cnt' % self.url)
-            return False
-
-        if self.html is None or self.html == '':
-            log.debug('%s caught for no html' % self.url)
-            return False
-
-        log.debug('%s verified for default true' % self.url)
-        return True
-
     def is_media_news(self):
         """If the article is related heavily to media:
         gallery, video, big pictures, etc
@@ -637,13 +592,6 @@ class Article(object):
         if self.html:
             return RawHelper.get_parsing_candidate(self.url, self.html)
         return URLHelper.get_parsing_candidate(self.url)
-
-    def build_resource_path(self):
-        """Must be called after computing HTML/final URL
-        """
-        res_path = self.get_resource_path()
-        if not os.path.exists(res_path):
-            os.mkdir(res_path)
 
     def get_resource_path(self):
         """Every article object has a special directory to store data in from
@@ -772,7 +720,7 @@ class Article(object):
         """Save langauges in their ISO 2-character form
         """
         if meta_lang and len(meta_lang) >= 2 and \
-                meta_lang in get_available_language_codes():
+                meta_lang in get_language_codes():
             self.meta_lang = meta_lang[:2]
 
     def set_meta_keywords(self, meta_keywords):

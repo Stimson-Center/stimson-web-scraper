@@ -21,9 +21,7 @@ log = logging.getLogger(__name__)
 
 PARENT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
-USERAGENTS = os.path.join(PARENT_DIRECTORY, 'resources/useragents.txt')
-
-DATA_DIRECTORY = '.newspaper_scraper'
+DATA_DIRECTORY = '.scraper'
 
 TOP_DIRECTORY = os.path.join(tempfile.gettempdir(), DATA_DIRECTORY)
 

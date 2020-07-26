@@ -115,14 +115,6 @@ class Parser(object):
         lxml.etree.strip_tags(node, *tags)
 
     @classmethod
-    def get_element_by_id(cls, node, idd):
-        selector = '//*[@id="%s"]' % idd
-        elems = node.xpath(selector)
-        if elems:
-            return elems[0]
-        return None
-
-    @classmethod
     def get_elements_by_tag(
             cls, node, tag=None, attr=None, value=None, childs=False, use_regex=False) -> list:
         NS = None
@@ -141,14 +133,6 @@ class Parser(object):
         if node in elems and (tag or childs):
             elems.remove(node)
         return elems
-
-    @classmethod
-    def append_child(cls, node, child):
-        node.append(child)
-
-    @classmethod
-    def child_nodes(cls, node):
-        return list(node)
 
     @classmethod
     def child_nodes_with_text(cls, node):

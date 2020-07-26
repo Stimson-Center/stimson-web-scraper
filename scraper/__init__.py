@@ -9,7 +9,7 @@ import logging
 from .article import Article, ArticleException
 from .configuration import Configuration
 from .mthreading import NewsPool
-from .utils import get_languages, get_available_languages, fulltext
+from .utils import get_languages, fulltext
 from .version import __version__
 
 __title__ = 'stimson-web-scraper'

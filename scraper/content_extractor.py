@@ -588,43 +588,6 @@ class ContentExtractor(object):
             return urljoin(article_url, node_images[0])
         return ''
 
-    def _get_urls(self, doc, titles):
-        """Return a list of urls or a list of (url, title_text) tuples
-        if specified.
-        """
-        if doc is None:
-            return []
-
-        a_kwargs = {'tag': 'a'}
-        a_tags = self.parser.get_elements_by_tag(doc, **a_kwargs)
-
-        # TODO: this should be refactored! We should have a separate
-        # method which siphones the titles our of a list of <a> tags.
-        if titles:
-            return [(a.get('href'), a.text) for a in a_tags if a.get('href')]
-        return [a.get('href') for a in a_tags if a.get('href')]
-
-    def get_urls(self, doc_or_html, titles=False, regex=False):
-        """`doc_or_html`s html page or doc and returns list of urls, the regex
-        flag indicates we don't parse via lxml and just search the html.
-        """
-        if doc_or_html is None:
-            log.critical('Must extract urls from either html, text or doc!')
-            return []
-        # If we are extracting from raw text
-        if regex:
-            doc_or_html = re.sub('<[^<]+?>', ' ', str(doc_or_html))
-            doc_or_html = re.findall(
-                'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|'
-                '(?:%[0-9a-fA-F][0-9a-fA-F]))+', doc_or_html)
-            doc_or_html = [i.strip() for i in doc_or_html]
-            return doc_or_html or []
-        # If the doc_or_html is html, parse it into a root
-        if isinstance(doc_or_html, str):
-            doc = self.parser.from_string(doc_or_html)
-        else:
-            doc = doc_or_html
-        return self._get_urls(doc, titles)
 
     def extract_tags(self, doc):
         if len(list(doc)) == 0:
@@ -904,27 +867,6 @@ class ContentExtractor(object):
                     fake_parent_node.append(node)
                     nodes_to_check.append(node)
         return nodes_to_check
-
-    def is_table_and_no_para_exist(self, e):
-        sub_paragraphs = self.parser.get_elements_by_tag(e, tag='p')
-        for p in sub_paragraphs:
-            txt = self.parser.get_text(p)
-            if len(txt) < 25:
-                self.parser.remove(p)
-
-        sub_paragraphs_2 = self.parser.get_elements_by_tag(e, tag='p')
-        if len(sub_paragraphs_2) == 0 and e.tag != "td":
-            return True
-        return False
-
-    def is_nodescore_threshold_met(self, node, e):
-        top_node_score = self.get_score(node)
-        current_node_score = self.get_score(e)
-        threshold = float(top_node_score * .08)
-
-        if (current_node_score < threshold) and e.tag != 'td':
-            return False
-        return True
 
     def post_cleanup(self, top_node):
         """Remove any divs that looks like non-content, clusters of links,
