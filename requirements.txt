@@ -14,7 +14,6 @@ pdftotext>=2.1.4
 Pillow==6.2.2
 psutil>=5.7.2
 pyarabic>=0.6.8
-python-dotenv>=0.14.0
 pytest>=5.4.3
 pytextrank>=2.0.2
 pythainlp>=2.2.2
@@ -27,10 +26,4 @@ requests_toolbelt>=0.9.1
 spacy>=2.3.2
 tldextract>=2.2.2
 tinysegmenter==0.4
-flask>=1.1.2
-flask-cors>=3.0.8
-flask_restful>=0.3.8
-gunicorn>=20.0.4
-oauth2-client>=1.2.1
-pytest-flask>=1.0.0
 waitress>=1.4.4

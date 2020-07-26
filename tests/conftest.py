@@ -1,23 +1,13 @@
-import logging
 import os
 import time
 
 import pytest
-from flask import Flask
-from flask_restful import Api
 
 
 # noinspection PyProtectedMember
 @pytest.fixture
 def fixture_directory():
     return os.path.join(os.path.dirname(__file__), "fixtures")
-
-
-@pytest.fixture(scope='function')
-def app():
-    app = Flask("test")
-    app.logger.setLevel(logging.DEBUG)
-    return app
 
 
 def mock_resource_with(filename, resource_type):
