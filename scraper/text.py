@@ -201,7 +201,7 @@ class StopWordsJapanese(StopWords):
     """
 
     def __init__(self, language='ja'):
-        super(StopWordsJapanese, self).__init__(language='ja')
+        super(StopWordsJapanese, self).__init__(language=language)
 
     def candidate_words(self, stripped_input):
         import tinysegmenter
@@ -215,7 +215,7 @@ class StopWordsThai(StopWords):
     """
 
     def __init__(self, language='th'):
-        super(StopWordsThai, self).__init__(language='th')
+        super(StopWordsThai, self).__init__(language=language)
 
     def candidate_words(self, stripped_input):
         import pythainlp

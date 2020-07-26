@@ -226,6 +226,7 @@ class DocumentCleaner(object):
 
         return nodes_to_return
 
+    # noinspection PyUnusedLocal
     def replace_with_para(self, doc, div):
         # TODO: Cooper: Why isn't doc used here
         self.parser.replace_tag(div, 'p')

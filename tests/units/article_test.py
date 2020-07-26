@@ -222,6 +222,7 @@ class ArticleTestCase(unittest.TestCase):
     def test_download_file_failure(self):
         url = "file://" + os.path.join(HTML_FN, "does_not_exist.html")
         article = Article(url=url)
+        # noinspection PyUnusedLocal
         try:
             article.download()
         except ArticleException as ex:

@@ -6,7 +6,6 @@ fake_useragent>=0.1.11
 feedfinder2>=0.0.4
 feedparser>=5.2.1
 fpdf2>=2.0.5
-google-cloud-translate>=2.0.1
 jieba3k>=0.35.1
 lxml>=4.5.2
 numpy>=1.19.1
@@ -31,7 +30,6 @@ tinysegmenter==0.4
 flask>=1.1.2
 flask-cors>=3.0.8
 flask_restful>=0.3.8
-google-api-python-client>=1.10.0
 gunicorn>=20.0.4
 oauth2-client>=1.2.1
 pytest-flask>=1.0.0

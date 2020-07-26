@@ -11,18 +11,15 @@ import os
 import random
 import re
 import string
-import sys
-import threading
 import time
 import unicodedata
 
-import requests
 from bs4 import BeautifulSoup
 from dateutil.parser import parse as date_parser
 
 from . import settings
 
-__title__ = 'scraper'
+__title__ = 'stimson-web-scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
@@ -121,45 +118,6 @@ class ReplaceSequence(object):
         return mutatedString
 
 
-class TimeoutError(Exception):
-    pass
-
-
-def timelimit(timeout):
-    """Borrowed from web.py, rip Aaron Swartz
-    """
-
-    def _1(function):
-        def _2(*args, **kw):
-            class Dispatch(threading.Thread):
-                def __init__(self):
-                    threading.Thread.__init__(self)
-                    self.result = None
-                    self.error = None
-
-                    self.setDaemon(True)
-                    self.start()
-
-                def run(self):
-                    # noinspection PyBroadException
-                    try:
-                        self.result = function(*args, **kw)
-                    except:
-                        self.error = sys.exc_info()
-
-            c = Dispatch()
-            c.join(timeout)
-            if c.is_alive():
-                raise TimeoutError()
-            if c.error:
-                raise c.error[0](c.error[1])
-            return c.result
-
-        return _2
-
-    return _1
-
-
 def domain_to_filename(domain):
     """All '/' are turned into '-', no trailing. schema's
     are gone, only the raw domain + ".txt" remains
@@ -222,20 +180,6 @@ def to_valid_filename(s):
     """
     valid_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
     return ''.join(c for c in s if c in valid_chars)
-
-
-def print_duration(method):
-    """Prints out the runtime duration of a method in seconds
-    """
-
-    def timed(*args, **kw):
-        ts = time.time()
-        result = method(*args, **kw)
-        te = time.time()
-        print('%r %2.2f sec' % (method.__name__, te - ts))
-        return result
-
-    return timed
 
 
 def chunks(l, n):
@@ -416,18 +360,6 @@ def extend_config(config, config_items):
     return config
 
 
-def get_load_time(url):
-    # set headers
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
-    }
-    # make get request to article_url
-    response = requests.get(url, headers=headers, stream=True, timeout=10.000)
-    # get page load time
-    load_time = response.elapsed.total_seconds()
-    return load_time
-
-
 def fulltext(html, language='en'):
     """Takes article HTML string input and outputs the fulltext
     Input string is decoded via UnicodeDammit if needed
@@ -505,3 +437,4 @@ def split_words(text):
         return [x.strip('.').lower() for x in text.split()]
     except TypeError:
         return None
+

@@ -64,7 +64,6 @@ class Configuration(object):
 
         # English is the fallback
         self._language = 'en'
-        self.translate = False
 
         # Unique stopword classes for oriental languages, don'tcanonical_link toggle
         self.stopwords_class = StopWords
@@ -104,16 +103,9 @@ class Configuration(object):
         self._language = language.lower()
         self.stopwords_class = self.get_stopwords_class(language)
 
-    def get_translate(self):
-        return self.translate
-
-    def set_translate(self, translate):
-        self.translate = translate
-
     def get_json(self):
         return {
-            "language": self.get_language(),
-            "translate": self.translate
+            "language": self.get_language()
         }
 
     language = property(get_language, set_language,

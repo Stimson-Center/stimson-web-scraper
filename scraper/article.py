@@ -11,13 +11,11 @@ import pytextrank
 import requests
 import spacy
 from urllib.parse import urlparse
-from textwrap import wrap
 
 
 from bs4 import BeautifulSoup
 # https://preslav.me/2019/01/09/dotenv-files-python/
 from fake_useragent import UserAgent
-from google.cloud import translate
 
 from scraper.urls import extract_domain
 from scraper.video_extractor import VideoExtractor
@@ -35,7 +33,7 @@ from .utils import (URLHelper, RawHelper, extend_config,
                     get_available_language_codes, extract_meta_refresh,
                     parse_date_str, split_words)
 
-__title__ = 'scraper'
+__title__ = 'stimson-web-scraper'
 __author__ = 'Lucas Ou-Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
@@ -182,7 +180,6 @@ class Article(object):
         self.tables = []
 
         self.workflow = []
-        self.translate = False
         self.process = 0
         self.thread_id = 0
         self.set_workflow(INIT)
@@ -371,58 +368,6 @@ class Article(object):
                 self.set_publish_date(dates[0])
         self.set_workflow(NLPED)
 
-    def split_by_n(self, seq, n):
-        '''A generator to divide a sequence into chunks of n units.'''
-        sequences = []
-        while seq:
-            sequences.append(seq[:n])
-            seq = seq[n:]
-        return sequences
-
-    def google_translate_text(self, client, parent, source_text, source_language, target_language):
-        target_text = ''
-        if source_text and len(source_text):
-            # Detail on supported types can be found here:
-            # https://cloud.google.com/translate/docs/supported-formats
-            # GOOGLE error: 'Request payload size exceeds the limit: 204800 bytes.'
-            # Cooper: TODO: NOTE: 5000 give error Input too long!
-            for source_text_block in self.split_by_n(source_text, 10000):
-                source_text_block_length = len(source_text_block)
-                try:
-                    response = client.translate_text(
-                        parent=parent,
-                        contents=[source_text_block],
-                        mime_type="text/plain",  # mime types: text/plain, text/html
-                        source_language_code=source_language,
-                        target_language_code=target_language,
-                    )
-                    # Display the translation for each input text provided
-                    for translation in response.translations:
-                        target_text += translation.translated_text
-                except Exception as ex:
-                    pass
-        return target_text
-
-    # PUBLIC API
-    def translation(self, target_language='en'):
-        global TRANSLATED
-        self.throw_if_not_downloaded_verbose()
-        self.throw_if_not_parsed_verbose()
-        if not os.environ.get('GOOGLE_APPLICATION_CREDENTIALS'):
-            raise ArticleException("GOOGLE_APPLICATION_CREDENTIALS not found")
-        if self.config.get_language == "en":
-            raise ArticleException("Article Configuration language is already 'en'")
-        client = translate.TranslationServiceClient()
-
-        parent = client.location_path("stimson-web-api", "global")
-        title = self.google_translate_text(client, parent, self.title, self.config._language, target_language)
-        summary = self.google_translate_text(client, parent, self.summary, self.config._language, target_language)
-        text = self.google_translate_text(client, parent, self.text, self.config._language, target_language)
-        self.config.set_language = target_language
-        self.set_title(title)
-        self.set_summary(summary)
-        self.set_text(text)
-        self.set_workflow(TRANSLATED)
 
     # PUBLIC API
     def get_json(self):
@@ -448,7 +393,6 @@ class Article(object):
     def set_json(self, article_json):
         self.authors = article_json["authors"]
         self.config.set_language(article_json["config"]['language'])
-        self.config.set_translate(article_json["config"]['translate'])
         self.html = article_json["html"]
         self.images = article_json["images"] if 'images' in article_json else []
         self.keywords = article_json["keywords"]
@@ -476,7 +420,6 @@ class Article(object):
             # recurse once!
             self.build()
         self.nlp()
-        self.translation()
         url = self.url.lower()
         if url.find(".wikipedia.org/wiki/") >= 0:
             self.parse_tables(attributes={"class": "wikitable"})

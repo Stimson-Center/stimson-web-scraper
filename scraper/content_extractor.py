@@ -650,7 +650,6 @@ class ContentExtractor(object):
             nodes_to_check = self.nodes_to_check_soap(html)
         starting_boost = float(1.0)
         cnt = 0
-        i = 0
         parent_nodes = []
         nodes_with_text = []
 

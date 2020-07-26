@@ -29,4 +29,5 @@ def test_parser(fixture_directory):
     len1 = len(child_nodes)
     assert len1
     text = Parser.get_text(doc2)
+    assert text
     pass

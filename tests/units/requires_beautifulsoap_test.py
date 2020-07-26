@@ -6,13 +6,12 @@ All unit tests for the scraper Article should be contained in this file.
 from scraper import Article, Configuration
 
 
-def validate(url, language, translate):
+def validate(url, language):
     config = Configuration()
     config.follow_meta_refresh = True
     # BUG was that website reported language as zh-Hant-TW when it really was en!
     config.use_meta_language = False
     config.set_language(language)
-    config.translate = translate
     config.http_success_only = False
     article = Article(url, config=config)
     article.download()
@@ -25,7 +24,7 @@ def validate(url, language, translate):
 def test_gnana_news(fixture_directory):
     url = "https://newsghana.com.gh/17-fishermen-in-custody-for-illegal-fishing/"
     # url = "https://www.yahoo.com"
-    article = validate(url, 'en', False)
+    article = validate(url, 'en')
 
 
 def test_spanish_news():
@@ -46,8 +45,10 @@ def test_spanish_news():
 
 def test_horseedmedia():
     url = "https://horseedmedia.net/2016/03/05/detained-illegal-fishing-vessel-escapes-northern-somalia-port/"
-    article = validate(url, 'en', False)
+    article = validate(url, 'en')
+    assert article
 
-def test1():
+def test_cnn():
     url = "https://www.cnn.com/2020/06/30/media/mary-trump-book/index.html"
-    article = validate(url, 'en', False)
+    article = validate(url, 'en')
+    assert article

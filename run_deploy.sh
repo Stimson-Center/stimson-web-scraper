@@ -13,7 +13,7 @@ pip3 install twine wheel
 python3 -m pip install --user --upgrade setuptools wheel twine
 [[ -d build ]] && rm -rf build
 [[ -d dist ]] && rm -rf dist
-pip3 uninstall stimson-web-scraper
+pip3 uninstall -y stimson-web-scraper
 python3 setup.py build install publish
 
 # python3 -m twine upload --repository testpypi dist/*

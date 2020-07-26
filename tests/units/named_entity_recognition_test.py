@@ -10,13 +10,12 @@ from scraper.named_entity_recognition import TextRank4Keyword
 from scraper.text import get_stopwords
 
 
-def validate(url, language, translate):
+def validate(url, language):
     config = Configuration()
     config.follow_meta_refresh = True
     # BUG was that website reported language as zh-Hant-TW when it really was en!
     config.use_meta_language = False
     config.set_language(language)
-    config.translate = translate
     config.http_success_only = False
     article = Article(url, config=config)
     article.download()
@@ -79,17 +78,18 @@ def test_dates():
 
 def test_power_projects_english():
     url = "https://www.power-technology.com/projects/dai-nanh/"
-    article = validate(url, 'en', False)
+    article = validate(url, 'en')
+    assert article
 
 
 def test_chinese():
     url = "http://news.sohu.com/20050601/n225789219.shtml"
-    article = validate(url, 'zh', False)
+    article = validate(url, 'zh')
     assert article
 
 
 def test_alphanum_keywords():
     url = "http://bangkokpost.com/world/1249738/casting-a-wider-net"
-    article = validate(url, 'en', False)
+    article = validate(url, 'en')
     for keyword in article.keywords:
         assert keyword.isalnum()
