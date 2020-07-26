@@ -6,16 +6,18 @@ import datetime
 import glob
 import logging
 import os
-from urllib.parse import urlparse
-
 # With lazy-loading
 import pytextrank
 import requests
 import spacy
+from urllib.parse import urlparse
+from textwrap import wrap
+
+
 from bs4 import BeautifulSoup
 # https://preslav.me/2019/01/09/dotenv-files-python/
 from fake_useragent import UserAgent
-from google.cloud import translate_v2
+from google.cloud import translate
 
 from scraper.urls import extract_domain
 from scraper.video_extractor import VideoExtractor
@@ -82,7 +84,7 @@ class Article(object):
 
         if source_url == '':
             scheme = urls.get_scheme(url)
-            if scheme is None or scheme.strip() is '':
+            if scheme is None or scheme.strip() == '':
                 scheme = 'http'
             source_url = scheme + '://' + urls.get_domain(url)
 
@@ -355,6 +357,11 @@ class Article(object):
         self.set_keywords(keywords)
         summary = ''.join(map(str, tr4w.get_sentences()))
         self.set_summary(summary)
+        # try to make a title from the top phrase if title not found in html or PDF
+        if not self.title or len(self.title.strip()) == 0:
+            for phrase in tr4w.get_phrases():
+                self.set_title(phrase.text.strip())
+                break
         # try to get date from raw text if not found in html
         current_date = datetime.date.today()
         if self.publish_date == current_date:
@@ -363,6 +370,38 @@ class Article(object):
                 # even if there are multiple dates returned, usually the first date is best to use
                 self.set_publish_date(dates[0])
         self.set_workflow(NLPED)
+
+    def split_by_n(self, seq, n):
+        '''A generator to divide a sequence into chunks of n units.'''
+        sequences = []
+        while seq:
+            sequences.append(seq[:n])
+            seq = seq[n:]
+        return sequences
+
+    def google_translate_text(self, client, parent, source_text, source_language, target_language):
+        target_text = ''
+        if source_text and len(source_text):
+            # Detail on supported types can be found here:
+            # https://cloud.google.com/translate/docs/supported-formats
+            # GOOGLE error: 'Request payload size exceeds the limit: 204800 bytes.'
+            # Cooper: TODO: NOTE: 5000 give error Input too long!
+            for source_text_block in self.split_by_n(source_text, 10000):
+                source_text_block_length = len(source_text_block)
+                try:
+                    response = client.translate_text(
+                        parent=parent,
+                        contents=[source_text_block],
+                        mime_type="text/plain",  # mime types: text/plain, text/html
+                        source_language_code=source_language,
+                        target_language_code=target_language,
+                    )
+                    # Display the translation for each input text provided
+                    for translation in response.translations:
+                        target_text += translation.translated_text
+                except Exception as ex:
+                    pass
+        return target_text
 
     # PUBLIC API
     def translation(self, target_language='en'):
@@ -373,16 +412,16 @@ class Article(object):
             raise ArticleException("GOOGLE_APPLICATION_CREDENTIALS not found")
         if self.config.get_language == "en":
             raise ArticleException("Article Configuration language is already 'en'")
-        # print(f"Scraper translate={self.config.translate} GOOGLE_APPLICATION_CREDENTIALS={os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')}")
-        translator = translate_v2.Client()
-        raw_dict = translator.translate(self.title, target_language=target_language, format_="text")
-        # noinspection PyTypeChecker
-        self.config._language = 'en'
-        self.set_title(raw_dict['translatedText'])
-        raw_dict = translator.translate(self.summary, target_language=target_language, format_="text")
-        self.set_summary(raw_dict['translatedText'])
-        raw_dict = translator.translate(self.text, target_language=target_language, format_="text")
-        self.set_text(raw_dict['translatedText'])
+        client = translate.TranslationServiceClient()
+
+        parent = client.location_path("stimson-web-api", "global")
+        title = self.google_translate_text(client, parent, self.title, self.config._language, target_language)
+        summary = self.google_translate_text(client, parent, self.summary, self.config._language, target_language)
+        text = self.google_translate_text(client, parent, self.text, self.config._language, target_language)
+        self.config.set_language = target_language
+        self.set_title(title)
+        self.set_summary(summary)
+        self.set_text(text)
         self.set_workflow(TRANSLATED)
 
     # PUBLIC API
