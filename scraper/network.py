@@ -16,7 +16,7 @@ from requests_toolbelt.utils import deprecated
 # This site doesn’t like and want scraping. This gives you the same dreaded error 54,
 # connection reset by the peer.
 from .configuration import Configuration
-from .mthreading import ThreadPool
+from tests.mthreading import ThreadPool
 
 __title__ = 'stimson-web-scraper'
 __author__ = 'Lucas Ou-Yang'

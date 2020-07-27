@@ -6,7 +6,7 @@ from time import time
 
 from scraper import Article, Configuration
 from scraper.urls import get_path
-from scraper.mthreading import NewsPool
+from ..mthreading import NewsPool
 
 
 def save_article(article, filename, filedir='/tmp'):

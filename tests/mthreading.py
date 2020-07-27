@@ -10,7 +10,8 @@ import queue
 import traceback
 from threading import Thread
 
-from .configuration import Configuration
+import scraper
+from scraper.configuration import Configuration
 
 __title__ = 'stimson-web-scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -82,13 +83,15 @@ class NewsPool(object):
         We allocate one thread per source to avoid rate limiting.
         5 articles = 5 threads, one per articles.
 
-        >>> from scraper import news_pool, Article
+        >>> from scraper import Article
+        >>> from tests.mthreading import NewsPool
 
         >>> cnn_paper = Article('http://cnn.com')
         >>> tc_paper = Article('http://techcrunch.com')
         >>> espn_paper = Article('http://espn.com')
 
         >>> papers = [cnn_paper, tc_paper, espn_paper]
+        >>> news_pool = NewsPool()
         >>> news_pool.set(papers)
         >>> news_pool.join()
 
@@ -121,7 +124,6 @@ class NewsPool(object):
 
         If both of the above conditions are not true, default to 1 thread.
         """
-        from .article import Article
 
         if override_threads is not None:
             num_threads = override_threads
@@ -132,7 +134,7 @@ class NewsPool(object):
         self.pool = ThreadPool(num_threads, timeout)
 
         for news_object in news_list:
-            if isinstance(news_object, Article):
+            if isinstance(news_object, scraper.Article):
                 self.pool.add_task(news_object.build)
             else:
                 raise NewsPoolException('Unsupported Class instance type')

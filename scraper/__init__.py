@@ -8,7 +8,6 @@ import logging
 
 from .article import Article, ArticleException
 from .configuration import Configuration
-from .mthreading import NewsPool
 from .utils import get_languages, fulltext
 from .version import __version__
 
@@ -18,8 +17,6 @@ __license__ = 'MIT'
 __copyright__ = 'Copyright 2014, Lucas Ou-Yang'
 __maintainer__ = "The Stimson Center"
 __maintainer_email = "cooper@pobox.com"
-
-news_pool = NewsPool()
 
 
 class NullHandler(logging.Handler):
