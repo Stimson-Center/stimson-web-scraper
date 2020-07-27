@@ -377,7 +377,7 @@ class Article(object):
             "html": self.html,
             "images:": list(self.images),
             "keywords": self.keywords,
-            "language": self.config._language,
+            "language": self.config.get_language(),
             "movies": self.movies,
             "publish_date": self.publish_date,
             "summary": self.summary,
