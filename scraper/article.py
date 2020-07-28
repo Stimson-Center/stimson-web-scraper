@@ -296,6 +296,9 @@ class Article(object):
 
         self.fetch_images()
         self.release_resources()
+        url = self.url.lower()
+        if url.find(".wikipedia.org/wiki/") >= 0:
+            self.parse_tables(attributes={"class": "wikitable"})
         self.set_workflow(PARSED)
 
     # PUBLIC API
@@ -420,9 +423,6 @@ class Article(object):
             # recurse once!
             self.build()
         self.nlp()
-        url = self.url.lower()
-        if url.find(".wikipedia.org/wiki/") >= 0:
-            self.parse_tables(attributes={"class": "wikitable"})
 
     def xx_keywords(self, stopwords, count=10):
         """Get the top `count` keywords and their frequency scores ignores blacklisted

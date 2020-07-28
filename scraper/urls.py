@@ -6,7 +6,6 @@ Hence, we have an entire module dedicated to them.
 
 import logging
 import re
-from base64 import b64encode, b64decode
 from urllib.parse import parse_qs, urljoin, urlparse, urlsplit, urlunsplit
 
 from tldextract import tldextract

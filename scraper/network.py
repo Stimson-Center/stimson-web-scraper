@@ -16,7 +16,6 @@ from requests_toolbelt.utils import deprecated
 # This site doesn’t like and want scraping. This gives you the same dreaded error 54,
 # connection reset by the peer.
 from .configuration import Configuration
-from tests.mthreading import ThreadPool
 
 __title__ = 'stimson-web-scraper'
 __author__ = 'Lucas Ou-Yang'
@@ -133,24 +132,3 @@ class MRequest(object):
                 self.resp.raise_for_status()
         except requests.exceptions.RequestException as e:
             log.critical('[REQUEST FAILED] ' + str(e))
-
-
-def multithread_request(urls, config=None):
-    """Request multiple urls via mthreading, order of urls & requests is stable
-    returns same requests but with response variables filled.
-    """
-    config = config or Configuration()
-    num_threads = config.number_threads
-    timeout = config.thread_timeout_seconds
-
-    pool = ThreadPool(num_threads, timeout)
-
-    m_requests = []
-    for url in urls:
-        m_requests.append(MRequest(url, config))
-
-    for req in m_requests:
-        pool.add_task(req.send)
-
-    pool.wait_completion()
-    return m_requests
