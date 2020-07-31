@@ -15,12 +15,11 @@ RUN apt-get -y install build-essential libpoppler-cpp-dev pkg-config python-dev 
 COPY bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 
-# https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
-RUN python -m venv /app/.venv
-
 RUN mkdir -p /app
 WORKDIR /app
 COPY . /app
+# https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
+RUN python -m venv /app/.venv
 RUN source /app/.venv/bin/activate
 RUN . /app/.venv/bin/activate && pip install --upgrade pip
 RUN . /app/.venv/bin/activate && pip install -r requirements.txt

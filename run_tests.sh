@@ -5,6 +5,7 @@ python3 -m venv .venv
  . .venv/bin/activate && pip3 uninstall -y crcmod
  . .venv/bin/activate && pip3 install --no-cache-dir -U crcmod
  . .venv/bin/activate && pip3 install -r requirements.txt
+ . .venv/bin/activate && pip3 install -r requirements-test.txt
  . .venv/bin/activate && pip3 install pytest
  . .venv/bin/activate && python3 -m spacy download zh_core_web_sm  # Chinese
  . .venv/bin/activate && python3 -m spacy download da_core_news_sm # Danish
