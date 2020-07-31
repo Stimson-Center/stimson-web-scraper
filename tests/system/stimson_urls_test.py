@@ -86,7 +86,7 @@ def article_curator(test_driver_file, config):
             publish_date = article.publish_date[0:10].strip() if article.publish_date else ''
             article.publish_date = publish_date
             if publish_date:
-                filename = f'{publish_date} {title}.json'
+                filename = f'{publish_date}_{title}.json'
             else:
                 filename = f'{title}.json'
             # encoded = b64_encode(article.url)
