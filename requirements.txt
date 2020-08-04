@@ -15,7 +15,7 @@ Pillow==6.2.2
 psutil>=5.7.2
 pyarabic>=0.6.8
 pytextrank>=2.0.2
-pythainlp>=2.2.2
+pythainlp>=2.2.3
 python-dateutil>=2.8.1
 dateparser>=0.7.6
 PyPDF4>=1.27.0
